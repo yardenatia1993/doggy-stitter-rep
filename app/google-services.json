@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "648048846844",
+    "project_id": "doggy-sitter",
+    "storage_bucket": "doggy-sitter.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:648048846844:android:47e0d7cf4cdad0a7c27479",
+        "android_client_info": {
+          "package_name": "com.example.doggysitter"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAFl1absmrT348jvK7he_e7RBOBQgADNbk"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

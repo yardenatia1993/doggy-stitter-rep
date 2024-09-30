@@ -1,0 +1,13 @@
+<resources>
+    <string name="app_name">Doggy sitter</string>
+    <string name="login">Login</string>
+    <string name="email">Email</string>
+    <string name="password">Password</string>
+    <string name="register">Register</string>
+    <string name="click_here_to_login">Click here to login</string>
+    <string name="click_here_to_register">Click here to register</string>
+    <string name="what_are_you">What are you?</string>
+    <string name="dog_owner">Dog owner</string>
+    <string name="dog_walker">Dog walker</string>
+    <string name="logout">Logout</string>
+</resources>
