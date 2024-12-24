@@ -2,10 +2,8 @@ package com.example.doggysitter;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
-import androidx.activity.OnBackPressedCallback;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
@@ -14,7 +12,7 @@ import androidx.core.view.WindowInsetsCompat;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
-public class SplashScreen extends AppCompatActivity {
+public class SplashScreenActivity extends AppCompatActivity {
     @Override
     protected void onStart() {
         super.onStart();
@@ -36,9 +34,9 @@ public class SplashScreen extends AppCompatActivity {
         auth = FirebaseAuth.getInstance();
         user = auth.getCurrentUser();
         if (user == null) {
-            startActivity(new Intent(this, Register.class));
+            startActivity(new Intent(this, RegisterActivity.class));
         } else {
-            startActivity(new Intent(this, Login.class));
+            startActivity(new Intent(this, LoginActivity.class));
         }
         finish();
 

@@ -5,15 +5,10 @@ public class Dog {
     private int age;
     private String breed;
     private String imageUrl;
-    private String ownerId;
 
     public Dog() {
     }
 
-
-    public Dog(String ownerId) {
-        this.ownerId = ownerId;
-    }
 
     public String getName() {
         return name;
@@ -47,11 +42,5 @@ public class Dog {
         this.imageUrl = imageUrl;
     }
 
-    public String getOwnerId() {
-        return ownerId;
-    }
 
-    public void setOwnerId(String ownerId) {
-        this.ownerId = ownerId;
-    }
 }

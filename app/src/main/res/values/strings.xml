@@ -10,4 +10,6 @@
     <string name="dog_owner">Dog owner</string>
     <string name="dog_walker">Dog walker</string>
     <string name="logout">Logout</string>
+    <string name="error_email_empty">Email cannot be empty</string>
+    <string name="error_password_empty">Password cannot be empty</string>
 </resources>
