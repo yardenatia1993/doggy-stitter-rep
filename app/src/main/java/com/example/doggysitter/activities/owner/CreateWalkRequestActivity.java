@@ -2,19 +2,19 @@ package com.example.doggysitter.activities.owner;
 
 import com.example.doggysitter.R;
 import com.example.doggysitter.models.Dog;
+import com.example.doggysitter.models.IsraeliLocation;
 import com.example.doggysitter.models.WalkRequest;
 import com.example.doggysitter.repositories.DogRepository;
 import com.example.doggysitter.repositories.WalkRequestRepository;
 import com.example.doggysitter.utils.DateTimeUtils;
 import com.example.doggysitter.utils.FirestoreConstants;
+import com.example.doggysitter.utils.IsraeliLocationPickerDialog;
 import com.example.doggysitter.utils.LocationUtils;
-import com.example.doggysitter.utils.PlacesLocationHelper;
 import com.example.doggysitter.utils.ValidationUtils;
 
 import android.Manifest;
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
-import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.os.Bundle;
@@ -29,21 +29,16 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.location.Priority;
-import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.tasks.CancellationTokenSource;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentSnapshot;
-import com.google.android.libraries.places.api.model.Place;
-import com.google.android.libraries.places.widget.Autocomplete;
-import com.google.android.libraries.places.widget.AutocompleteActivity;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -51,7 +46,6 @@ import java.util.List;
 
 public class CreateWalkRequestActivity extends AppCompatActivity {
     private static final int REQUEST_PICKUP_LOCATION_PERMISSION = 2001;
-    private static final int REQUEST_PICKUP_PLACE = 3001;
 
     private Spinner dogSpinner;
     private EditText dateEditText;
@@ -357,46 +351,22 @@ public class CreateWalkRequestActivity extends AppCompatActivity {
     }
 
     private void openManualPickupLocation() {
-        if (!PlacesLocationHelper.isManualSearchAvailable(this)) {
-            Toast.makeText(this, R.string.manual_location_unavailable, Toast.LENGTH_SHORT).show();
-            return;
-        }
-
-        try {
-            startActivityForResult(
-                    PlacesLocationHelper.buildAutocompleteIntent(this),
-                    REQUEST_PICKUP_PLACE
-            );
-        } catch (RuntimeException error) {
-            Toast.makeText(this, R.string.manual_location_unavailable, Toast.LENGTH_SHORT).show();
-        }
+        IsraeliLocationPickerDialog.show(this, this::handleManualPickupLocation);
     }
 
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode != REQUEST_PICKUP_PLACE) {
-            return;
-        }
-
-        if (resultCode == RESULT_OK && data != null) {
-            Place place = Autocomplete.getPlaceFromIntent(data);
-            LatLng latLng = place.getLatLng();
-            if (latLng == null) {
-                Toast.makeText(this, R.string.error_location_unavailable, Toast.LENGTH_SHORT).show();
-                return;
-            }
-            pickupLat = latLng.latitude;
-            pickupLng = latLng.longitude;
-            String label = PlacesLocationHelper.getReadableLabel(place);
-            pickupLocationLabelEditText.setText(label);
-            pickupLocationStatusTextView.setText(
-                    TextUtils.isEmpty(label) ? getString(R.string.pickup_location_saved) : label
-            );
-            Toast.makeText(this, R.string.pickup_location_saved, Toast.LENGTH_SHORT).show();
-        } else if (resultCode == AutocompleteActivity.RESULT_ERROR && data != null) {
-            Toast.makeText(this, R.string.error_location_unavailable, Toast.LENGTH_SHORT).show();
-        }
+    private void handleManualPickupLocation(IsraeliLocation location) {
+        pickupLat = location.getLat();
+        pickupLng = location.getLng();
+        pickupLocationLabelEditText.setText(location.getNameHe());
+        pickupLocationStatusTextView.setText(getString(
+                R.string.location_saved_with_name,
+                location.getNameHe()
+        ));
+        Toast.makeText(
+                this,
+                getString(R.string.location_saved_with_name, location.getNameHe()),
+                Toast.LENGTH_SHORT
+        ).show();
     }
 
     @Override

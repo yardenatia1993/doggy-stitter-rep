@@ -1,18 +1,18 @@
 package com.example.doggysitter.activities.walker;
 
 import com.example.doggysitter.R;
+import com.example.doggysitter.models.IsraeliLocation;
 import com.example.doggysitter.models.WalkerProfile;
 import com.example.doggysitter.repositories.UserRepository;
 import com.example.doggysitter.repositories.WalkerProfileRepository;
 import com.example.doggysitter.utils.DateTimeUtils;
 import com.example.doggysitter.utils.FirestoreConstants;
+import com.example.doggysitter.utils.IsraeliLocationPickerDialog;
 import com.example.doggysitter.utils.LocationUtils;
-import com.example.doggysitter.utils.PlacesLocationHelper;
 import com.example.doggysitter.utils.ValidationUtils;
 
 import android.Manifest;
 import android.app.TimePickerDialog;
-import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.os.Bundle;
@@ -30,21 +30,16 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.location.Priority;
-import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.tasks.CancellationTokenSource;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentSnapshot;
-import com.google.android.libraries.places.api.model.Place;
-import com.google.android.libraries.places.widget.Autocomplete;
-import com.google.android.libraries.places.widget.AutocompleteActivity;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -56,7 +51,6 @@ import java.util.Map;
 public class WalkerProfileActivity extends AppCompatActivity {
     private static final String TAG = "WalkerProfileActivity";
     private static final int REQUEST_SERVICE_LOCATION_PERMISSION = 2002;
-    private static final int REQUEST_SERVICE_PLACE = 3002;
     private static final List<String> PHONE_PREFIXES = Arrays.asList(
             "050", "051", "052", "053", "054", "055", "056", "058", "059",
             "02", "03", "04", "08", "09"
@@ -619,49 +613,22 @@ public class WalkerProfileActivity extends AppCompatActivity {
     }
 
     private void openManualServiceLocation() {
-        if (!PlacesLocationHelper.isManualSearchAvailable(this)) {
-            Toast.makeText(this, R.string.manual_location_unavailable, Toast.LENGTH_SHORT).show();
-            return;
-        }
-
-        try {
-            startActivityForResult(
-                    PlacesLocationHelper.buildAutocompleteIntent(this),
-                    REQUEST_SERVICE_PLACE
-            );
-        } catch (RuntimeException error) {
-            Log.e(TAG, "manual location launch failure", error);
-            Toast.makeText(this, R.string.manual_location_unavailable, Toast.LENGTH_SHORT).show();
-        }
+        IsraeliLocationPickerDialog.show(this, this::handleManualServiceLocation);
     }
 
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode != REQUEST_SERVICE_PLACE) {
-            return;
-        }
-
-        if (resultCode == RESULT_OK && data != null) {
-            Place place = Autocomplete.getPlaceFromIntent(data);
-            LatLng latLng = place.getLatLng();
-            if (latLng == null) {
-                Toast.makeText(this, R.string.error_location_unavailable, Toast.LENGTH_SHORT).show();
-                return;
-            }
-            serviceLat = latLng.latitude;
-            serviceLng = latLng.longitude;
-            serviceLocationLabel = PlacesLocationHelper.getReadableLabel(place);
-            serviceLocationStatusTextView.setText(
-                    TextUtils.isEmpty(serviceLocationLabel)
-                            ? getString(R.string.service_location_saved)
-                            : serviceLocationLabel
-            );
-            Toast.makeText(this, R.string.service_location_saved, Toast.LENGTH_SHORT).show();
-        } else if (resultCode == AutocompleteActivity.RESULT_ERROR && data != null) {
-            Log.e(TAG, "manual location error: " + Autocomplete.getStatusFromIntent(data));
-            Toast.makeText(this, R.string.error_location_unavailable, Toast.LENGTH_SHORT).show();
-        }
+    private void handleManualServiceLocation(IsraeliLocation location) {
+        serviceLat = location.getLat();
+        serviceLng = location.getLng();
+        serviceLocationLabel = location.getNameHe();
+        serviceLocationStatusTextView.setText(getString(
+                R.string.location_saved_with_name,
+                location.getNameHe()
+        ));
+        Toast.makeText(
+                this,
+                getString(R.string.location_saved_with_name, location.getNameHe()),
+                Toast.LENGTH_SHORT
+        ).show();
     }
 
     @Override

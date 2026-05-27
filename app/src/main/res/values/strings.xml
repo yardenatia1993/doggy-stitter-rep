@@ -91,7 +91,7 @@
     <string name="max_price_required_label">מחיר מקסימלי לכל הטיול *</string>
     <string name="pickup_location_section">מיקום איסוף</string>
     <string name="use_current_location">השתמש במיקום הנוכחי</string>
-    <string name="choose_manual_location">בחר עיר / כתובת ידנית</string>
+    <string name="choose_manual_location">בחר יישוב ידנית</string>
     <string name="location_not_selected">לא נבחר מיקום</string>
     <string name="pickup_location_saved">המיקום נשמר</string>
     <string name="pickup_location_label">תיאור מיקום / כתובת קצרה</string>
@@ -184,7 +184,7 @@
     <string name="error_accept_walk_request">קבלת הבקשה נכשלה</string>
     <string name="service_area_section">אזור פעילות</string>
     <string name="use_current_location_service_area">השתמש במיקום הנוכחי כאזור פעילות</string>
-    <string name="choose_manual_service_location">בחר עיר / כתובת ידנית</string>
+    <string name="choose_manual_service_location">בחר יישוב ידנית</string>
     <string name="service_location_not_selected">לא נבחר מיקום פעילות</string>
     <string name="service_location_saved">מיקום הפעילות נשמר</string>
     <string name="service_radius_required_label">רדיוס שירות בק״מ *</string>
@@ -195,5 +195,10 @@
     <string name="error_service_radius_range">רדיוס השירות חייב להיות בין 1 ל-50 ק״מ</string>
     <string name="complete_walker_profile_required">יש להשלים פרופיל דוגווקר לפני צפייה בבקשות</string>
     <string name="service_area_required">יש להגדיר אזור פעילות בפרופיל</string>
-    <string name="manual_location_unavailable">חיפוש מיקום ידני אינו זמין כרגע</string>
+    <string name="choose_location_title">בחר יישוב</string>
+    <string name="location_search_label">חיפוש יישוב</string>
+    <string name="location_search_hint">הקלד שם יישוב</string>
+    <string name="no_location_results">לא נמצאו תוצאות</string>
+    <string name="location_saved_with_name">המיקום נשמר: %1$s</string>
+    <string name="error_load_locations">טעינת רשימת היישובים נכשלה</string>
 </resources>
