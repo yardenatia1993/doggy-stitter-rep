@@ -17,44 +17,44 @@
         android:theme="@style/Theme.DoggySitter"
         tools:targetApi="31">
         <activity
-            android:name=".MyWalkerJobsActivity"
+            android:name=".activities.walker.MyWalkerJobsActivity"
             android:exported="false" />
         <activity
-            android:name=".AvailableWalkRequestsActivity"
+            android:name=".activities.walker.AvailableWalkRequestsActivity"
             android:exported="false" />
         <activity
-            android:name=".WalkerProfileActivity"
+            android:name=".activities.walker.WalkerProfileActivity"
             android:exported="false"
             android:windowSoftInputMode="stateAlwaysHidden|adjustResize" />
         <activity
-            android:name=".CreateWalkRequestActivity"
+            android:name=".activities.owner.CreateWalkRequestActivity"
             android:exported="false" />
         <activity
-            android:name=".MyDogsActivity"
+            android:name=".activities.owner.MyDogsActivity"
             android:exported="false" />
         <activity
-            android:name=".AddDogActivity"
+            android:name=".activities.owner.AddDogActivity"
             android:exported="false" />
         <activity
-            android:name=".AdminDashboardActivity"
+            android:name=".activities.admin.AdminDashboardActivity"
             android:exported="false" />
         <activity
-            android:name=".WalkerDashboardActivity"
+            android:name=".activities.walker.WalkerDashboardActivity"
             android:exported="false" />
         <activity
-            android:name=".OwnerDashboardActivity"
+            android:name=".activities.owner.OwnerDashboardActivity"
             android:exported="false" />
         <activity
-            android:name=".RoleSelectionActivity"
+            android:name=".activities.auth.RoleSelectionActivity"
             android:exported="false" />
         <activity
-            android:name=".RegisterActivity"
+            android:name=".activities.auth.RegisterActivity"
             android:exported="false" />
         <activity
-            android:name=".LoginActivity"
+            android:name=".activities.auth.LoginActivity"
             android:exported="false" />
         <activity
-            android:name=".SplashScreenActivity"
+            android:name=".activities.auth.SplashScreenActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

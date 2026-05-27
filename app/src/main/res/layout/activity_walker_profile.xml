@@ -5,7 +5,7 @@
     android:layout_height="match_parent"
     android:fillViewport="true"
     android:layoutDirection="rtl"
-    tools:context=".WalkerProfileActivity">
+    tools:context=".activities.walker.WalkerProfileActivity">
 
     <LinearLayout
         android:id="@+id/main"
@@ -28,18 +28,34 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="24dp"
-            android:text="@string/phone_required_label"
+            android:text="@string/phone_prefix_required_label"
+            android:textAlignment="viewStart"
+            android:textDirection="rtl"
+            android:textSize="15sp" />
+
+        <Spinner
+            android:id="@+id/spinner_phone_prefix"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="14dp"
+            android:text="@string/phone_number_required_label"
             android:textAlignment="viewStart"
             android:textDirection="rtl"
             android:textSize="15sp" />
 
         <EditText
-            android:id="@+id/edit_phone"
+            android:id="@+id/edit_phone_number"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="4dp"
             android:hint="@string/phone"
-            android:inputType="phone"
+            android:inputType="number"
+            android:maxLength="7"
             android:textDirection="ltr" />
 
         <TextView
@@ -83,18 +99,18 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="14dp"
-            android:text="@string/price_per_walk_required_label"
+            android:text="@string/estimated_hourly_price_required_label"
             android:textAlignment="viewStart"
             android:textDirection="rtl"
             android:textSize="15sp" />
 
         <EditText
-            android:id="@+id/edit_price_per_walk"
+            android:id="@+id/edit_estimated_hourly_price"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="4dp"
-            android:hint="@string/price_per_walk"
-            android:inputType="numberDecimal" />
+            android:hint="@string/estimated_hourly_price"
+            android:inputType="number" />
 
         <TextView
             android:layout_width="match_parent"
@@ -112,11 +128,105 @@
             android:layout_height="wrap_content"
             android:text="@string/day_sunday" />
 
+        <LinearLayout
+            android:id="@+id/layout_sunday_hours"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:visibility="gone">
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/start_time"
+                    android:textSize="14sp" />
+
+                <Button
+                    android:id="@+id/button_sunday_start"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/choose_time" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:layout_weight="1"
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/end_time"
+                    android:textSize="14sp" />
+
+                <Button
+                    android:id="@+id/button_sunday_end"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/choose_time" />
+            </LinearLayout>
+        </LinearLayout>
+
         <CheckBox
             android:id="@+id/check_monday"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/day_monday" />
+
+        <LinearLayout
+            android:id="@+id/layout_monday_hours"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:visibility="gone">
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/start_time"
+                    android:textSize="14sp" />
+
+                <Button
+                    android:id="@+id/button_monday_start"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/choose_time" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:layout_weight="1"
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/end_time"
+                    android:textSize="14sp" />
+
+                <Button
+                    android:id="@+id/button_monday_end"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/choose_time" />
+            </LinearLayout>
+        </LinearLayout>
 
         <CheckBox
             android:id="@+id/check_tuesday"
@@ -124,11 +234,105 @@
             android:layout_height="wrap_content"
             android:text="@string/day_tuesday" />
 
+        <LinearLayout
+            android:id="@+id/layout_tuesday_hours"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:visibility="gone">
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/start_time"
+                    android:textSize="14sp" />
+
+                <Button
+                    android:id="@+id/button_tuesday_start"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/choose_time" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:layout_weight="1"
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/end_time"
+                    android:textSize="14sp" />
+
+                <Button
+                    android:id="@+id/button_tuesday_end"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/choose_time" />
+            </LinearLayout>
+        </LinearLayout>
+
         <CheckBox
             android:id="@+id/check_wednesday"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/day_wednesday" />
+
+        <LinearLayout
+            android:id="@+id/layout_wednesday_hours"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:visibility="gone">
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/start_time"
+                    android:textSize="14sp" />
+
+                <Button
+                    android:id="@+id/button_wednesday_start"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/choose_time" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:layout_weight="1"
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/end_time"
+                    android:textSize="14sp" />
+
+                <Button
+                    android:id="@+id/button_wednesday_end"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/choose_time" />
+            </LinearLayout>
+        </LinearLayout>
 
         <CheckBox
             android:id="@+id/check_thursday"
@@ -136,17 +340,158 @@
             android:layout_height="wrap_content"
             android:text="@string/day_thursday" />
 
+        <LinearLayout
+            android:id="@+id/layout_thursday_hours"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:visibility="gone">
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/start_time"
+                    android:textSize="14sp" />
+
+                <Button
+                    android:id="@+id/button_thursday_start"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/choose_time" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:layout_weight="1"
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/end_time"
+                    android:textSize="14sp" />
+
+                <Button
+                    android:id="@+id/button_thursday_end"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/choose_time" />
+            </LinearLayout>
+        </LinearLayout>
+
         <CheckBox
             android:id="@+id/check_friday"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/day_friday" />
 
+        <LinearLayout
+            android:id="@+id/layout_friday_hours"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:visibility="gone">
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/start_time"
+                    android:textSize="14sp" />
+
+                <Button
+                    android:id="@+id/button_friday_start"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/choose_time" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:layout_weight="1"
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/end_time"
+                    android:textSize="14sp" />
+
+                <Button
+                    android:id="@+id/button_friday_end"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/choose_time" />
+            </LinearLayout>
+        </LinearLayout>
+
         <CheckBox
             android:id="@+id/check_saturday"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/day_saturday" />
+
+        <LinearLayout
+            android:id="@+id/layout_saturday_hours"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:visibility="gone">
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/start_time"
+                    android:textSize="14sp" />
+
+                <Button
+                    android:id="@+id/button_saturday_start"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/choose_time" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:layout_weight="1"
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/end_time"
+                    android:textSize="14sp" />
+
+                <Button
+                    android:id="@+id/button_saturday_end"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/choose_time" />
+            </LinearLayout>
+        </LinearLayout>
 
         <TextView
             android:layout_width="match_parent"
@@ -164,6 +509,13 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
             android:text="@string/use_current_location_service_area" />
+
+        <Button
+            android:id="@+id/button_manual_service_location"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:text="@string/choose_manual_service_location" />
 
         <TextView
             android:id="@+id/text_service_location_status"
@@ -190,7 +542,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="4dp"
             android:hint="@string/service_radius_hint"
-            android:inputType="numberDecimal" />
+            android:inputType="number" />
 
         <ProgressBar
             android:id="@+id/progress_bar"

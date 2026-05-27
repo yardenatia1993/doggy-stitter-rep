@@ -5,7 +5,7 @@
     android:layout_height="match_parent"
     android:fillViewport="true"
     android:layoutDirection="rtl"
-    tools:context=".AddDogActivity">
+    tools:context=".activities.owner.AddDogActivity">
 
     <LinearLayout
         android:id="@+id/main"

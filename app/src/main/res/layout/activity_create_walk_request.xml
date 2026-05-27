@@ -5,7 +5,7 @@
     android:layout_height="match_parent"
     android:fillViewport="true"
     android:layoutDirection="rtl"
-    tools:context=".CreateWalkRequestActivity">
+    tools:context=".activities.owner.CreateWalkRequestActivity">
 
     <LinearLayout
         android:id="@+id/main"
@@ -125,6 +125,13 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
             android:text="@string/use_current_location" />
+
+        <Button
+            android:id="@+id/button_manual_pickup_location"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:text="@string/choose_manual_location" />
 
         <TextView
             android:id="@+id/text_pickup_location_status"

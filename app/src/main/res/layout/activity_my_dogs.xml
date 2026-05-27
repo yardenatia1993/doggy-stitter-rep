@@ -8,7 +8,7 @@
     android:orientation="vertical"
     android:padding="24dp"
     android:textDirection="rtl"
-    tools:context=".MyDogsActivity">
+    tools:context=".activities.owner.MyDogsActivity">
 
     <TextView
         android:layout_width="wrap_content"

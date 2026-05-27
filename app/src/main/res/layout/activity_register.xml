@@ -5,7 +5,7 @@
     android:layout_height="match_parent"
     android:fillViewport="true"
     android:layoutDirection="rtl"
-    tools:context=".RegisterActivity">
+    tools:context=".activities.auth.RegisterActivity">
 
     <LinearLayout
         android:id="@+id/main"
