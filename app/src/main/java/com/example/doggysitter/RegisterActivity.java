@@ -61,10 +61,7 @@ public class RegisterActivity extends AppCompatActivity {
         authRepository.register(email, password).addOnCompleteListener(task -> {
             if (!task.isSuccessful()) {
                 setLoading(false);
-                String message = task.getException() != null
-                        ? task.getException().getMessage()
-                        : getString(R.string.error_register_failed);
-                Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, R.string.error_register_failed, Toast.LENGTH_SHORT).show();
                 return;
             }
 
@@ -121,6 +118,5 @@ public class RegisterActivity extends AppCompatActivity {
         finish();
     }
 }
-
 
 

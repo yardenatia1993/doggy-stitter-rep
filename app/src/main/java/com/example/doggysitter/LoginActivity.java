@@ -58,10 +58,7 @@ public class LoginActivity extends AppCompatActivity {
             if (task.isSuccessful()) {
                 openAndFinish(SplashScreenActivity.class);
             } else {
-                String message = task.getException() != null
-                        ? task.getException().getMessage()
-                        : getString(R.string.error_login_failed);
-                Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, R.string.error_login_failed, Toast.LENGTH_SHORT).show();
             }
         });
     }
