@@ -4,6 +4,7 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -34,5 +35,26 @@ public class WalkRequestRepository {
         requestData.put(FirestoreConstants.FIELD_CREATED_AT, FieldValue.serverTimestamp());
 
         return walkRequestsCollection.document(requestId).set(requestData);
+    }
+
+    public Task<QuerySnapshot> getOpenWalkRequests() {
+        return walkRequestsCollection
+                .whereEqualTo(FirestoreConstants.FIELD_STATUS, FirestoreConstants.WALK_REQUEST_STATUS_OPEN)
+                .get();
+    }
+
+    public Task<QuerySnapshot> getAcceptedWalkRequestsForWalker(String walkerId) {
+        return walkRequestsCollection
+                .whereEqualTo(FirestoreConstants.FIELD_WALKER_ID, walkerId)
+                .get();
+    }
+
+    public Task<Void> acceptWalkRequest(String requestId, String walkerId) {
+        Map<String, Object> requestData = new HashMap<>();
+        requestData.put(FirestoreConstants.FIELD_STATUS, FirestoreConstants.WALK_REQUEST_STATUS_ACCEPTED);
+        requestData.put(FirestoreConstants.FIELD_WALKER_ID, walkerId);
+        requestData.put(FirestoreConstants.FIELD_ACCEPTED_AT, FieldValue.serverTimestamp());
+
+        return walkRequestsCollection.document(requestId).update(requestData);
     }
 }

@@ -5,7 +5,7 @@
     android:layout_height="match_parent"
     android:fillViewport="true"
     android:layoutDirection="rtl"
-    tools:context=".AddDogActivity">
+    tools:context=".WalkerProfileActivity">
 
     <LinearLayout
         android:id="@+id/main"
@@ -16,10 +16,9 @@
         android:textDirection="rtl">
 
         <TextView
-            android:id="@+id/text_title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/title_add_dog"
+            android:text="@string/title_walker_profile"
             android:textSize="26sp"
             android:textStyle="bold" />
 
@@ -27,108 +26,125 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="24dp"
-            android:text="@string/dog_name_required_label"
+            android:text="@string/phone_required_label"
             android:textAlignment="viewStart"
             android:textDirection="rtl"
             android:textSize="15sp" />
 
         <EditText
-            android:id="@+id/edit_dog_name"
+            android:id="@+id/edit_phone"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="4dp"
-            android:autofillHints="name"
-            android:hint="@string/dog_name_hint"
-            android:inputType="textCapWords"
-            android:textDirection="anyRtl" />
+            android:hint="@string/phone"
+            android:inputType="phone"
+            android:textDirection="ltr" />
 
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
-            android:text="@string/age_required_label"
-            android:textAlignment="viewStart"
-            android:textDirection="rtl"
-            android:textSize="15sp" />
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="4dp"
-            android:orientation="horizontal">
-
-            <Spinner
-                android:id="@+id/spinner_years"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1" />
-
-            <Spinner
-                android:id="@+id/spinner_months"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="12dp"
-                android:layout_weight="1" />
-        </LinearLayout>
-
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
-            android:text="@string/breed_required_label"
-            android:textAlignment="viewStart"
-            android:textDirection="rtl"
-            android:textSize="15sp" />
-
-        <AutoCompleteTextView
-            android:id="@+id/edit_breed"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="4dp"
-            android:hint="@string/breed"
-            android:inputType="text"
-            android:textDirection="rtl" />
-
-        <TextView
-            android:id="@+id/text_custom_breed_label"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="12dp"
-            android:text="@string/custom_breed_required_label"
-            android:textAlignment="viewStart"
-            android:textDirection="rtl"
-            android:textSize="15sp"
-            android:visibility="gone" />
-
-        <EditText
-            android:id="@+id/edit_custom_breed"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="4dp"
-            android:hint="@string/custom_breed"
-            android:inputType="textCapWords"
-            android:textDirection="anyRtl"
-            android:visibility="gone" />
-
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
-            android:text="@string/notes_optional_label"
+            android:layout_marginTop="14dp"
+            android:text="@string/short_description_required_label"
             android:textAlignment="viewStart"
             android:textDirection="rtl"
             android:textSize="15sp" />
 
         <EditText
-            android:id="@+id/edit_notes"
+            android:id="@+id/edit_description"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="4dp"
             android:gravity="top"
-            android:hint="@string/notes"
+            android:hint="@string/short_description"
             android:inputType="textMultiLine"
             android:minLines="3"
             android:textDirection="anyRtl" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="14dp"
+            android:text="@string/experience_years_required_label"
+            android:textAlignment="viewStart"
+            android:textDirection="rtl"
+            android:textSize="15sp" />
+
+        <EditText
+            android:id="@+id/edit_experience_years"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
+            android:hint="@string/experience_years"
+            android:inputType="number" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="14dp"
+            android:text="@string/price_per_walk_required_label"
+            android:textAlignment="viewStart"
+            android:textDirection="rtl"
+            android:textSize="15sp" />
+
+        <EditText
+            android:id="@+id/edit_price_per_walk"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
+            android:hint="@string/price_per_walk"
+            android:inputType="numberDecimal" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:text="@string/available_days_required_label"
+            android:textAlignment="viewStart"
+            android:textDirection="rtl"
+            android:textSize="16sp"
+            android:textStyle="bold" />
+
+        <CheckBox
+            android:id="@+id/check_sunday"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/day_sunday" />
+
+        <CheckBox
+            android:id="@+id/check_monday"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/day_monday" />
+
+        <CheckBox
+            android:id="@+id/check_tuesday"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/day_tuesday" />
+
+        <CheckBox
+            android:id="@+id/check_wednesday"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/day_wednesday" />
+
+        <CheckBox
+            android:id="@+id/check_thursday"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/day_thursday" />
+
+        <CheckBox
+            android:id="@+id/check_friday"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/day_friday" />
+
+        <CheckBox
+            android:id="@+id/check_saturday"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/day_saturday" />
 
         <ProgressBar
             android:id="@+id/progress_bar"
@@ -139,7 +155,7 @@
             android:visibility="gone" />
 
         <Button
-            android:id="@+id/button_save_dog"
+            android:id="@+id/button_save_profile"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="20dp"

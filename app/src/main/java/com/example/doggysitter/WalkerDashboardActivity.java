@@ -15,7 +15,16 @@ public class WalkerDashboardActivity extends AppCompatActivity {
         setContentView(R.layout.activity_walker_dashboard);
 
         authRepository = new AuthRepository();
+        Button profileButton = findViewById(R.id.button_my_profile);
+        Button availableRequestsButton = findViewById(R.id.button_available_walk_requests);
+        Button myJobsButton = findViewById(R.id.button_my_jobs);
         Button logoutButton = findViewById(R.id.button_logout);
+
+        profileButton.setOnClickListener(view -> startActivity(new Intent(this, WalkerProfileActivity.class)));
+        availableRequestsButton.setOnClickListener(
+                view -> startActivity(new Intent(this, AvailableWalkRequestsActivity.class))
+        );
+        myJobsButton.setOnClickListener(view -> startActivity(new Intent(this, MyWalkerJobsActivity.class)));
         logoutButton.setOnClickListener(view -> logout());
     }
 

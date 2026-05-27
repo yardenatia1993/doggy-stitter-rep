@@ -27,12 +27,21 @@ public final class FirestoreConstants {
     public static final String FIELD_MAX_PRICE = "maxPrice";
     public static final String FIELD_STATUS = "status";
     public static final String FIELD_UPDATED_AT = "updatedAt";
+    public static final String FIELD_PHONE = "phone";
+    public static final String FIELD_DESCRIPTION = "description";
+    public static final String FIELD_EXPERIENCE_YEARS = "experienceYears";
+    public static final String FIELD_PRICE_PER_WALK = "pricePerWalk";
+    public static final String FIELD_AVAILABLE_DAYS = "availableDays";
+    public static final String FIELD_ACTIVE = "active";
+    public static final String FIELD_WALKER_ID = "walkerId";
+    public static final String FIELD_ACCEPTED_AT = "acceptedAt";
 
     public static final String ROLE_OWNER = "OWNER";
     public static final String ROLE_WALKER = "WALKER";
     public static final String ROLE_ADMIN = "ADMIN";
 
     public static final String WALK_REQUEST_STATUS_OPEN = "OPEN";
+    public static final String WALK_REQUEST_STATUS_ACCEPTED = "ACCEPTED";
 
     private FirestoreConstants() {
     }

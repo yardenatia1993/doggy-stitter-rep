@@ -31,6 +31,7 @@ public class AddDogActivity extends AppCompatActivity {
     private Spinner yearsSpinner;
     private Spinner monthsSpinner;
     private AutoCompleteTextView breedAutoCompleteTextView;
+    private TextView customBreedLabelTextView;
     private EditText customBreedEditText;
     private EditText notesEditText;
     private Button saveButton;
@@ -68,6 +69,7 @@ public class AddDogActivity extends AppCompatActivity {
         yearsSpinner = findViewById(R.id.spinner_years);
         monthsSpinner = findViewById(R.id.spinner_months);
         breedAutoCompleteTextView = findViewById(R.id.edit_breed);
+        customBreedLabelTextView = findViewById(R.id.text_custom_breed_label);
         customBreedEditText = findViewById(R.id.edit_custom_breed);
         notesEditText = findViewById(R.id.edit_notes);
         saveButton = findViewById(R.id.button_save_dog);
@@ -107,6 +109,7 @@ public class AddDogActivity extends AppCompatActivity {
             @Override
             public void onTextChanged(CharSequence value, int start, int before, int count) {
                 boolean isOther = breedOther.equals(ValidationUtils.normalizeSpaces(value.toString()));
+                customBreedLabelTextView.setVisibility(isOther ? View.VISIBLE : View.GONE);
                 customBreedEditText.setVisibility(isOther ? View.VISIBLE : View.GONE);
             }
 
@@ -157,6 +160,7 @@ public class AddDogActivity extends AppCompatActivity {
             breedAutoCompleteTextView.setText(breed, false);
         } else if (!TextUtils.isEmpty(breed)) {
             breedAutoCompleteTextView.setText(breedOther, false);
+            customBreedLabelTextView.setVisibility(View.VISIBLE);
             customBreedEditText.setVisibility(View.VISIBLE);
             customBreedEditText.setText(breed);
         }

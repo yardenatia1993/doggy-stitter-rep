@@ -4,6 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fillViewport="true"
+    android:layoutDirection="rtl"
     tools:context=".LoginActivity">
 
     <LinearLayout
@@ -12,38 +13,63 @@
         android:layout_height="wrap_content"
         android:gravity="center_vertical"
         android:orientation="vertical"
-        android:padding="24dp">
+        android:padding="24dp"
+        android:textDirection="rtl">
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
             android:text="@string/app_name"
+            android:textDirection="ltr"
             android:textSize="30sp"
             android:textStyle="bold" />
 
         <TextView
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="24dp"
             android:text="@string/title_login"
+            android:textAlignment="viewStart"
+            android:textDirection="rtl"
             android:textSize="22sp" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/email_required_label"
+            android:textAlignment="viewStart"
+            android:textDirection="rtl"
+            android:textSize="15sp" />
 
         <EditText
             android:id="@+id/edit_email"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
             android:autofillHints="emailAddress"
             android:hint="@string/email"
-            android:inputType="textEmailAddress" />
+            android:inputType="textEmailAddress"
+            android:textDirection="ltr" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="14dp"
+            android:text="@string/password_required_label"
+            android:textAlignment="viewStart"
+            android:textDirection="rtl"
+            android:textSize="15sp" />
 
         <EditText
             android:id="@+id/edit_password"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="12dp"
+            android:layout_marginTop="4dp"
             android:autofillHints="password"
             android:hint="@string/password"
-            android:inputType="textPassword" />
+            android:inputType="textPassword"
+            android:textDirection="ltr" />
 
         <ProgressBar
             android:id="@+id/progress_bar"

@@ -4,8 +4,10 @@
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:layoutDirection="rtl"
     android:orientation="vertical"
     android:padding="24dp"
+    android:textDirection="rtl"
     tools:context=".WalkerDashboardActivity">
 
     <TextView
@@ -20,21 +22,18 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="24dp"
-        android:enabled="false"
         android:text="@string/my_profile" />
 
     <Button
         android:id="@+id/button_available_walk_requests"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:enabled="false"
         android:text="@string/available_walk_requests" />
 
     <Button
         android:id="@+id/button_my_jobs"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:enabled="false"
         android:text="@string/my_jobs" />
 
     <Button

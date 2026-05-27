@@ -11,7 +11,9 @@ public class WalkRequest {
     private double maxPrice;
     private String notes;
     private String status;
+    private String walkerId;
     private Object createdAt;
+    private Object acceptedAt;
 
     public WalkRequest() {
     }
@@ -111,11 +113,27 @@ public class WalkRequest {
         this.status = status;
     }
 
+    public String getWalkerId() {
+        return walkerId;
+    }
+
+    public void setWalkerId(String walkerId) {
+        this.walkerId = walkerId;
+    }
+
     public Object getCreatedAt() {
         return createdAt;
     }
 
     public void setCreatedAt(Object createdAt) {
         this.createdAt = createdAt;
+    }
+
+    public Object getAcceptedAt() {
+        return acceptedAt;
+    }
+
+    public void setAcceptedAt(Object acceptedAt) {
+        this.acceptedAt = acceptedAt;
     }
 }
