@@ -1,24 +1,46 @@
 package com.example.doggysitter;
 
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.SetOptions;
+
+import java.util.HashMap;
+import java.util.Map;
 
 public class UserRepository {
-    private FirebaseFirestore db;
+    private final FirebaseFirestore firestore;
+
     public UserRepository() {
-        db = FirebaseFirestore.getInstance();
+        firestore = FirebaseFirestore.getInstance();
     }
 
-    public void addUser(User user, OnSuccessListener<Void> onSuccess, OnFailureListener onFailure) {
-        db.collection("users").document(user.getId()).set(user)
-                .addOnSuccessListener(onSuccess)
-                .addOnFailureListener(onFailure);
+    public Task<Void> createUser(User user) {
+        Map<String, Object> userData = new HashMap<>();
+        userData.put(FirestoreConstants.FIELD_UID, user.getUid());
+        userData.put(FirestoreConstants.FIELD_FULL_NAME, user.getFullName());
+        userData.put(FirestoreConstants.FIELD_EMAIL, user.getEmail());
+        userData.put(FirestoreConstants.FIELD_ROLE, user.getRole());
+        userData.put(FirestoreConstants.FIELD_CREATED_AT, FieldValue.serverTimestamp());
+
+        return firestore.collection(FirestoreConstants.COLLECTION_USERS)
+                .document(user.getUid())
+                .set(userData, SetOptions.merge());
     }
 
-    public void getUser(String userId, OnSuccessListener<DocumentSnapshot> listener) {
-        db.collection("users").document(userId).get().addOnSuccessListener(listener);
+    public Task<DocumentSnapshot> getUser(String uid) {
+        return firestore.collection(FirestoreConstants.COLLECTION_USERS)
+                .document(uid)
+                .get();
     }
 
+    public Task<Void> saveRole(String uid, String role) {
+        Map<String, Object> roleData = new HashMap<>();
+        roleData.put(FirestoreConstants.FIELD_ROLE, role);
+
+        return firestore.collection(FirestoreConstants.COLLECTION_USERS)
+                .document(uid)
+                .set(roleData, SetOptions.merge());
+    }
 }

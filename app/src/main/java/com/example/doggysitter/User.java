@@ -1,27 +1,36 @@
 package com.example.doggysitter;
 
 public class User {
-    protected String id;
-    protected String email;
-    protected String phoneNumber;
-    protected String imageUrl;
-    protected String location;
-    protected String name;
-    protected String userType;
-    public User(){
+    private String uid;
+    private String fullName;
+    private String email;
+    private String role;
+    private Object createdAt;
 
-    }
-    public User(String id, String email,String userType){
-        this.id=id;
-        this.email=email;
-        this.userType=userType;
-    }
-    public String getId() {
-        return id;
+    public User() {
     }
 
-    public void setId(String id) {
-        this.id = id;
+    public User(String uid, String fullName, String email, String role) {
+        this.uid = uid;
+        this.fullName = fullName;
+        this.email = email;
+        this.role = role;
+    }
+
+    public String getUid() {
+        return uid;
+    }
+
+    public void setUid(String uid) {
+        this.uid = uid;
+    }
+
+    public String getFullName() {
+        return fullName;
+    }
+
+    public void setFullName(String fullName) {
+        this.fullName = fullName;
     }
 
     public String getEmail() {
@@ -32,43 +41,19 @@ public class User {
         this.email = email;
     }
 
-    public String getName() {
-        return name;
+    public String getRole() {
+        return role;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setRole(String role) {
+        this.role = role;
     }
 
-    public String getPhoneNumber() {
-        return phoneNumber;
+    public Object getCreatedAt() {
+        return createdAt;
     }
 
-    public void setPhoneNumber(String phoneNumber) {
-        this.phoneNumber = phoneNumber;
-    }
-
-    public String getImageUrl() {
-        return imageUrl;
-    }
-
-    public void setImageUrl(String imageUrl) {
-        this.imageUrl = imageUrl;
-    }
-
-    public String getLocation() {
-        return location;
-    }
-
-    public void setLocation(String location) {
-        this.location = location;
-    }
-
-    public String getUserType() {
-        return userType;
-    }
-
-    public void setUserType(String userType) {
-        this.userType = userType;
+    public void setCreatedAt(Object createdAt) {
+        this.createdAt = createdAt;
     }
 }

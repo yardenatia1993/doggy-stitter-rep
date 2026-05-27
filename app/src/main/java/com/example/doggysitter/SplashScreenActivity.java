@@ -2,45 +2,66 @@ package com.example.doggysitter;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.widget.Toast;
 
-import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.graphics.Insets;
-import androidx.core.view.ViewCompat;
-import androidx.core.view.WindowInsetsCompat;
 
-import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
 public class SplashScreenActivity extends AppCompatActivity {
-    @Override
-    protected void onStart() {
-        super.onStart();
-    }
-
-    FirebaseAuth auth;
-    FirebaseUser user;
+    private AuthRepository authRepository;
+    private UserRepository userRepository;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        EdgeToEdge.enable(this);
         setContentView(R.layout.activity_splash_screen);
-        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
-            Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
-            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
-            return insets;
-        });
-        auth = FirebaseAuth.getInstance();
-        user = auth.getCurrentUser();
-        if (user == null) {
-            startActivity(new Intent(this, RegisterActivity.class));
-        } else {
-            startActivity(new Intent(this, LoginActivity.class));
-        }
-        finish();
 
+        authRepository = new AuthRepository();
+        userRepository = new UserRepository();
+
+        FirebaseUser currentUser = authRepository.getCurrentUser();
+        if (currentUser == null) {
+            openAndFinish(LoginActivity.class);
+            return;
+        }
+
+        loadUserRole(currentUser.getUid());
     }
 
+    private void loadUserRole(String uid) {
+        userRepository.getUser(uid)
+                .addOnSuccessListener(documentSnapshot -> {
+                    if (!documentSnapshot.exists()) {
+                        openAndFinish(RoleSelectionActivity.class);
+                        return;
+                    }
 
+                    String role = documentSnapshot.getString(FirestoreConstants.FIELD_ROLE);
+                    routeByRole(role);
+                })
+                .addOnFailureListener(error -> {
+                    Toast.makeText(this, R.string.error_load_profile, Toast.LENGTH_SHORT).show();
+                    openAndFinish(LoginActivity.class);
+                });
+    }
+
+    private void routeByRole(String role) {
+        if (FirestoreConstants.ROLE_OWNER.equals(role)) {
+            openAndFinish(OwnerDashboardActivity.class);
+        } else if (FirestoreConstants.ROLE_WALKER.equals(role)) {
+            openAndFinish(WalkerDashboardActivity.class);
+        } else if (FirestoreConstants.ROLE_ADMIN.equals(role)) {
+            openAndFinish(AdminDashboardActivity.class);
+        } else {
+            openAndFinish(RoleSelectionActivity.class);
+        }
+    }
+
+    private void openAndFinish(Class<?> activityClass) {
+        Intent intent = new Intent(this, activityClass);
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        startActivity(intent);
+        finish();
+    }
 }

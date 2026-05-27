@@ -2,127 +2,125 @@ package com.example.doggysitter;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ProgressBar;
-import android.widget.RadioButton;
-import android.widget.TextView;
 import android.widget.Toast;
 
-import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.graphics.Insets;
-import androidx.core.view.ViewCompat;
-import androidx.core.view.WindowInsetsCompat;
 
-import com.google.android.material.textfield.TextInputEditText;
 import com.google.firebase.auth.FirebaseUser;
 
-import java.util.Objects;
-
 public class RegisterActivity extends AppCompatActivity {
-
-    TextInputEditText editTextEmail, editTextPassword;
-    Button btnRegister;
-    ProgressBar progressBar;
+    private EditText fullNameEditText;
+    private EditText emailEditText;
+    private EditText passwordEditText;
+    private EditText confirmPasswordEditText;
+    private Button registerButton;
+    private Button loginButton;
+    private ProgressBar progressBar;
+    private AuthRepository authRepository;
     private UserRepository userRepository;
-    private FirebaseAuthManager authManager;
-    TextView goToLogin;
-    RadioButton radioOwner, radioWalker;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        EdgeToEdge.enable(this);
         setContentView(R.layout.activity_register);
-        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
-            Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
-            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
-            return insets;
-        });
 
-        InitViews();
-        authManager=new FirebaseAuthManager();
-        userRepository=new UserRepository();
-        RegisterHandler();
-        goToLogin.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                startActivity(new Intent(RegisterActivity.this, LoginActivity.class));
-                finish();
-            }
-        });
+        authRepository = new AuthRepository();
+        userRepository = new UserRepository();
+        initViews();
 
-
+        registerButton.setOnClickListener(view -> register());
+        loginButton.setOnClickListener(view -> openAndFinish(LoginActivity.class));
     }
 
+    private void initViews() {
+        fullNameEditText = findViewById(R.id.edit_full_name);
+        emailEditText = findViewById(R.id.edit_email);
+        passwordEditText = findViewById(R.id.edit_password);
+        confirmPasswordEditText = findViewById(R.id.edit_confirm_password);
+        registerButton = findViewById(R.id.button_register);
+        loginButton = findViewById(R.id.button_login);
+        progressBar = findViewById(R.id.progress_bar);
+    }
 
-    public void RegisterHandler() {
-        btnRegister.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
+    private void register() {
+        String fullName = fullNameEditText.getText().toString().trim();
+        String email = emailEditText.getText().toString().trim();
+        String password = passwordEditText.getText().toString();
+        String confirmPassword = confirmPasswordEditText.getText().toString();
 
-                String email = String.valueOf(editTextEmail.getText()).trim();
-                String password = String.valueOf(editTextPassword.getText()).trim();
-                if (!InputValidatorUtil.isValidInput(RegisterActivity.this, email, password)) return;
+        if (!validateInput(fullName, email, password, confirmPassword)) {
+            return;
+        }
 
-                if (!radioOwner.isChecked() && !radioWalker.isChecked()) {
-                    Toast.makeText(RegisterActivity.this, "Please select user type", Toast.LENGTH_SHORT).show();
-                    return;
-                }
-                progressBar.setVisibility(View.VISIBLE);
-                authManager.register(email, password, task -> {
-                    progressBar.setVisibility(View.GONE);
-
-                    if (task.isSuccessful()) {
-                        FirebaseUser firebaseUser = authManager.getCurrentUser();
-                        assert firebaseUser != null;
-
-                        if (radioWalker.isChecked()) {
-                            // Create a UserWalker object
-                            UserWalker walker = new UserWalker(firebaseUser.getUid(), email);
-                            userRepository.addUser(walker, aVoid -> {
-                                Toast.makeText(RegisterActivity.this, "Dog Walker registered successfully", Toast.LENGTH_SHORT).show();
-                                startActivity(new Intent(RegisterActivity.this, MainActivity.class));
-                                finish();
-                            }, e -> {
-                                Toast.makeText(RegisterActivity.this, "Failed to save Dog Walker data", Toast.LENGTH_SHORT).show();
-                            });
-                        } else if (radioOwner.isChecked()) {
-                            // Create a UserOwner object
-                            UserOwner owner = new UserOwner(firebaseUser.getUid(), email);
-                            userRepository.addUser(owner, aVoid -> {
-                                Toast.makeText(RegisterActivity.this, "Dog Owner registered successfully", Toast.LENGTH_SHORT).show();
-                                startActivity(new Intent(RegisterActivity.this, MainActivity.class));
-                                finish();
-                            }, e -> {
-                                Toast.makeText(RegisterActivity.this, "Failed to save Dog Owner data", Toast.LENGTH_SHORT).show();
-                            });
-                        }
-
-                    } else {
-                        // Handle registration failure
-                        Toast.makeText(RegisterActivity.this, "Authentication failed:\n"
-                                        + Objects.requireNonNull(task.getException()).getMessage(),
-                                Toast.LENGTH_SHORT).show();
-                    }
-                });
+        setLoading(true);
+        authRepository.register(email, password).addOnCompleteListener(task -> {
+            if (!task.isSuccessful()) {
+                setLoading(false);
+                String message = task.getException() != null
+                        ? task.getException().getMessage()
+                        : getString(R.string.error_register_failed);
+                Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
+                return;
             }
+
+            FirebaseUser firebaseUser = authRepository.getCurrentUser();
+            if (firebaseUser == null) {
+                setLoading(false);
+                Toast.makeText(this, R.string.error_register_failed, Toast.LENGTH_SHORT).show();
+                return;
+            }
+
+            User user = new User(firebaseUser.getUid(), fullName, email, null);
+            userRepository.createUser(user)
+                    .addOnSuccessListener(unused -> {
+                        setLoading(false);
+                        openAndFinish(RoleSelectionActivity.class);
+                    })
+                    .addOnFailureListener(error -> {
+                        setLoading(false);
+                        Toast.makeText(this, R.string.error_save_profile, Toast.LENGTH_SHORT).show();
+                    });
         });
     }
 
-    public void InitViews() {
-        editTextEmail = findViewById(R.id.email);
-        editTextPassword = findViewById(R.id.password);
-        btnRegister = findViewById(R.id.btn_register);
-        progressBar = findViewById(R.id.progressBar);
-        goToLogin = findViewById(R.id.login);
-        radioOwner = findViewById(R.id.radio_owner);
-        radioWalker = findViewById(R.id.radio_walker);
+    private boolean validateInput(String fullName, String email, String password, String confirmPassword) {
+        if (TextUtils.isEmpty(fullName)) {
+            fullNameEditText.setError(getString(R.string.error_full_name_required));
+            return false;
+        }
+        if (TextUtils.isEmpty(email)) {
+            emailEditText.setError(getString(R.string.error_email_required));
+            return false;
+        }
+        if (TextUtils.isEmpty(password)) {
+            passwordEditText.setError(getString(R.string.error_password_required));
+            return false;
+        }
+        if (!password.equals(confirmPassword)) {
+            confirmPasswordEditText.setError(getString(R.string.error_passwords_do_not_match));
+            return false;
+        }
+        return true;
+    }
 
+    private void setLoading(boolean loading) {
+        progressBar.setVisibility(loading ? View.VISIBLE : View.GONE);
+        registerButton.setEnabled(!loading);
+        loginButton.setEnabled(!loading);
+    }
+
+    private void openAndFinish(Class<?> activityClass) {
+        Intent intent = new Intent(this, activityClass);
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        startActivity(intent);
+        finish();
     }
 }
-
 
 
 

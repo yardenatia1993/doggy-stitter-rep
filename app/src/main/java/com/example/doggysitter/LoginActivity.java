@@ -2,94 +2,80 @@ package com.example.doggysitter;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ProgressBar;
-import android.widget.TextView;
 import android.widget.Toast;
 
-import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.graphics.Insets;
-import androidx.core.view.ViewCompat;
-import androidx.core.view.WindowInsetsCompat;
-
-import com.google.android.material.textfield.TextInputEditText;
-import com.google.firebase.auth.FirebaseUser;
 
 public class LoginActivity extends AppCompatActivity {
-    TextInputEditText editTextEmail, editTextPassword;
-    Button btnLogin;
-    ProgressBar progressBar;
-    TextView goToRegister;
-    private FirebaseAuthManager authManager;
+    private EditText emailEditText;
+    private EditText passwordEditText;
+    private Button loginButton;
+    private Button registerButton;
+    private ProgressBar progressBar;
+    private AuthRepository authRepository;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        EdgeToEdge.enable(this);
         setContentView(R.layout.activity_login);
-        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
-            Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
-            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
-            return insets;
-        });
-        InitViews();
-        goToRegister();
-        LoginHandler();
+
+        authRepository = new AuthRepository();
+        initViews();
+
+        loginButton.setOnClickListener(view -> login());
+        registerButton.setOnClickListener(view -> startActivity(new Intent(this, RegisterActivity.class)));
     }
-    public void LoginHandler(){
-        btnLogin.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                String email = String.valueOf(editTextEmail.getText());
-                String password = String.valueOf(editTextPassword.getText());
-                if (!InputValidatorUtil.isValidInput(LoginActivity.this, email, password))return;
 
-                progressBar.setVisibility(View.VISIBLE);
-                authManager = new FirebaseAuthManager();
-                authManager.login(email, password, task -> {
-                    if (task.isSuccessful()) {
-                        FirebaseUser firebaseUser = authManager.getCurrentUser();
-                        String userId = firebaseUser.getUid();
+    private void initViews() {
+        emailEditText = findViewById(R.id.edit_email);
+        passwordEditText = findViewById(R.id.edit_password);
+        loginButton = findViewById(R.id.button_login);
+        registerButton = findViewById(R.id.button_register);
+        progressBar = findViewById(R.id.progress_bar);
+    }
 
-                        // Fetch the user's details from Firestore
-                        UserRepository userRepository = new UserRepository();
-                        userRepository.getUser(userId, documentSnapshot -> {
-                            User user = documentSnapshot.toObject(User.class);
-                            CurrentUser.getInstance().setUser(user);
+    private void login() {
+        String email = emailEditText.getText().toString().trim();
+        String password = passwordEditText.getText().toString();
 
-                            // Redirect based on user type
-                            // Suggest user.getUserType().equals("walker"))? (MainActivity.class): RegisterActivity.class)
-                            assert user != null;
-                            if (user.getUserType().equals("walker")) {
-                               startActivity(new Intent(LoginActivity.this, MainActivity.class));
-                            } else {
-                               startActivity(new Intent(LoginActivity.this, RegisterActivity.class));
-                            }
-                            finish();
-                        });
-                    } else {
-                        Toast.makeText(LoginActivity.this, "Authentication failed.", Toast.LENGTH_SHORT).show();
-                    }
-                });
+        if (TextUtils.isEmpty(email)) {
+            emailEditText.setError(getString(R.string.error_email_required));
+            return;
+        }
+        if (TextUtils.isEmpty(password)) {
+            passwordEditText.setError(getString(R.string.error_password_required));
+            return;
+        }
+
+        setLoading(true);
+        authRepository.login(email, password).addOnCompleteListener(task -> {
+            setLoading(false);
+            if (task.isSuccessful()) {
+                openAndFinish(SplashScreenActivity.class);
+            } else {
+                String message = task.getException() != null
+                        ? task.getException().getMessage()
+                        : getString(R.string.error_login_failed);
+                Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
             }
         });
     }
 
-    public void InitViews() {
-        editTextEmail = findViewById(R.id.email);
-        editTextPassword = findViewById(R.id.password);
-        btnLogin = findViewById(R.id.btn_login);
-        progressBar = findViewById(R.id.progressBar);
-        goToRegister =findViewById(R.id.register);
+    private void setLoading(boolean loading) {
+        progressBar.setVisibility(loading ? View.VISIBLE : View.GONE);
+        loginButton.setEnabled(!loading);
+        registerButton.setEnabled(!loading);
     }
-    public void goToRegister() {
-        goToRegister.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                startActivity(new Intent(LoginActivity.this, RegisterActivity.class));
-                finish();
-            }
-        });
+
+    private void openAndFinish(Class<?> activityClass) {
+        Intent intent = new Intent(this, activityClass);
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        startActivity(intent);
+        finish();
     }
 }
