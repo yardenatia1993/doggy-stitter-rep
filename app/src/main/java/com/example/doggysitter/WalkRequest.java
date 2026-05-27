@@ -2,16 +2,33 @@ package com.example.doggysitter;
 
 public class WalkRequest {
     private String id;
-    private String ownerUid;
+    private String ownerId;
     private String dogId;
-    private String walkerUid;
-    private String status;
-    private String address;
+    private String dogName;
+    private String date;
+    private String time;
+    private int durationMinutes;
+    private double maxPrice;
     private String notes;
-    private Object scheduledAt;
+    private String status;
     private Object createdAt;
 
     public WalkRequest() {
+    }
+
+    public WalkRequest(String id, String ownerId, String dogId, String dogName, String date,
+                       String time, int durationMinutes, double maxPrice, String notes,
+                       String status) {
+        this.id = id;
+        this.ownerId = ownerId;
+        this.dogId = dogId;
+        this.dogName = dogName;
+        this.date = date;
+        this.time = time;
+        this.durationMinutes = durationMinutes;
+        this.maxPrice = maxPrice;
+        this.notes = notes;
+        this.status = status;
     }
 
     public String getId() {
@@ -22,12 +39,12 @@ public class WalkRequest {
         this.id = id;
     }
 
-    public String getOwnerUid() {
-        return ownerUid;
+    public String getOwnerId() {
+        return ownerId;
     }
 
-    public void setOwnerUid(String ownerUid) {
-        this.ownerUid = ownerUid;
+    public void setOwnerId(String ownerId) {
+        this.ownerId = ownerId;
     }
 
     public String getDogId() {
@@ -38,28 +55,44 @@ public class WalkRequest {
         this.dogId = dogId;
     }
 
-    public String getWalkerUid() {
-        return walkerUid;
+    public String getDogName() {
+        return dogName;
     }
 
-    public void setWalkerUid(String walkerUid) {
-        this.walkerUid = walkerUid;
+    public void setDogName(String dogName) {
+        this.dogName = dogName;
     }
 
-    public String getStatus() {
-        return status;
+    public String getDate() {
+        return date;
     }
 
-    public void setStatus(String status) {
-        this.status = status;
+    public void setDate(String date) {
+        this.date = date;
     }
 
-    public String getAddress() {
-        return address;
+    public String getTime() {
+        return time;
     }
 
-    public void setAddress(String address) {
-        this.address = address;
+    public void setTime(String time) {
+        this.time = time;
+    }
+
+    public int getDurationMinutes() {
+        return durationMinutes;
+    }
+
+    public void setDurationMinutes(int durationMinutes) {
+        this.durationMinutes = durationMinutes;
+    }
+
+    public double getMaxPrice() {
+        return maxPrice;
+    }
+
+    public void setMaxPrice(double maxPrice) {
+        this.maxPrice = maxPrice;
     }
 
     public String getNotes() {
@@ -70,12 +103,12 @@ public class WalkRequest {
         this.notes = notes;
     }
 
-    public Object getScheduledAt() {
-        return scheduledAt;
+    public String getStatus() {
+        return status;
     }
 
-    public void setScheduledAt(Object scheduledAt) {
-        this.scheduledAt = scheduledAt;
+    public void setStatus(String status) {
+        this.status = status;
     }
 
     public Object getCreatedAt() {

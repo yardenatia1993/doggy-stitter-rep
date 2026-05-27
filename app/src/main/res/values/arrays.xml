@@ -1,0 +1,26 @@
+<resources>
+    <string-array name="dog_breeds">
+        <item>לברדור</item>
+        <item>גולדן רטריבר</item>
+        <item>רועה גרמני</item>
+        <item>רועה בלגי</item>
+        <item>שיצו</item>
+        <item>מלטז</item>
+        <item>פודל</item>
+        <item>פומרניאן</item>
+        <item>פינצ\'ר</item>
+        <item>צ\'יוואווה</item>
+        <item>בולדוג צרפתי</item>
+        <item>האסקי סיבירי</item>
+        <item>בורדר קולי</item>
+        <item>ביגל</item>
+        <item>קוקר ספנייל</item>
+        <item>יורקשייר טרייר</item>
+        <item>בוקסר</item>
+        <item>רוטוויילר</item>
+        <item>דוברמן</item>
+        <item>כלב כנעני</item>
+        <item>מעורב</item>
+        <item>אחר</item>
+    </string-array>
+</resources>

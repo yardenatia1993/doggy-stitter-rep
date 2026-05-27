@@ -15,6 +15,15 @@
         android:theme="@style/Theme.DoggySitter"
         tools:targetApi="31">
         <activity
+            android:name=".CreateWalkRequestActivity"
+            android:exported="false" />
+        <activity
+            android:name=".MyDogsActivity"
+            android:exported="false" />
+        <activity
+            android:name=".AddDogActivity"
+            android:exported="false" />
+        <activity
             android:name=".AdminDashboardActivity"
             android:exported="false" />
         <activity

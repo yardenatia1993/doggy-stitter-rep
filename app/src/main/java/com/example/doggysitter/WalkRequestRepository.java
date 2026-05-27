@@ -1,0 +1,38 @@
+package com.example.doggysitter;
+
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.FieldValue;
+import com.google.firebase.firestore.FirebaseFirestore;
+
+import java.util.HashMap;
+import java.util.Map;
+
+public class WalkRequestRepository {
+    private final CollectionReference walkRequestsCollection;
+
+    public WalkRequestRepository() {
+        walkRequestsCollection = FirebaseFirestore.getInstance()
+                .collection(FirestoreConstants.COLLECTION_WALK_REQUESTS);
+    }
+
+    public Task<Void> createWalkRequest(WalkRequest walkRequest) {
+        String requestId = walkRequestsCollection.document().getId();
+        walkRequest.setId(requestId);
+
+        Map<String, Object> requestData = new HashMap<>();
+        requestData.put(FirestoreConstants.FIELD_ID, walkRequest.getId());
+        requestData.put(FirestoreConstants.FIELD_OWNER_ID, walkRequest.getOwnerId());
+        requestData.put(FirestoreConstants.FIELD_DOG_ID, walkRequest.getDogId());
+        requestData.put(FirestoreConstants.FIELD_DOG_NAME, walkRequest.getDogName());
+        requestData.put(FirestoreConstants.FIELD_DATE, walkRequest.getDate());
+        requestData.put(FirestoreConstants.FIELD_TIME, walkRequest.getTime());
+        requestData.put(FirestoreConstants.FIELD_DURATION_MINUTES, walkRequest.getDurationMinutes());
+        requestData.put(FirestoreConstants.FIELD_MAX_PRICE, walkRequest.getMaxPrice());
+        requestData.put(FirestoreConstants.FIELD_NOTES, walkRequest.getNotes());
+        requestData.put(FirestoreConstants.FIELD_STATUS, walkRequest.getStatus());
+        requestData.put(FirestoreConstants.FIELD_CREATED_AT, FieldValue.serverTimestamp());
+
+        return walkRequestsCollection.document(requestId).set(requestData);
+    }
+}

@@ -15,7 +15,16 @@ public class OwnerDashboardActivity extends AppCompatActivity {
         setContentView(R.layout.activity_owner_dashboard);
 
         authRepository = new AuthRepository();
+        Button addDogButton = findViewById(R.id.button_add_dog);
+        Button myDogsButton = findViewById(R.id.button_my_dogs);
+        Button createWalkRequestButton = findViewById(R.id.button_create_walk_request);
         Button logoutButton = findViewById(R.id.button_logout);
+
+        addDogButton.setOnClickListener(view -> startActivity(new Intent(this, AddDogActivity.class)));
+        myDogsButton.setOnClickListener(view -> startActivity(new Intent(this, MyDogsActivity.class)));
+        createWalkRequestButton.setOnClickListener(
+                view -> startActivity(new Intent(this, CreateWalkRequestActivity.class))
+        );
         logoutButton.setOnClickListener(view -> logout());
     }
 

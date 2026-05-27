@@ -2,14 +2,25 @@ package com.example.doggysitter;
 
 public class Dog {
     private String id;
-    private String ownerUid;
+    private String ownerId;
     private String name;
+    private Integer age;
+    private Integer ageMonths;
     private String breed;
-    private int age;
-    private String imageUrl;
+    private String notes;
     private Object createdAt;
+    private Object updatedAt;
 
     public Dog() {
+    }
+
+    public Dog(String id, String ownerId, String name, Integer ageMonths, String breed, String notes) {
+        this.id = id;
+        this.ownerId = ownerId;
+        this.name = name;
+        this.ageMonths = ageMonths;
+        this.breed = breed;
+        this.notes = notes;
     }
 
     public String getId() {
@@ -20,12 +31,12 @@ public class Dog {
         this.id = id;
     }
 
-    public String getOwnerUid() {
-        return ownerUid;
+    public String getOwnerId() {
+        return ownerId;
     }
 
-    public void setOwnerUid(String ownerUid) {
-        this.ownerUid = ownerUid;
+    public void setOwnerId(String ownerId) {
+        this.ownerId = ownerId;
     }
 
     public String getName() {
@@ -36,6 +47,22 @@ public class Dog {
         this.name = name;
     }
 
+    public Integer getAge() {
+        return age;
+    }
+
+    public void setAge(Integer age) {
+        this.age = age;
+    }
+
+    public Integer getAgeMonths() {
+        return ageMonths;
+    }
+
+    public void setAgeMonths(Integer ageMonths) {
+        this.ageMonths = ageMonths;
+    }
+
     public String getBreed() {
         return breed;
     }
@@ -44,20 +71,12 @@ public class Dog {
         this.breed = breed;
     }
 
-    public int getAge() {
-        return age;
+    public String getNotes() {
+        return notes;
     }
 
-    public void setAge(int age) {
-        this.age = age;
-    }
-
-    public String getImageUrl() {
-        return imageUrl;
-    }
-
-    public void setImageUrl(String imageUrl) {
-        this.imageUrl = imageUrl;
+    public void setNotes(String notes) {
+        this.notes = notes;
     }
 
     public Object getCreatedAt() {
@@ -66,5 +85,13 @@ public class Dog {
 
     public void setCreatedAt(Object createdAt) {
         this.createdAt = createdAt;
+    }
+
+    public Object getUpdatedAt() {
+        return updatedAt;
+    }
+
+    public void setUpdatedAt(Object updatedAt) {
+        this.updatedAt = updatedAt;
     }
 }
