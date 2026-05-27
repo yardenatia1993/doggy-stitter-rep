@@ -59,6 +59,7 @@ public class LoginActivity extends AppCompatActivity {
                             CurrentUser.getInstance().setUser(user);
 
                             // Redirect based on user type
+                            // Suggest user.getUserType().equals("walker"))? (MainActivity.class): RegisterActivity.class)
                             assert user != null;
                             if (user.getUserType().equals("walker")) {
                                startActivity(new Intent(LoginActivity.this, MainActivity.class));
