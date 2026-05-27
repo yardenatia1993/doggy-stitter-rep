@@ -35,6 +35,12 @@ public final class FirestoreConstants {
     public static final String FIELD_ACTIVE = "active";
     public static final String FIELD_WALKER_ID = "walkerId";
     public static final String FIELD_ACCEPTED_AT = "acceptedAt";
+    public static final String FIELD_PICKUP_LAT = "pickupLat";
+    public static final String FIELD_PICKUP_LNG = "pickupLng";
+    public static final String FIELD_PICKUP_LOCATION_LABEL = "pickupLocationLabel";
+    public static final String FIELD_SERVICE_LAT = "serviceLat";
+    public static final String FIELD_SERVICE_LNG = "serviceLng";
+    public static final String FIELD_SERVICE_RADIUS_KM = "serviceRadiusKm";
 
     public static final String ROLE_OWNER = "OWNER";
     public static final String ROLE_WALKER = "WALKER";

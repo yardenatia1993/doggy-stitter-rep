@@ -1,7 +1,10 @@
 package com.example.doggysitter;
 
+import android.Manifest;
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
+import android.content.pm.PackageManager;
+import android.location.Location;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.View;
@@ -10,10 +13,16 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.Spinner;
+import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
 
+import com.google.android.gms.location.FusedLocationProviderClient;
+import com.google.android.gms.location.LocationServices;
+import com.google.android.gms.location.Priority;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentSnapshot;
@@ -23,20 +32,28 @@ import java.util.Calendar;
 import java.util.List;
 
 public class CreateWalkRequestActivity extends AppCompatActivity {
+    private static final int REQUEST_PICKUP_LOCATION_PERMISSION = 2001;
+
     private Spinner dogSpinner;
     private EditText dateEditText;
     private EditText timeEditText;
     private Spinner durationSpinner;
     private EditText maxPriceEditText;
+    private EditText pickupLocationLabelEditText;
     private EditText notesEditText;
+    private TextView pickupLocationStatusTextView;
+    private Button currentLocationButton;
     private Button createButton;
     private ProgressBar progressBar;
     private DogRepository dogRepository;
     private WalkRequestRepository walkRequestRepository;
+    private FusedLocationProviderClient fusedLocationClient;
     private final List<Dog> dogs = new ArrayList<>();
     private final List<Integer> durationValues = new ArrayList<>();
     private String selectedDateIso;
     private String selectedTime;
+    private Double pickupLat;
+    private Double pickupLng;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,11 +62,13 @@ public class CreateWalkRequestActivity extends AppCompatActivity {
 
         dogRepository = new DogRepository();
         walkRequestRepository = new WalkRequestRepository();
+        fusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
         initViews();
         setupDurationSpinner();
 
         dateEditText.setOnClickListener(view -> showDatePicker());
         timeEditText.setOnClickListener(view -> showTimePicker());
+        currentLocationButton.setOnClickListener(view -> requestPickupLocation());
         createButton.setOnClickListener(view -> createWalkRequest());
         loadDogs();
     }
@@ -60,7 +79,10 @@ public class CreateWalkRequestActivity extends AppCompatActivity {
         timeEditText = findViewById(R.id.edit_time);
         durationSpinner = findViewById(R.id.spinner_duration);
         maxPriceEditText = findViewById(R.id.edit_max_price);
+        pickupLocationLabelEditText = findViewById(R.id.edit_pickup_location_label);
         notesEditText = findViewById(R.id.edit_notes);
+        pickupLocationStatusTextView = findViewById(R.id.text_pickup_location_status);
+        currentLocationButton = findViewById(R.id.button_current_pickup_location);
         createButton = findViewById(R.id.button_create_request);
         progressBar = findViewById(R.id.progress_bar);
     }
@@ -207,8 +229,15 @@ public class CreateWalkRequestActivity extends AppCompatActivity {
             maxPriceEditText.setError(getString(R.string.error_price_positive));
             return;
         }
+        if (pickupLat == null || pickupLng == null) {
+            Toast.makeText(this, R.string.error_pickup_location_required, Toast.LENGTH_SHORT).show();
+            return;
+        }
 
         double maxPrice = Double.parseDouble(maxPriceText);
+        String pickupLocationLabel = ValidationUtils.normalizeSpaces(
+                pickupLocationLabelEditText.getText().toString()
+        );
         String notes = ValidationUtils.normalizeSpaces(notesEditText.getText().toString());
         Dog selectedDog = dogs.get(dogSpinner.getSelectedItemPosition());
         WalkRequest walkRequest = new WalkRequest(
@@ -223,6 +252,9 @@ public class CreateWalkRequestActivity extends AppCompatActivity {
                 notes,
                 FirestoreConstants.WALK_REQUEST_STATUS_OPEN
         );
+        walkRequest.setPickupLat(pickupLat);
+        walkRequest.setPickupLng(pickupLng);
+        walkRequest.setPickupLocationLabel(pickupLocationLabel);
 
         setLoading(true);
         walkRequestRepository.createWalkRequest(walkRequest)
@@ -237,8 +269,80 @@ public class CreateWalkRequestActivity extends AppCompatActivity {
                 });
     }
 
+    private void requestPickupLocation() {
+        if (!LocationUtils.hasLocationPermission(this)) {
+            ActivityCompat.requestPermissions(
+                    this,
+                    new String[]{
+                            Manifest.permission.ACCESS_FINE_LOCATION,
+                            Manifest.permission.ACCESS_COARSE_LOCATION
+                    },
+                    REQUEST_PICKUP_LOCATION_PERMISSION
+            );
+            return;
+        }
+        loadCurrentPickupLocation();
+    }
+
+    private void loadCurrentPickupLocation() {
+        if (!LocationUtils.hasLocationPermission(this)) {
+            Toast.makeText(this, R.string.error_location_permission_denied, Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        setLoading(true);
+        try {
+            fusedLocationClient.getCurrentLocation(Priority.PRIORITY_HIGH_ACCURACY, null)
+                    .addOnSuccessListener(this, this::handlePickupLocation)
+                    .addOnFailureListener(this, error -> {
+                        setLoading(false);
+                        Toast.makeText(this, R.string.error_location_unavailable, Toast.LENGTH_SHORT).show();
+                    });
+        } catch (SecurityException error) {
+            setLoading(false);
+            Toast.makeText(this, R.string.error_location_permission_denied, Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    private void handlePickupLocation(Location location) {
+        setLoading(false);
+        if (location == null) {
+            Toast.makeText(this, R.string.error_location_unavailable, Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        pickupLat = location.getLatitude();
+        pickupLng = location.getLongitude();
+        pickupLocationStatusTextView.setText(R.string.pickup_location_saved);
+        Toast.makeText(this, R.string.pickup_location_saved, Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
+                                           @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        if (requestCode != REQUEST_PICKUP_LOCATION_PERMISSION) {
+            return;
+        }
+
+        boolean granted = false;
+        for (int grantResult : grantResults) {
+            if (grantResult == PackageManager.PERMISSION_GRANTED) {
+                granted = true;
+                break;
+            }
+        }
+
+        if (granted) {
+            loadCurrentPickupLocation();
+        } else {
+            Toast.makeText(this, R.string.error_location_permission_denied, Toast.LENGTH_SHORT).show();
+        }
+    }
+
     private void setLoading(boolean loading) {
         progressBar.setVisibility(loading ? View.VISIBLE : View.GONE);
         createButton.setEnabled(!loading && !dogs.isEmpty());
+        currentLocationButton.setEnabled(!loading);
     }
 }

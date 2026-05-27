@@ -32,6 +32,9 @@ public class WalkerProfileRepository {
         profileData.put(FirestoreConstants.FIELD_PRICE_PER_WALK, profile.getPricePerWalk());
         profileData.put(FirestoreConstants.FIELD_AVAILABLE_DAYS, profile.getAvailableDays());
         profileData.put(FirestoreConstants.FIELD_ACTIVE, profile.isActive());
+        profileData.put(FirestoreConstants.FIELD_SERVICE_LAT, profile.getServiceLat());
+        profileData.put(FirestoreConstants.FIELD_SERVICE_LNG, profile.getServiceLng());
+        profileData.put(FirestoreConstants.FIELD_SERVICE_RADIUS_KM, profile.getServiceRadiusKm());
         profileData.put(FirestoreConstants.FIELD_UPDATED_AT, FieldValue.serverTimestamp());
 
         if (!profileExists) {

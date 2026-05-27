@@ -12,6 +12,10 @@ public class WalkRequest {
     private String notes;
     private String status;
     private String walkerId;
+    private Double pickupLat;
+    private Double pickupLng;
+    private String pickupLocationLabel;
+    private Double distanceKm;
     private Object createdAt;
     private Object acceptedAt;
 
@@ -119,6 +123,38 @@ public class WalkRequest {
 
     public void setWalkerId(String walkerId) {
         this.walkerId = walkerId;
+    }
+
+    public Double getPickupLat() {
+        return pickupLat;
+    }
+
+    public void setPickupLat(Double pickupLat) {
+        this.pickupLat = pickupLat;
+    }
+
+    public Double getPickupLng() {
+        return pickupLng;
+    }
+
+    public void setPickupLng(Double pickupLng) {
+        this.pickupLng = pickupLng;
+    }
+
+    public String getPickupLocationLabel() {
+        return pickupLocationLabel;
+    }
+
+    public void setPickupLocationLabel(String pickupLocationLabel) {
+        this.pickupLocationLabel = pickupLocationLabel;
+    }
+
+    public Double getDistanceKm() {
+        return distanceKm;
+    }
+
+    public void setDistanceKm(Double distanceKm) {
+        this.distanceKm = distanceKm;
     }
 
     public Object getCreatedAt() {

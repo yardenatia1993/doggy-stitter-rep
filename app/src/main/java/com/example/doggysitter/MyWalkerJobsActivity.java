@@ -23,6 +23,7 @@ public class MyWalkerJobsActivity extends AppCompatActivity {
     private ProgressBar progressBar;
     private WalkRequestAdapter walkRequestAdapter;
     private WalkRequestRepository walkRequestRepository;
+    private WalkerProfileRepository walkerProfileRepository;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -30,6 +31,7 @@ public class MyWalkerJobsActivity extends AppCompatActivity {
         setContentView(R.layout.activity_my_walker_jobs);
 
         walkRequestRepository = new WalkRequestRepository();
+        walkerProfileRepository = new WalkerProfileRepository();
         jobsRecyclerView = findViewById(R.id.recycler_walk_requests);
         emptyTextView = findViewById(R.id.text_empty);
         progressBar = findViewById(R.id.progress_bar);
@@ -42,10 +44,10 @@ public class MyWalkerJobsActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        loadJobs();
+        loadProfileAndJobs();
     }
 
-    private void loadJobs() {
+    private void loadProfileAndJobs() {
         FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
         if (currentUser == null) {
             Toast.makeText(this, R.string.error_login_required, Toast.LENGTH_SHORT).show();
@@ -54,7 +56,17 @@ public class MyWalkerJobsActivity extends AppCompatActivity {
         }
 
         setLoading(true);
-        walkRequestRepository.getAcceptedWalkRequestsForWalker(currentUser.getUid())
+        walkerProfileRepository.getProfile(currentUser.getUid())
+                .addOnSuccessListener(documentSnapshot -> {
+                    Double serviceLat = getNumberField(documentSnapshot, FirestoreConstants.FIELD_SERVICE_LAT);
+                    Double serviceLng = getNumberField(documentSnapshot, FirestoreConstants.FIELD_SERVICE_LNG);
+                    loadJobs(currentUser.getUid(), serviceLat, serviceLng);
+                })
+                .addOnFailureListener(error -> loadJobs(currentUser.getUid(), null, null));
+    }
+
+    private void loadJobs(String walkerId, Double serviceLat, Double serviceLng) {
+        walkRequestRepository.getAcceptedWalkRequestsForWalker(walkerId)
                 .addOnSuccessListener(querySnapshot -> {
                     setLoading(false);
                     List<WalkRequest> walkRequests = new ArrayList<>();
@@ -64,6 +76,16 @@ public class MyWalkerJobsActivity extends AppCompatActivity {
                                 && FirestoreConstants.WALK_REQUEST_STATUS_ACCEPTED.equals(walkRequest.getStatus())) {
                             if (walkRequest.getId() == null || walkRequest.getId().trim().isEmpty()) {
                                 walkRequest.setId(documentSnapshot.getId());
+                            }
+                            if (serviceLat != null && serviceLng != null
+                                    && walkRequest.getPickupLat() != null
+                                    && walkRequest.getPickupLng() != null) {
+                                walkRequest.setDistanceKm(LocationUtils.calculateDistanceKm(
+                                        serviceLat,
+                                        serviceLng,
+                                        walkRequest.getPickupLat(),
+                                        walkRequest.getPickupLng()
+                                ));
                             }
                             walkRequests.add(walkRequest);
                         }
@@ -85,5 +107,13 @@ public class MyWalkerJobsActivity extends AppCompatActivity {
 
     private void setLoading(boolean loading) {
         progressBar.setVisibility(loading ? View.VISIBLE : View.GONE);
+    }
+
+    private Double getNumberField(DocumentSnapshot documentSnapshot, String fieldName) {
+        Object value = documentSnapshot.get(fieldName);
+        if (value instanceof Number) {
+            return ((Number) value).doubleValue();
+        }
+        return null;
     }
 }

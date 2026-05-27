@@ -23,6 +23,7 @@ public class AvailableWalkRequestsActivity extends AppCompatActivity implements 
     private ProgressBar progressBar;
     private WalkRequestAdapter walkRequestAdapter;
     private WalkRequestRepository walkRequestRepository;
+    private WalkerProfileRepository walkerProfileRepository;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -30,6 +31,7 @@ public class AvailableWalkRequestsActivity extends AppCompatActivity implements 
         setContentView(R.layout.activity_available_walk_requests);
 
         walkRequestRepository = new WalkRequestRepository();
+        walkerProfileRepository = new WalkerProfileRepository();
         walkRequestsRecyclerView = findViewById(R.id.recycler_walk_requests);
         emptyTextView = findViewById(R.id.text_empty);
         progressBar = findViewById(R.id.progress_bar);
@@ -42,11 +44,51 @@ public class AvailableWalkRequestsActivity extends AppCompatActivity implements 
     @Override
     protected void onResume() {
         super.onResume();
-        loadOpenWalkRequests();
+        loadAvailableWalkRequests();
     }
 
-    private void loadOpenWalkRequests() {
+    private void loadAvailableWalkRequests() {
+        FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
+        if (currentUser == null) {
+            Toast.makeText(this, R.string.error_login_required, Toast.LENGTH_SHORT).show();
+            finish();
+            return;
+        }
+
         setLoading(true);
+        walkerProfileRepository.getProfile(currentUser.getUid())
+                .addOnSuccessListener(documentSnapshot -> {
+                    if (!documentSnapshot.exists()) {
+                        setLoading(false);
+                        walkRequestAdapter.submitList(new ArrayList<>());
+                        showEmptyMessage(R.string.complete_walker_profile_required);
+                        return;
+                    }
+
+                    Double serviceLat = getNumberField(documentSnapshot, FirestoreConstants.FIELD_SERVICE_LAT);
+                    Double serviceLng = getNumberField(documentSnapshot, FirestoreConstants.FIELD_SERVICE_LNG);
+                    Double serviceRadiusKm = getNumberField(
+                            documentSnapshot,
+                            FirestoreConstants.FIELD_SERVICE_RADIUS_KM
+                    );
+
+                    if (serviceLat == null || serviceLng == null
+                            || serviceRadiusKm == null || serviceRadiusKm < 1) {
+                        setLoading(false);
+                        walkRequestAdapter.submitList(new ArrayList<>());
+                        showEmptyMessage(R.string.service_area_required);
+                        return;
+                    }
+
+                    loadOpenWalkRequests(serviceLat, serviceLng, serviceRadiusKm);
+                })
+                .addOnFailureListener(error -> {
+                    setLoading(false);
+                    Toast.makeText(this, R.string.error_load_walker_profile, Toast.LENGTH_SHORT).show();
+                });
+    }
+
+    private void loadOpenWalkRequests(double serviceLat, double serviceLng, double serviceRadiusKm) {
         walkRequestRepository.getOpenWalkRequests()
                 .addOnSuccessListener(querySnapshot -> {
                     setLoading(false);
@@ -57,7 +99,19 @@ public class AvailableWalkRequestsActivity extends AppCompatActivity implements 
                             if (walkRequest.getId() == null || walkRequest.getId().trim().isEmpty()) {
                                 walkRequest.setId(documentSnapshot.getId());
                             }
-                            walkRequests.add(walkRequest);
+                            if (walkRequest.getPickupLat() == null || walkRequest.getPickupLng() == null) {
+                                continue;
+                            }
+                            double distanceKm = LocationUtils.calculateDistanceKm(
+                                    serviceLat,
+                                    serviceLng,
+                                    walkRequest.getPickupLat(),
+                                    walkRequest.getPickupLng()
+                            );
+                            if (distanceKm <= serviceRadiusKm) {
+                                walkRequest.setDistanceKm(distanceKm);
+                                walkRequests.add(walkRequest);
+                            }
                         }
                     }
 
@@ -83,7 +137,7 @@ public class AvailableWalkRequestsActivity extends AppCompatActivity implements 
         walkRequestRepository.acceptWalkRequest(walkRequest.getId(), currentUser.getUid())
                 .addOnSuccessListener(unused -> {
                     Toast.makeText(this, R.string.walk_request_accepted, Toast.LENGTH_SHORT).show();
-                    loadOpenWalkRequests();
+                    loadAvailableWalkRequests();
                 })
                 .addOnFailureListener(error -> {
                     setLoading(false);
@@ -92,11 +146,26 @@ public class AvailableWalkRequestsActivity extends AppCompatActivity implements 
     }
 
     private void updateEmptyState(boolean isEmpty) {
+        emptyTextView.setText(R.string.no_available_walk_requests);
         emptyTextView.setVisibility(isEmpty ? View.VISIBLE : View.GONE);
         walkRequestsRecyclerView.setVisibility(isEmpty ? View.GONE : View.VISIBLE);
     }
 
+    private void showEmptyMessage(int messageResId) {
+        emptyTextView.setText(messageResId);
+        emptyTextView.setVisibility(View.VISIBLE);
+        walkRequestsRecyclerView.setVisibility(View.GONE);
+    }
+
     private void setLoading(boolean loading) {
         progressBar.setVisibility(loading ? View.VISIBLE : View.GONE);
+    }
+
+    private Double getNumberField(DocumentSnapshot documentSnapshot, String fieldName) {
+        Object value = documentSnapshot.get(fieldName);
+        if (value instanceof Number) {
+            return ((Number) value).doubleValue();
+        }
+        return null;
     }
 }

@@ -51,6 +51,22 @@
             android:textSize="16sp" />
 
         <TextView
+            android:id="@+id/text_pickup_location"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="6dp"
+            android:textSize="15sp"
+            android:visibility="gone" />
+
+        <TextView
+            android:id="@+id/text_distance"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
+            android:textSize="15sp"
+            android:visibility="gone" />
+
+        <TextView
             android:id="@+id/text_notes"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

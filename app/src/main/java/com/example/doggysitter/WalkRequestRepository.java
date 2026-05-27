@@ -32,6 +32,9 @@ public class WalkRequestRepository {
         requestData.put(FirestoreConstants.FIELD_MAX_PRICE, walkRequest.getMaxPrice());
         requestData.put(FirestoreConstants.FIELD_NOTES, walkRequest.getNotes());
         requestData.put(FirestoreConstants.FIELD_STATUS, walkRequest.getStatus());
+        requestData.put(FirestoreConstants.FIELD_PICKUP_LAT, walkRequest.getPickupLat());
+        requestData.put(FirestoreConstants.FIELD_PICKUP_LNG, walkRequest.getPickupLng());
+        requestData.put(FirestoreConstants.FIELD_PICKUP_LOCATION_LABEL, walkRequest.getPickupLocationLabel());
         requestData.put(FirestoreConstants.FIELD_CREATED_AT, FieldValue.serverTimestamp());
 
         return walkRequestsCollection.document(requestId).set(requestData);

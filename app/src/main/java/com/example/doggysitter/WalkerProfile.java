@@ -11,6 +11,9 @@ public class WalkerProfile {
     private Double pricePerWalk;
     private List<String> availableDays;
     private boolean active;
+    private Double serviceLat;
+    private Double serviceLng;
+    private Double serviceRadiusKm;
     private Object createdAt;
     private Object updatedAt;
 
@@ -92,6 +95,30 @@ public class WalkerProfile {
 
     public void setActive(boolean active) {
         this.active = active;
+    }
+
+    public Double getServiceLat() {
+        return serviceLat;
+    }
+
+    public void setServiceLat(Double serviceLat) {
+        this.serviceLat = serviceLat;
+    }
+
+    public Double getServiceLng() {
+        return serviceLng;
+    }
+
+    public void setServiceLng(Double serviceLng) {
+        this.serviceLng = serviceLng;
+    }
+
+    public Double getServiceRadiusKm() {
+        return serviceRadiusKm;
+    }
+
+    public void setServiceRadiusKm(Double serviceRadiusKm) {
+        this.serviceRadiusKm = serviceRadiusKm;
     }
 
     public Object getCreatedAt() {

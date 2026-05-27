@@ -11,6 +11,8 @@
         android:id="@+id/main"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:focusable="true"
+        android:focusableInTouchMode="true"
         android:orientation="vertical"
         android:padding="24dp"
         android:textDirection="rtl">
@@ -145,6 +147,50 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/day_saturday" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:text="@string/service_area_section"
+            android:textAlignment="viewStart"
+            android:textDirection="rtl"
+            android:textSize="18sp"
+            android:textStyle="bold" />
+
+        <Button
+            android:id="@+id/button_current_service_location"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:text="@string/use_current_location_service_area" />
+
+        <TextView
+            android:id="@+id/text_service_location_status"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:text="@string/service_location_not_selected"
+            android:textAlignment="viewStart"
+            android:textDirection="rtl"
+            android:textSize="15sp" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="14dp"
+            android:text="@string/service_radius_required_label"
+            android:textAlignment="viewStart"
+            android:textDirection="rtl"
+            android:textSize="15sp" />
+
+        <EditText
+            android:id="@+id/edit_service_radius"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
+            android:hint="@string/service_radius_hint"
+            android:inputType="numberDecimal" />
 
         <ProgressBar
             android:id="@+id/progress_bar"

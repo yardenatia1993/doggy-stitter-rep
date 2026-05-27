@@ -83,6 +83,12 @@
     <string name="select_duration">בחר משך טיול</string>
     <string name="max_price">מחיר מקסימלי לכל הטיול</string>
     <string name="max_price_required_label">מחיר מקסימלי לכל הטיול *</string>
+    <string name="pickup_location_section">מיקום איסוף</string>
+    <string name="use_current_location">השתמש במיקום הנוכחי</string>
+    <string name="location_not_selected">לא נבחר מיקום</string>
+    <string name="pickup_location_saved">המיקום נשמר</string>
+    <string name="pickup_location_label">תיאור מיקום / כתובת קצרה</string>
+    <string name="pickup_location_hint">לדוגמה: ליד הכניסה לבניין</string>
     <string name="create_request">יצירת בקשה</string>
     <string name="no_dogs_yet">עדיין לא הוספת כלבים</string>
     <string name="add_first_dog">הוסף כלב</string>
@@ -109,6 +115,8 @@
     <string name="request_time">שעה: %1$s</string>
     <string name="request_duration">משך הטיול: %1$d דקות</string>
     <string name="request_max_price">מחיר מקסימלי לכל הטיול: %1$.2f ₪</string>
+    <string name="request_location_label">תיאור מיקום: %1$s</string>
+    <string name="request_distance">מרחק: %1$s</string>
     <string name="request_notes">הערות: %1$s</string>
     <string name="no_dogs_for_request">צריך להוסיף כלב לפני יצירת בקשת טיול</string>
     <string name="error_full_name_required">יש להזין שם מלא</string>
@@ -137,6 +145,9 @@
     <string name="error_price_positive">המחיר חייב להיות גדול מ-0</string>
     <string name="error_date_required">יש לבחור תאריך</string>
     <string name="error_time_required">יש לבחור שעה</string>
+    <string name="error_pickup_location_required">יש לבחור מיקום איסוף</string>
+    <string name="error_location_permission_denied">אין הרשאה לגישה למיקום</string>
+    <string name="error_location_unavailable">לא ניתן לקבל את המיקום כרגע</string>
     <string name="error_save_dog">לא ניתן לשמור את הכלב</string>
     <string name="error_update_dog">לא ניתן לעדכן את הכלב</string>
     <string name="error_load_dog">לא ניתן לטעון את הכלב</string>
@@ -155,4 +166,16 @@
     <string name="error_save_walker_profile">שמירת פרופיל הדוגווקר נכשלה</string>
     <string name="error_load_walk_requests">טעינת בקשות הטיול נכשלה</string>
     <string name="error_accept_walk_request">קבלת הבקשה נכשלה</string>
+    <string name="service_area_section">אזור פעילות</string>
+    <string name="use_current_location_service_area">השתמש במיקום הנוכחי כאזור פעילות</string>
+    <string name="service_location_not_selected">לא נבחר מיקום פעילות</string>
+    <string name="service_location_saved">מיקום הפעילות נשמר</string>
+    <string name="service_radius_required_label">רדיוס שירות בק״מ *</string>
+    <string name="service_radius_hint">לדוגמה: 10</string>
+    <string name="error_service_location_required">יש להגדיר מיקום פעילות</string>
+    <string name="error_service_radius_required">יש להזין רדיוס שירות</string>
+    <string name="error_service_radius_numeric">רדיוס השירות חייב להיות מספר</string>
+    <string name="error_service_radius_range">רדיוס השירות חייב להיות בין 1 ל-50 ק״מ</string>
+    <string name="complete_walker_profile_required">יש להשלים פרופיל דוגווקר לפני צפייה בבקשות</string>
+    <string name="service_area_required">יש להגדיר אזור פעילות בפרופיל</string>
 </resources>

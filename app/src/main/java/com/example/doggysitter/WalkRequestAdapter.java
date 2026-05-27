@@ -76,6 +76,26 @@ public class WalkRequestAdapter extends RecyclerView.Adapter<WalkRequestAdapter.
                 walkRequest.getMaxPrice()
         ));
 
+        String pickupLocationLabel = ValidationUtils.normalizeSpaces(walkRequest.getPickupLocationLabel());
+        holder.pickupLocationTextView.setVisibility(
+                TextUtils.isEmpty(pickupLocationLabel) ? View.GONE : View.VISIBLE
+        );
+        holder.pickupLocationTextView.setText(String.format(
+                Locale.getDefault(),
+                context.getString(R.string.request_location_label),
+                pickupLocationLabel
+        ));
+
+        Double distanceKm = walkRequest.getDistanceKm();
+        holder.distanceTextView.setVisibility(distanceKm == null ? View.GONE : View.VISIBLE);
+        if (distanceKm != null) {
+            holder.distanceTextView.setText(String.format(
+                    Locale.getDefault(),
+                    context.getString(R.string.request_distance),
+                    LocationUtils.formatDistanceHebrew(distanceKm)
+            ));
+        }
+
         String notes = ValidationUtils.normalizeSpaces(walkRequest.getNotes());
         holder.notesTextView.setVisibility(TextUtils.isEmpty(notes) ? View.GONE : View.VISIBLE);
         holder.notesTextView.setText(String.format(
@@ -120,6 +140,8 @@ public class WalkRequestAdapter extends RecyclerView.Adapter<WalkRequestAdapter.
         private final TextView timeTextView;
         private final TextView durationTextView;
         private final TextView maxPriceTextView;
+        private final TextView pickupLocationTextView;
+        private final TextView distanceTextView;
         private final TextView notesTextView;
         private final TextView statusTextView;
         private final Button acceptButton;
@@ -131,6 +153,8 @@ public class WalkRequestAdapter extends RecyclerView.Adapter<WalkRequestAdapter.
             timeTextView = itemView.findViewById(R.id.text_time);
             durationTextView = itemView.findViewById(R.id.text_duration);
             maxPriceTextView = itemView.findViewById(R.id.text_max_price);
+            pickupLocationTextView = itemView.findViewById(R.id.text_pickup_location);
+            distanceTextView = itemView.findViewById(R.id.text_distance);
             notesTextView = itemView.findViewById(R.id.text_notes);
             statusTextView = itemView.findViewById(R.id.text_status);
             acceptButton = itemView.findViewById(R.id.button_accept);
