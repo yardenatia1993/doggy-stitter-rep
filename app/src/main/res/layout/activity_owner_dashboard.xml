@@ -35,6 +35,12 @@
         android:text="@string/create_walk_request" />
 
     <Button
+        android:id="@+id/button_my_requests"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/my_requests" />
+
+    <Button
         android:id="@+id/button_logout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

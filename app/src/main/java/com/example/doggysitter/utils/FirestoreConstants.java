@@ -40,6 +40,8 @@ public final class FirestoreConstants {
     public static final String FIELD_ACTIVE = "active";
     public static final String FIELD_WALKER_ID = "walkerId";
     public static final String FIELD_ACCEPTED_AT = "acceptedAt";
+    public static final String FIELD_COMPLETED_AT = "completedAt";
+    public static final String FIELD_CANCELED_AT = "canceledAt";
     public static final String FIELD_PICKUP_LAT = "pickupLat";
     public static final String FIELD_PICKUP_LNG = "pickupLng";
     public static final String FIELD_PICKUP_LOCATION_LABEL = "pickupLocationLabel";
@@ -56,6 +58,8 @@ public final class FirestoreConstants {
 
     public static final String WALK_REQUEST_STATUS_OPEN = "OPEN";
     public static final String WALK_REQUEST_STATUS_ACCEPTED = "ACCEPTED";
+    public static final String WALK_REQUEST_STATUS_COMPLETED = "COMPLETED";
+    public static final String WALK_REQUEST_STATUS_CANCELED = "CANCELED";
 
     public static final String DAY_SUNDAY = "SUNDAY";
     public static final String DAY_MONDAY = "MONDAY";

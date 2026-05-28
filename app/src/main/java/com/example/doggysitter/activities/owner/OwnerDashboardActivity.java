@@ -22,6 +22,7 @@ public class OwnerDashboardActivity extends AppCompatActivity {
         Button addDogButton = findViewById(R.id.button_add_dog);
         Button myDogsButton = findViewById(R.id.button_my_dogs);
         Button createWalkRequestButton = findViewById(R.id.button_create_walk_request);
+        Button myRequestsButton = findViewById(R.id.button_my_requests);
         Button logoutButton = findViewById(R.id.button_logout);
 
         addDogButton.setOnClickListener(view -> startActivity(new Intent(this, AddDogActivity.class)));
@@ -29,6 +30,7 @@ public class OwnerDashboardActivity extends AppCompatActivity {
         createWalkRequestButton.setOnClickListener(
                 view -> startActivity(new Intent(this, CreateWalkRequestActivity.class))
         );
+        myRequestsButton.setOnClickListener(view -> startActivity(new Intent(this, OwnerRequestsActivity.class)));
         logoutButton.setOnClickListener(view -> logout());
     }
 

@@ -4,7 +4,6 @@ import com.example.doggysitter.R;
 import com.example.doggysitter.models.WalkRequest;
 import com.example.doggysitter.utils.DateTimeUtils;
 import com.example.doggysitter.utils.FirestoreConstants;
-import com.example.doggysitter.utils.LocationUtils;
 import com.example.doggysitter.utils.ValidationUtils;
 
 import android.content.Context;
@@ -19,41 +18,54 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 
-public class WalkRequestAdapter extends RecyclerView.Adapter<WalkRequestAdapter.WalkRequestViewHolder> {
+public class OwnerWalkRequestAdapter
+        extends RecyclerView.Adapter<OwnerWalkRequestAdapter.OwnerWalkRequestViewHolder> {
     public interface Listener {
-        void onAcceptWalkRequest(WalkRequest walkRequest);
+        void onCancelRequest(WalkRequest walkRequest);
+
+        void onCompleteRequest(WalkRequest walkRequest);
     }
 
     private final List<WalkRequest> walkRequests = new ArrayList<>();
+    private final Map<String, String> walkerNamesById = new HashMap<>();
     private final Listener listener;
-    private final boolean showAcceptButton;
-    private final boolean showStatus;
+    private boolean actionsEnabled = true;
 
-    public WalkRequestAdapter(Listener listener, boolean showAcceptButton, boolean showStatus) {
+    public OwnerWalkRequestAdapter(Listener listener) {
         this.listener = listener;
-        this.showAcceptButton = showAcceptButton;
-        this.showStatus = showStatus;
     }
 
-    public void submitList(List<WalkRequest> newWalkRequests) {
+    public void submitList(List<WalkRequest> newWalkRequests, Map<String, String> newWalkerNamesById) {
         walkRequests.clear();
         walkRequests.addAll(newWalkRequests);
+        walkerNamesById.clear();
+        walkerNamesById.putAll(newWalkerNamesById);
+        notifyDataSetChanged();
+    }
+
+    public void setActionsEnabled(boolean actionsEnabled) {
+        if (this.actionsEnabled == actionsEnabled) {
+            return;
+        }
+        this.actionsEnabled = actionsEnabled;
         notifyDataSetChanged();
     }
 
     @NonNull
     @Override
-    public WalkRequestViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+    public OwnerWalkRequestViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.item_walk_request, parent, false);
-        return new WalkRequestViewHolder(view);
+                .inflate(R.layout.item_owner_walk_request, parent, false);
+        return new OwnerWalkRequestViewHolder(view);
     }
 
     @Override
-    public void onBindViewHolder(@NonNull WalkRequestViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull OwnerWalkRequestViewHolder holder, int position) {
         WalkRequest walkRequest = walkRequests.get(position);
         Context context = holder.itemView.getContext();
 
@@ -93,37 +105,14 @@ public class WalkRequestAdapter extends RecyclerView.Adapter<WalkRequestAdapter.
                 pickupLocationLabel
         ));
 
-        Double distanceKm = walkRequest.getDistanceKm();
-        holder.distanceTextView.setVisibility(distanceKm == null ? View.GONE : View.VISIBLE);
-        if (distanceKm != null) {
-            holder.distanceTextView.setText(String.format(
-                    Locale.getDefault(),
-                    context.getString(R.string.request_distance),
-                    LocationUtils.formatDistanceHebrew(distanceKm)
-            ));
-        }
-
-        String notes = ValidationUtils.normalizeSpaces(walkRequest.getNotes());
-        holder.notesTextView.setVisibility(TextUtils.isEmpty(notes) ? View.GONE : View.VISIBLE);
-        holder.notesTextView.setText(String.format(
-                Locale.getDefault(),
-                context.getString(R.string.request_notes),
-                notes
-        ));
-
-        holder.statusTextView.setVisibility(showStatus ? View.VISIBLE : View.GONE);
         holder.statusTextView.setText(String.format(
                 Locale.getDefault(),
                 context.getString(R.string.status_label),
                 getDisplayStatus(context, walkRequest.getStatus())
         ));
 
-        holder.acceptButton.setVisibility(showAcceptButton ? View.VISIBLE : View.GONE);
-        holder.acceptButton.setOnClickListener(view -> {
-            if (listener != null) {
-                listener.onAcceptWalkRequest(walkRequest);
-            }
-        });
+        bindWalkerName(holder, context, walkRequest);
+        bindActionButton(holder, context, walkRequest);
     }
 
     @Override
@@ -131,12 +120,61 @@ public class WalkRequestAdapter extends RecyclerView.Adapter<WalkRequestAdapter.
         return walkRequests.size();
     }
 
-    private String getDisplayStatus(Context context, String status) {
-        if (FirestoreConstants.WALK_REQUEST_STATUS_ACCEPTED.equals(status)) {
-            return context.getString(R.string.status_accepted_display);
+    private void bindWalkerName(OwnerWalkRequestViewHolder holder, Context context, WalkRequest walkRequest) {
+        String walkerId = ValidationUtils.normalizeSpaces(walkRequest.getWalkerId());
+        boolean shouldShowWalker = FirestoreConstants.WALK_REQUEST_STATUS_ACCEPTED.equals(walkRequest.getStatus())
+                && !TextUtils.isEmpty(walkerId);
+        holder.walkerNameTextView.setVisibility(shouldShowWalker ? View.VISIBLE : View.GONE);
+        if (!shouldShowWalker) {
+            return;
         }
+
+        String walkerName = ValidationUtils.normalizeSpaces(walkerNamesById.get(walkerId));
+        if (TextUtils.isEmpty(walkerName)) {
+            walkerName = context.getString(R.string.selected_walker_fallback);
+        }
+        holder.walkerNameTextView.setText(String.format(
+                Locale.getDefault(),
+                context.getString(R.string.request_walker_name),
+                walkerName
+        ));
+    }
+
+    private void bindActionButton(OwnerWalkRequestViewHolder holder, Context context, WalkRequest walkRequest) {
+        if (FirestoreConstants.WALK_REQUEST_STATUS_OPEN.equals(walkRequest.getStatus())) {
+            holder.actionButton.setVisibility(View.VISIBLE);
+            holder.actionButton.setEnabled(actionsEnabled);
+            holder.actionButton.setText(R.string.cancel_request);
+            holder.actionButton.setOnClickListener(view -> {
+                if (listener != null) {
+                    listener.onCancelRequest(walkRequest);
+                }
+            });
+            return;
+        }
+
+        if (FirestoreConstants.WALK_REQUEST_STATUS_ACCEPTED.equals(walkRequest.getStatus())) {
+            holder.actionButton.setVisibility(View.VISIBLE);
+            holder.actionButton.setEnabled(actionsEnabled);
+            holder.actionButton.setText(R.string.complete_request);
+            holder.actionButton.setOnClickListener(view -> {
+                if (listener != null) {
+                    listener.onCompleteRequest(walkRequest);
+                }
+            });
+            return;
+        }
+
+        holder.actionButton.setVisibility(View.GONE);
+        holder.actionButton.setOnClickListener(null);
+    }
+
+    private String getDisplayStatus(Context context, String status) {
         if (FirestoreConstants.WALK_REQUEST_STATUS_OPEN.equals(status)) {
             return context.getString(R.string.status_open_display);
+        }
+        if (FirestoreConstants.WALK_REQUEST_STATUS_ACCEPTED.equals(status)) {
+            return context.getString(R.string.status_accepted_display);
         }
         if (FirestoreConstants.WALK_REQUEST_STATUS_COMPLETED.equals(status)) {
             return context.getString(R.string.status_completed_display);
@@ -147,19 +185,18 @@ public class WalkRequestAdapter extends RecyclerView.Adapter<WalkRequestAdapter.
         return context.getString(R.string.status_unknown_display);
     }
 
-    static class WalkRequestViewHolder extends RecyclerView.ViewHolder {
+    static class OwnerWalkRequestViewHolder extends RecyclerView.ViewHolder {
         private final TextView dogNameTextView;
         private final TextView dateTextView;
         private final TextView timeTextView;
         private final TextView durationTextView;
         private final TextView maxPriceTextView;
         private final TextView pickupLocationTextView;
-        private final TextView distanceTextView;
-        private final TextView notesTextView;
         private final TextView statusTextView;
-        private final Button acceptButton;
+        private final TextView walkerNameTextView;
+        private final Button actionButton;
 
-        WalkRequestViewHolder(@NonNull View itemView) {
+        OwnerWalkRequestViewHolder(@NonNull View itemView) {
             super(itemView);
             dogNameTextView = itemView.findViewById(R.id.text_dog_name);
             dateTextView = itemView.findViewById(R.id.text_date);
@@ -167,10 +204,9 @@ public class WalkRequestAdapter extends RecyclerView.Adapter<WalkRequestAdapter.
             durationTextView = itemView.findViewById(R.id.text_duration);
             maxPriceTextView = itemView.findViewById(R.id.text_max_price);
             pickupLocationTextView = itemView.findViewById(R.id.text_pickup_location);
-            distanceTextView = itemView.findViewById(R.id.text_distance);
-            notesTextView = itemView.findViewById(R.id.text_notes);
             statusTextView = itemView.findViewById(R.id.text_status);
-            acceptButton = itemView.findViewById(R.id.button_accept);
+            walkerNameTextView = itemView.findViewById(R.id.text_walker_name);
+            actionButton = itemView.findViewById(R.id.button_primary_action);
         }
     }
 }

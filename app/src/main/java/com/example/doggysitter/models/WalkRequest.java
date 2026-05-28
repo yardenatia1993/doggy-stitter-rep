@@ -19,6 +19,8 @@ public class WalkRequest {
     private Double distanceKm;
     private Object createdAt;
     private Object acceptedAt;
+    private Object completedAt;
+    private Object canceledAt;
 
     public WalkRequest() {
     }
@@ -172,5 +174,21 @@ public class WalkRequest {
 
     public void setAcceptedAt(Object acceptedAt) {
         this.acceptedAt = acceptedAt;
+    }
+
+    public Object getCompletedAt() {
+        return completedAt;
+    }
+
+    public void setCompletedAt(Object completedAt) {
+        this.completedAt = completedAt;
+    }
+
+    public Object getCanceledAt() {
+        return canceledAt;
+    }
+
+    public void setCanceledAt(Object canceledAt) {
+        this.canceledAt = canceledAt;
     }
 }

@@ -49,6 +49,12 @@ public class WalkRequestRepository {
                 .get();
     }
 
+    public Task<QuerySnapshot> getRequestsForOwner(String ownerId) {
+        return walkRequestsCollection
+                .whereEqualTo(FirestoreConstants.FIELD_OWNER_ID, ownerId)
+                .get();
+    }
+
     public Task<QuerySnapshot> getAcceptedWalkRequestsForWalker(String walkerId) {
         return walkRequestsCollection
                 .whereEqualTo(FirestoreConstants.FIELD_WALKER_ID, walkerId)
@@ -60,6 +66,22 @@ public class WalkRequestRepository {
         requestData.put(FirestoreConstants.FIELD_STATUS, FirestoreConstants.WALK_REQUEST_STATUS_ACCEPTED);
         requestData.put(FirestoreConstants.FIELD_WALKER_ID, walkerId);
         requestData.put(FirestoreConstants.FIELD_ACCEPTED_AT, FieldValue.serverTimestamp());
+
+        return walkRequestsCollection.document(requestId).update(requestData);
+    }
+
+    public Task<Void> cancelRequest(String requestId) {
+        Map<String, Object> requestData = new HashMap<>();
+        requestData.put(FirestoreConstants.FIELD_STATUS, FirestoreConstants.WALK_REQUEST_STATUS_CANCELED);
+        requestData.put(FirestoreConstants.FIELD_CANCELED_AT, FieldValue.serverTimestamp());
+
+        return walkRequestsCollection.document(requestId).update(requestData);
+    }
+
+    public Task<Void> completeRequest(String requestId) {
+        Map<String, Object> requestData = new HashMap<>();
+        requestData.put(FirestoreConstants.FIELD_STATUS, FirestoreConstants.WALK_REQUEST_STATUS_COMPLETED);
+        requestData.put(FirestoreConstants.FIELD_COMPLETED_AT, FieldValue.serverTimestamp());
 
         return walkRequestsCollection.document(requestId).update(requestData);
     }
