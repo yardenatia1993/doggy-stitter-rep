@@ -19,7 +19,22 @@ public class AdminDashboardActivity extends AppCompatActivity {
         setContentView(R.layout.activity_admin_dashboard);
 
         authRepository = new AuthRepository();
+        Button usersButton = findViewById(R.id.button_users);
+        Button walkerProfilesButton = findViewById(R.id.button_walker_profiles);
+        Button walkRequestsButton = findViewById(R.id.button_walk_requests);
+        Button reviewsButton = findViewById(R.id.button_reviews);
+        Button statisticsButton = findViewById(R.id.button_statistics);
         Button logoutButton = findViewById(R.id.button_logout);
+
+        usersButton.setOnClickListener(view -> startActivity(new Intent(this, AdminUsersActivity.class)));
+        walkerProfilesButton.setOnClickListener(
+                view -> startActivity(new Intent(this, AdminWalkerProfilesActivity.class))
+        );
+        walkRequestsButton.setOnClickListener(
+                view -> startActivity(new Intent(this, AdminWalkRequestsActivity.class))
+        );
+        reviewsButton.setOnClickListener(view -> startActivity(new Intent(this, AdminReviewsActivity.class)));
+        statisticsButton.setOnClickListener(view -> startActivity(new Intent(this, AdminStatsActivity.class)));
         logoutButton.setOnClickListener(view -> logout());
     }
 

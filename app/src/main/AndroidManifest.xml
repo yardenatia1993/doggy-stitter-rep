@@ -27,6 +27,21 @@
             android:exported="false"
             android:windowSoftInputMode="stateAlwaysHidden|adjustResize" />
         <activity
+            android:name=".activities.admin.AdminStatsActivity"
+            android:exported="false" />
+        <activity
+            android:name=".activities.admin.AdminReviewsActivity"
+            android:exported="false" />
+        <activity
+            android:name=".activities.admin.AdminWalkRequestsActivity"
+            android:exported="false" />
+        <activity
+            android:name=".activities.admin.AdminWalkerProfilesActivity"
+            android:exported="false" />
+        <activity
+            android:name=".activities.admin.AdminUsersActivity"
+            android:exported="false" />
+        <activity
             android:name=".activities.owner.OwnerRequestsActivity"
             android:exported="false" />
         <activity

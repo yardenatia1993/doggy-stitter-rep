@@ -63,6 +63,7 @@ public class WalkerProfileActivity extends AppCompatActivity {
     private EditText estimatedHourlyPriceEditText;
     private EditText serviceRadiusEditText;
     private TextView averageRatingTextView;
+    private TextView ratingStarsTextView;
     private TextView ratingCountTextView;
     private TextView noRatingsTextView;
     private TextView serviceLocationStatusTextView;
@@ -115,6 +116,7 @@ public class WalkerProfileActivity extends AppCompatActivity {
         estimatedHourlyPriceEditText = findViewById(R.id.edit_estimated_hourly_price);
         serviceRadiusEditText = findViewById(R.id.edit_service_radius);
         averageRatingTextView = findViewById(R.id.text_average_rating);
+        ratingStarsTextView = findViewById(R.id.text_rating_stars);
         ratingCountTextView = findViewById(R.id.text_rating_count);
         noRatingsTextView = findViewById(R.id.text_no_ratings);
         serviceLocationStatusTextView = findViewById(R.id.text_service_location_status);
@@ -317,15 +319,27 @@ public class WalkerProfileActivity extends AppCompatActivity {
 
         noRatingsTextView.setVisibility(View.GONE);
         averageRatingTextView.setVisibility(View.VISIBLE);
+        ratingStarsTextView.setVisibility(View.VISIBLE);
         ratingCountTextView.setVisibility(View.VISIBLE);
         averageRatingTextView.setText(getString(R.string.average_rating, averageRating));
+        ratingStarsTextView.setText(formatRatingStars(averageRating));
         ratingCountTextView.setText(getString(R.string.rating_count, ratingCount));
     }
 
     private void showNoRatings() {
         averageRatingTextView.setVisibility(View.GONE);
+        ratingStarsTextView.setVisibility(View.GONE);
         ratingCountTextView.setVisibility(View.GONE);
         noRatingsTextView.setVisibility(View.VISIBLE);
+    }
+
+    private String formatRatingStars(double averageRating) {
+        int fullStars = Math.max(0, Math.min(5, (int) Math.round(averageRating)));
+        StringBuilder stars = new StringBuilder();
+        for (int index = 0; index < 5; index++) {
+            stars.append(index < fullStars ? '★' : '☆');
+        }
+        return stars.toString();
     }
 
     private long getLongNumber(DocumentSnapshot documentSnapshot, String fieldName) {

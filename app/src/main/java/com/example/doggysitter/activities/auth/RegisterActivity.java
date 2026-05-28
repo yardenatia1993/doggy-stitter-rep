@@ -8,6 +8,8 @@ import com.example.doggysitter.repositories.UserRepository;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.util.Log;
+import android.util.Patterns;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -16,9 +18,16 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.google.firebase.FirebaseNetworkException;
+import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException;
+import com.google.firebase.auth.FirebaseAuthUserCollisionException;
+import com.google.firebase.auth.FirebaseAuthWeakPasswordException;
 import com.google.firebase.auth.FirebaseUser;
 
 public class RegisterActivity extends AppCompatActivity {
+    private static final String TAG = "RegisterActivity";
+    private static final int MIN_PASSWORD_LENGTH = 6;
+
     private EditText fullNameEditText;
     private EditText emailEditText;
     private EditText passwordEditText;
@@ -66,7 +75,9 @@ public class RegisterActivity extends AppCompatActivity {
         authRepository.register(email, password).addOnCompleteListener(task -> {
             if (!task.isSuccessful()) {
                 setLoading(false);
-                Toast.makeText(this, R.string.error_register_failed, Toast.LENGTH_SHORT).show();
+                Exception error = task.getException();
+                Log.e(TAG, "Registration failed", error);
+                Toast.makeText(this, getRegisterErrorMessageResId(error), Toast.LENGTH_SHORT).show();
                 return;
             }
 
@@ -85,6 +96,7 @@ public class RegisterActivity extends AppCompatActivity {
                     })
                     .addOnFailureListener(error -> {
                         setLoading(false);
+                        Log.e(TAG, "Failed to create user profile after registration", error);
                         Toast.makeText(this, R.string.error_save_profile, Toast.LENGTH_SHORT).show();
                     });
         });
@@ -99,8 +111,20 @@ public class RegisterActivity extends AppCompatActivity {
             emailEditText.setError(getString(R.string.error_email_required));
             return false;
         }
+        if (!Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
+            emailEditText.setError(getString(R.string.error_invalid_email));
+            return false;
+        }
         if (TextUtils.isEmpty(password)) {
             passwordEditText.setError(getString(R.string.error_password_required));
+            return false;
+        }
+        if (password.length() < MIN_PASSWORD_LENGTH) {
+            passwordEditText.setError(getString(R.string.error_password_too_short));
+            return false;
+        }
+        if (TextUtils.isEmpty(confirmPassword)) {
+            confirmPasswordEditText.setError(getString(R.string.error_confirm_password_required));
             return false;
         }
         if (!password.equals(confirmPassword)) {
@@ -108,6 +132,32 @@ public class RegisterActivity extends AppCompatActivity {
             return false;
         }
         return true;
+    }
+
+    private int getRegisterErrorMessageResId(Exception error) {
+        if (error instanceof FirebaseAuthUserCollisionException) {
+            return R.string.error_email_already_exists;
+        }
+        if (error instanceof FirebaseAuthWeakPasswordException) {
+            return R.string.error_weak_password;
+        }
+        if (error instanceof FirebaseAuthInvalidCredentialsException) {
+            return R.string.error_invalid_email;
+        }
+        if (hasNetworkError(error)) {
+            return R.string.error_network_connection;
+        }
+        return R.string.error_register_failed;
+    }
+
+    private boolean hasNetworkError(Throwable error) {
+        while (error != null) {
+            if (error instanceof FirebaseNetworkException) {
+                return true;
+            }
+            error = error.getCause();
+        }
+        return false;
     }
 
     private void setLoading(boolean loading) {

@@ -12,7 +12,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ProgressBar;
-import android.widget.RadioGroup;
+import android.widget.RatingBar;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -24,7 +24,7 @@ import com.google.firebase.firestore.DocumentSnapshot;
 public class ReviewActivity extends AppCompatActivity {
     public static final String EXTRA_REQUEST_ID = "requestId";
 
-    private RadioGroup ratingGroup;
+    private RatingBar ratingBar;
     private EditText commentEditText;
     private ProgressBar progressBar;
     private Button submitButton;
@@ -41,7 +41,7 @@ public class ReviewActivity extends AppCompatActivity {
 
         walkRequestRepository = new WalkRequestRepository();
         reviewRepository = new ReviewRepository();
-        ratingGroup = findViewById(R.id.group_rating);
+        ratingBar = findViewById(R.id.rating_bar);
         commentEditText = findViewById(R.id.edit_comment);
         progressBar = findViewById(R.id.progress_bar);
         submitButton = findViewById(R.id.button_submit_review);
@@ -133,23 +133,7 @@ public class ReviewActivity extends AppCompatActivity {
     }
 
     private int getSelectedRating() {
-        int checkedId = ratingGroup.getCheckedRadioButtonId();
-        if (checkedId == R.id.radio_rating_1) {
-            return 1;
-        }
-        if (checkedId == R.id.radio_rating_2) {
-            return 2;
-        }
-        if (checkedId == R.id.radio_rating_3) {
-            return 3;
-        }
-        if (checkedId == R.id.radio_rating_4) {
-            return 4;
-        }
-        if (checkedId == R.id.radio_rating_5) {
-            return 5;
-        }
-        return 0;
+        return Math.round(ratingBar.getRating());
     }
 
     private void setLoading(boolean loading) {

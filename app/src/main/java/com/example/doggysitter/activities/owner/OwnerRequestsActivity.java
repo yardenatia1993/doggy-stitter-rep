@@ -80,6 +80,9 @@ public class OwnerRequestsActivity extends AppCompatActivity implements OwnerWal
                     for (DocumentSnapshot documentSnapshot : querySnapshot.getDocuments()) {
                         WalkRequest walkRequest = documentSnapshot.toObject(WalkRequest.class);
                         if (walkRequest != null) {
+                            if (FirestoreConstants.WALK_REQUEST_STATUS_CANCELED.equals(walkRequest.getStatus())) {
+                                continue;
+                            }
                             if (TextUtils.isEmpty(ValidationUtils.normalizeSpaces(walkRequest.getId()))) {
                                 walkRequest.setId(documentSnapshot.getId());
                             }

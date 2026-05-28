@@ -6,6 +6,7 @@ import com.example.doggysitter.repositories.AuthRepository;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -14,7 +15,11 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.google.firebase.FirebaseNetworkException;
+
 public class LoginActivity extends AppCompatActivity {
+    private static final String TAG = "LoginActivity";
+
     private EditText emailEditText;
     private EditText passwordEditText;
     private Button loginButton;
@@ -61,9 +66,28 @@ public class LoginActivity extends AppCompatActivity {
             if (task.isSuccessful()) {
                 openAndFinish(SplashScreenActivity.class);
             } else {
-                Toast.makeText(this, R.string.error_login_failed, Toast.LENGTH_SHORT).show();
+                Exception error = task.getException();
+                Log.e(TAG, "Login failed", error);
+                Toast.makeText(this, getLoginErrorMessageResId(error), Toast.LENGTH_SHORT).show();
             }
         });
+    }
+
+    private int getLoginErrorMessageResId(Exception error) {
+        if (hasNetworkError(error)) {
+            return R.string.error_network_connection;
+        }
+        return R.string.error_login_failed;
+    }
+
+    private boolean hasNetworkError(Throwable error) {
+        while (error != null) {
+            if (error instanceof FirebaseNetworkException) {
+                return true;
+            }
+            error = error.getCause();
+        }
+        return false;
     }
 
     private void setLoading(boolean loading) {

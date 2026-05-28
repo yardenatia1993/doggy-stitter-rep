@@ -4,8 +4,10 @@
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:layoutDirection="rtl"
     android:orientation="vertical"
     android:padding="24dp"
+    android:textDirection="rtl"
     tools:context=".activities.admin.AdminDashboardActivity">
 
     <TextView
@@ -20,15 +22,31 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="24dp"
-        android:enabled="false"
         android:text="@string/users" />
+
+    <Button
+        android:id="@+id/button_walker_profiles"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/walker_profiles" />
 
     <Button
         android:id="@+id/button_walk_requests"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:enabled="false"
         android:text="@string/walk_requests" />
+
+    <Button
+        android:id="@+id/button_reviews"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/reviews" />
+
+    <Button
+        android:id="@+id/button_statistics"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/statistics" />
 
     <Button
         android:id="@+id/button_logout"

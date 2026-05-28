@@ -5,6 +5,7 @@ import com.example.doggysitter.models.WalkRequest;
 import com.example.doggysitter.utils.DateTimeUtils;
 import com.example.doggysitter.utils.FirestoreConstants;
 import com.example.doggysitter.utils.LocationUtils;
+import com.example.doggysitter.utils.PriceUtils;
 import com.example.doggysitter.utils.ValidationUtils;
 
 import android.content.Context;
@@ -80,7 +81,7 @@ public class WalkRequestAdapter extends RecyclerView.Adapter<WalkRequestAdapter.
         holder.maxPriceTextView.setText(String.format(
                 Locale.getDefault(),
                 context.getString(R.string.request_max_price),
-                walkRequest.getMaxPrice()
+                PriceUtils.formatWholeShekelAmount(walkRequest.getMaxPrice())
         ));
 
         String pickupLocationLabel = ValidationUtils.normalizeSpaces(walkRequest.getPickupLocationLabel());
