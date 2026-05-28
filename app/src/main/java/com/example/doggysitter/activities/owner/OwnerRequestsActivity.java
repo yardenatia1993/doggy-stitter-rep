@@ -3,7 +3,7 @@ package com.example.doggysitter.activities.owner;
 import com.example.doggysitter.R;
 import com.example.doggysitter.adapters.OwnerWalkRequestAdapter;
 import com.example.doggysitter.models.WalkRequest;
-import com.example.doggysitter.repositories.UserRepository;
+import com.example.doggysitter.repositories.WalkerProfileRepository;
 import com.example.doggysitter.repositories.WalkRequestRepository;
 import com.example.doggysitter.utils.FirestoreConstants;
 import com.example.doggysitter.utils.ValidationUtils;
@@ -40,7 +40,7 @@ public class OwnerRequestsActivity extends AppCompatActivity implements OwnerWal
     private ProgressBar progressBar;
     private OwnerWalkRequestAdapter ownerWalkRequestAdapter;
     private WalkRequestRepository walkRequestRepository;
-    private UserRepository userRepository;
+    private WalkerProfileRepository walkerProfileRepository;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,7 +48,7 @@ public class OwnerRequestsActivity extends AppCompatActivity implements OwnerWal
         setContentView(R.layout.activity_owner_requests);
 
         walkRequestRepository = new WalkRequestRepository();
-        userRepository = new UserRepository();
+        walkerProfileRepository = new WalkerProfileRepository();
         ownerRequestsRecyclerView = findViewById(R.id.recycler_owner_requests);
         emptyTextView = findViewById(R.id.text_empty);
         progressBar = findViewById(R.id.progress_bar);
@@ -120,7 +120,7 @@ public class OwnerRequestsActivity extends AppCompatActivity implements OwnerWal
         List<String> orderedWalkerIds = new ArrayList<>(walkerIds);
         List<Task<DocumentSnapshot>> walkerTasks = new ArrayList<>();
         for (String walkerId : orderedWalkerIds) {
-            walkerTasks.add(userRepository.getUser(walkerId));
+            walkerTasks.add(walkerProfileRepository.getProfile(walkerId));
         }
 
         Tasks.whenAllComplete(walkerTasks)

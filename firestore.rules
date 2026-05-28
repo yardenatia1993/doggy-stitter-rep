@@ -1,0 +1,340 @@
+rules_version = '2';
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+    function signedIn() {
+      return request.auth != null;
+    }
+
+    function isSelf(userId) {
+      return signedIn() && request.auth.uid == userId;
+    }
+
+    function userPath(uid) {
+      return /databases/$(database)/documents/users/$(uid);
+    }
+
+    function userDoc(uid) {
+      return get(userPath(uid));
+    }
+
+    function currentRole() {
+      return userDoc(request.auth.uid).data.role;
+    }
+
+    function isAdmin() {
+      return signedIn() && currentRole() == "ADMIN";
+    }
+
+    function isOwner() {
+      return signedIn() && currentRole() == "OWNER";
+    }
+
+    function isWalker() {
+      return signedIn() && currentRole() == "WALKER";
+    }
+
+    function isSelectableUserRole(role) {
+      return role == "OWNER" || role == "WALKER";
+    }
+
+    function isValidUserRole(role) {
+      return isSelectableUserRole(role) || role == "ADMIN";
+    }
+
+    function hasOptionalSelectableRole(data) {
+      return !data.keys().hasAny(["role"])
+        || data.role == null
+        || isSelectableUserRole(data.role);
+    }
+
+    function hasOptionalReviewedFalse(data) {
+      return !data.keys().hasAny(["reviewed"]) || data.reviewed == false;
+    }
+
+    function changedKeys() {
+      return request.resource.data.diff(resource.data).affectedKeys();
+    }
+
+    function unchangedWalkRequestIdentity() {
+      return request.resource.data.id == resource.data.id
+        && request.resource.data.ownerId == resource.data.ownerId
+        && request.resource.data.dogId == resource.data.dogId
+        && request.resource.data.dogName == resource.data.dogName
+        && request.resource.data.date == resource.data.date
+        && request.resource.data.time == resource.data.time
+        && request.resource.data.durationMinutes == resource.data.durationMinutes
+        && request.resource.data.maxPrice == resource.data.maxPrice
+        && request.resource.data.notes == resource.data.notes
+        && request.resource.data.pickupLat == resource.data.pickupLat
+        && request.resource.data.pickupLng == resource.data.pickupLng
+        && request.resource.data.pickupLocationLabel == resource.data.pickupLocationLabel
+        && request.resource.data.reviewed == resource.data.reviewed
+        && request.resource.data.reviewId == resource.data.reviewId;
+    }
+
+    function unchangedWalkRequestForOwnerStatusChange() {
+      return request.resource.data.id == resource.data.id
+        && request.resource.data.ownerId == resource.data.ownerId
+        && request.resource.data.dogId == resource.data.dogId
+        && request.resource.data.dogName == resource.data.dogName
+        && request.resource.data.date == resource.data.date
+        && request.resource.data.time == resource.data.time
+        && request.resource.data.durationMinutes == resource.data.durationMinutes
+        && request.resource.data.maxPrice == resource.data.maxPrice
+        && request.resource.data.notes == resource.data.notes
+        && request.resource.data.walkerId == resource.data.walkerId
+        && request.resource.data.pickupLat == resource.data.pickupLat
+        && request.resource.data.pickupLng == resource.data.pickupLng
+        && request.resource.data.pickupLocationLabel == resource.data.pickupLocationLabel
+        && request.resource.data.reviewed == resource.data.reviewed
+        && request.resource.data.reviewId == resource.data.reviewId;
+    }
+
+    function reviewPath(reviewId) {
+      return /databases/$(database)/documents/reviews/$(reviewId);
+    }
+
+    function requestPath(requestId) {
+      return /databases/$(database)/documents/walkRequests/$(requestId);
+    }
+
+    function dogPath(dogId) {
+      return /databases/$(database)/documents/dogs/$(dogId);
+    }
+
+    function reviewRequestBefore() {
+      return get(requestPath(request.resource.data.requestId));
+    }
+
+    function reviewRequestAfter() {
+      return getAfter(requestPath(request.resource.data.requestId));
+    }
+
+    function matchingReviewAfter(reviewId, requestId, walkerId) {
+      return existsAfter(reviewPath(reviewId))
+        && getAfter(reviewPath(reviewId)).data.id == reviewId
+        && getAfter(reviewPath(reviewId)).data.requestId == requestId
+        && getAfter(reviewPath(reviewId)).data.ownerId == request.auth.uid
+        && getAfter(reviewPath(reviewId)).data.walkerId == walkerId;
+    }
+
+    function validUserCreate(userId) {
+      return isSelf(userId)
+        && request.resource.data.keys().hasOnly(["uid", "fullName", "email", "role", "createdAt"])
+        && request.resource.data.uid == userId
+        && hasOptionalSelectableRole(request.resource.data);
+    }
+
+    function validSelfUserUpdate(userId) {
+      return isSelf(userId)
+        && request.resource.data.uid == resource.data.uid
+        && request.resource.data.createdAt == resource.data.createdAt
+        && changedKeys().hasOnly(["fullName", "email", "role", "updatedAt"])
+        && (!changedKeys().hasAny(["role"])
+          || ((!resource.data.keys().hasAny(["role"]) || resource.data.role == null)
+            && isSelectableUserRole(request.resource.data.role)));
+    }
+
+    function validAdminUserUpdate() {
+      return changedKeys().hasOnly(["role"])
+        && isValidUserRole(request.resource.data.role);
+    }
+
+    function validDogCreate(dogId) {
+      return isOwner()
+        && request.resource.data.keys().hasOnly([
+          "id", "ownerId", "name", "ageMonths", "breed", "notes", "createdAt", "updatedAt"
+        ])
+        && request.resource.data.id == dogId
+        && request.resource.data.ownerId == request.auth.uid;
+    }
+
+    function validDogUpdate() {
+      return isOwner()
+        && resource.data.ownerId == request.auth.uid
+        && request.resource.data.ownerId == resource.data.ownerId
+        && request.resource.data.id == resource.data.id
+        && request.resource.data.createdAt == resource.data.createdAt
+        && changedKeys().hasOnly(["name", "ageMonths", "breed", "notes", "updatedAt"]);
+    }
+
+    function validWalkRequestCreate(requestId) {
+      return isOwner()
+        && request.resource.data.keys().hasOnly([
+          "id", "ownerId", "dogId", "dogName", "date", "time", "durationMinutes",
+          "maxPrice", "notes", "status", "reviewed", "pickupLat", "pickupLng",
+          "pickupLocationLabel", "createdAt"
+        ])
+        && request.resource.data.id == requestId
+        && request.resource.data.ownerId == request.auth.uid
+        && exists(dogPath(request.resource.data.dogId))
+        && get(dogPath(request.resource.data.dogId)).data.ownerId == request.auth.uid
+        && request.resource.data.status == "OPEN"
+        && hasOptionalReviewedFalse(request.resource.data);
+    }
+
+    function validWalkerAcceptRequest() {
+      return isWalker()
+        && resource.data.status == "OPEN"
+        && request.resource.data.status == "ACCEPTED"
+        && request.resource.data.walkerId == request.auth.uid
+        && changedKeys().hasOnly(["status", "walkerId", "acceptedAt"])
+        && unchangedWalkRequestIdentity();
+    }
+
+    function validOwnerCancelRequest() {
+      return isOwner()
+        && resource.data.ownerId == request.auth.uid
+        && resource.data.status == "OPEN"
+        && request.resource.data.status == "CANCELED"
+        && changedKeys().hasOnly(["status", "canceledAt"])
+        && unchangedWalkRequestForOwnerStatusChange();
+    }
+
+    function validOwnerCompleteRequest() {
+      return isOwner()
+        && resource.data.ownerId == request.auth.uid
+        && resource.data.status == "ACCEPTED"
+        && request.resource.data.status == "COMPLETED"
+        && changedKeys().hasOnly(["status", "completedAt"])
+        && unchangedWalkRequestForOwnerStatusChange();
+    }
+
+    function validOwnerReviewMark(requestId) {
+      return isOwner()
+        && resource.data.ownerId == request.auth.uid
+        && resource.data.status == "COMPLETED"
+        && resource.data.reviewed != true
+        && request.resource.data.reviewed == true
+        && request.resource.data.reviewId is string
+        && changedKeys().hasOnly(["reviewed", "reviewId"])
+        && request.resource.data.id == resource.data.id
+        && request.resource.data.ownerId == resource.data.ownerId
+        && request.resource.data.walkerId == resource.data.walkerId
+        && request.resource.data.status == resource.data.status
+        && matchingReviewAfter(request.resource.data.reviewId, requestId, resource.data.walkerId);
+    }
+
+    function ownWalkerProfileWrite(profileId) {
+      return isWalker()
+        && profileId == request.auth.uid
+        && request.resource.data.uid == request.auth.uid;
+    }
+
+    function validWalkerProfileCreate(profileId) {
+      return ownWalkerProfileWrite(profileId)
+        && request.resource.data.keys().hasOnly([
+          "uid", "fullName", "phone", "phonePrefix", "phoneNumber", "description",
+          "experienceYears", "estimatedHourlyPrice", "availableDays", "availability",
+          "active", "serviceLat", "serviceLng", "serviceRadiusKm", "serviceLocationLabel",
+          "createdAt", "updatedAt"
+        ]);
+    }
+
+    function validWalkerProfileUpdate(profileId) {
+      return ownWalkerProfileWrite(profileId)
+        && request.resource.data.uid == resource.data.uid
+        && changedKeys().hasOnly([
+          "fullName", "phone", "phonePrefix", "phoneNumber", "description",
+          "experienceYears", "estimatedHourlyPrice", "availableDays", "availability",
+          "active", "serviceLat", "serviceLng", "serviceRadiusKm", "serviceLocationLabel",
+          "updatedAt"
+        ]);
+    }
+
+    function validRatingCountIncrement() {
+      return (!resource.data.keys().hasAny(["ratingCount"]) && request.resource.data.ratingCount == 1)
+        || (resource.data.keys().hasAny(["ratingCount"])
+          && request.resource.data.ratingCount == resource.data.ratingCount + 1);
+    }
+
+    function validRatingSumIncrement() {
+      return (!resource.data.keys().hasAny(["ratingSum"])
+          && request.resource.data.ratingSum >= 1
+          && request.resource.data.ratingSum <= 5)
+        || (resource.data.keys().hasAny(["ratingSum"])
+          && request.resource.data.ratingSum >= resource.data.ratingSum + 1
+          && request.resource.data.ratingSum <= resource.data.ratingSum + 5);
+    }
+
+    function validClientRatingAggregateUpdate() {
+      return isOwner()
+        && changedKeys().hasOnly(["ratingSum", "ratingCount", "averageRating"])
+        && validRatingCountIncrement()
+        && validRatingSumIncrement()
+        && request.resource.data.averageRating >= 1
+        && request.resource.data.averageRating <= 5;
+    }
+
+    function validReviewCreate(reviewId) {
+      return isOwner()
+        && request.resource.data.keys().hasOnly([
+          "id", "requestId", "ownerId", "walkerId", "rating", "comment", "createdAt"
+        ])
+        && request.resource.data.id == reviewId
+        && request.resource.data.ownerId == request.auth.uid
+        && request.resource.data.requestId is string
+        && request.resource.data.walkerId is string
+        && request.resource.data.rating is int
+        && request.resource.data.rating >= 1
+        && request.resource.data.rating <= 5
+        && exists(requestPath(request.resource.data.requestId))
+        && reviewRequestBefore().data.ownerId == request.auth.uid
+        && reviewRequestBefore().data.status == "COMPLETED"
+        && reviewRequestBefore().data.reviewed != true
+        && reviewRequestBefore().data.walkerId == request.resource.data.walkerId
+        && reviewRequestAfter().data.reviewed == true
+        && reviewRequestAfter().data.reviewId == reviewId;
+    }
+
+    match /users/{userId} {
+      allow get: if isSelf(userId) || isAdmin();
+      allow list: if isAdmin();
+      allow create: if validUserCreate(userId);
+      allow update: if validSelfUserUpdate(userId) || (isAdmin() && validAdminUserUpdate());
+      allow delete: if false;
+    }
+
+    match /dogs/{dogId} {
+      allow get, list: if isAdmin() || (signedIn() && resource.data.ownerId == request.auth.uid);
+      allow create: if validDogCreate(dogId);
+      allow update: if validDogUpdate();
+      allow delete: if isOwner() && resource.data.ownerId == request.auth.uid;
+    }
+
+    match /walkRequests/{requestId} {
+      allow get, list: if isAdmin()
+        || (signedIn() && resource.data.ownerId == request.auth.uid)
+        || (isWalker() && resource.data.status == "OPEN")
+        || (isWalker() && resource.data.walkerId == request.auth.uid);
+      allow create: if validWalkRequestCreate(requestId);
+      allow update: if validWalkerAcceptRequest()
+        || validOwnerCancelRequest()
+        || validOwnerCompleteRequest()
+        || validOwnerReviewMark(requestId);
+      allow delete: if false;
+    }
+
+    match /walkerProfiles/{profileId} {
+      allow get, list: if isAdmin()
+        || isOwner()
+        || (isWalker() && profileId == request.auth.uid);
+      allow create: if validWalkerProfileCreate(profileId);
+      allow update: if validWalkerProfileUpdate(profileId) || validClientRatingAggregateUpdate();
+      allow delete: if false;
+    }
+
+    match /reviews/{reviewId} {
+      allow get, list: if isAdmin()
+        || (signedIn() && resource.data.ownerId == request.auth.uid)
+        || (signedIn() && resource.data.walkerId == request.auth.uid);
+      allow create: if validReviewCreate(reviewId);
+      allow update, delete: if false;
+    }
+
+    match /{document=**} {
+      allow read, write: if false;
+    }
+  }
+}
