@@ -21,6 +21,9 @@ public class WalkerProfile {
     private Double serviceLng;
     private Integer serviceRadiusKm;
     private String serviceLocationLabel;
+    private Long ratingSum;
+    private Long ratingCount;
+    private Double averageRating;
     private Object createdAt;
     private Object updatedAt;
 
@@ -166,6 +169,30 @@ public class WalkerProfile {
 
     public void setServiceLocationLabel(String serviceLocationLabel) {
         this.serviceLocationLabel = serviceLocationLabel;
+    }
+
+    public Long getRatingSum() {
+        return ratingSum;
+    }
+
+    public void setRatingSum(Long ratingSum) {
+        this.ratingSum = ratingSum;
+    }
+
+    public Long getRatingCount() {
+        return ratingCount;
+    }
+
+    public void setRatingCount(Long ratingCount) {
+        this.ratingCount = ratingCount;
+    }
+
+    public Double getAverageRating() {
+        return averageRating;
+    }
+
+    public void setAverageRating(Double averageRating) {
+        this.averageRating = averageRating;
     }
 
     public Object getCreatedAt() {

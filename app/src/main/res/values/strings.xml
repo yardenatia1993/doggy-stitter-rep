@@ -24,6 +24,7 @@
     <string name="title_my_dogs">הכלבים שלי</string>
     <string name="title_create_walk_request">יצירת בקשת טיול</string>
     <string name="title_owner_requests">הבקשות שלי</string>
+    <string name="title_review_walker">דירוג דוגווקר</string>
     <string name="title_walker_profile">הפרופיל שלי</string>
     <string name="title_available_walk_requests">בקשות טיול זמינות</string>
     <string name="title_my_walker_jobs">העבודות שלי</string>
@@ -116,6 +117,8 @@
     <string name="accept_request">קבל בקשה</string>
     <string name="cancel_request">ביטול בקשה</string>
     <string name="complete_request">סמן כהושלם</string>
+    <string name="rate_walker">דרג דוגווקר</string>
+    <string name="review_sent">הדירוג נשלח</string>
     <string name="confirm">אישור</string>
     <string name="cancel_request_confirmation">האם לבטל את הבקשה?</string>
     <string name="complete_request_confirmation">האם לסמן את הטיול כהושלם?</string>
@@ -138,6 +141,12 @@
     <string name="request_walker_name">שם הדוגווקר: %1$s</string>
     <string name="request_distance">מרחק: %1$s</string>
     <string name="request_notes">הערות: %1$s</string>
+    <string name="rating_label">דירוג</string>
+    <string name="comment_label">הערה</string>
+    <string name="submit_review">שליחת דירוג</string>
+    <string name="average_rating">דירוג ממוצע: %1$.1f מתוך 5</string>
+    <string name="rating_count">מספר דירוגים: %1$d</string>
+    <string name="no_ratings_yet">אין דירוגים עדיין</string>
     <string name="no_dogs_for_request">צריך להוסיף כלב לפני יצירת בקשת טיול</string>
     <string name="error_full_name_required">יש להזין שם מלא</string>
     <string name="error_email_required">יש להזין אימייל</string>
@@ -176,6 +185,11 @@
     <string name="error_create_walk_request">יצירת בקשת הטיול נכשלה</string>
     <string name="error_cancel_walk_request">ביטול הבקשה נכשל</string>
     <string name="error_complete_walk_request">סימון הטיול כהושלם נכשל</string>
+    <string name="error_rating_required">יש לבחור דירוג</string>
+    <string name="error_submit_review">שליחת הדירוג נכשלה</string>
+    <string name="error_load_walk_request">טעינת בקשת הטיול נכשלה</string>
+    <string name="error_review_completed_only">ניתן לדרג רק טיול שהושלם</string>
+    <string name="error_review_already_sent">כבר נשלח דירוג עבור הבקשה</string>
     <string name="error_phone_required">יש להזין טלפון</string>
     <string name="error_phone_prefix_required">יש לבחור קידומת</string>
     <string name="error_phone_number_required">יש להזין מספר טלפון</string>

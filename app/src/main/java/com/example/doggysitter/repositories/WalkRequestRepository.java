@@ -5,6 +5,7 @@ import com.example.doggysitter.utils.FirestoreConstants;
 
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QuerySnapshot;
@@ -35,6 +36,7 @@ public class WalkRequestRepository {
         requestData.put(FirestoreConstants.FIELD_MAX_PRICE, walkRequest.getMaxPrice());
         requestData.put(FirestoreConstants.FIELD_NOTES, walkRequest.getNotes());
         requestData.put(FirestoreConstants.FIELD_STATUS, walkRequest.getStatus());
+        requestData.put(FirestoreConstants.FIELD_REVIEWED, false);
         requestData.put(FirestoreConstants.FIELD_PICKUP_LAT, walkRequest.getPickupLat());
         requestData.put(FirestoreConstants.FIELD_PICKUP_LNG, walkRequest.getPickupLng());
         requestData.put(FirestoreConstants.FIELD_PICKUP_LOCATION_LABEL, walkRequest.getPickupLocationLabel());
@@ -53,6 +55,10 @@ public class WalkRequestRepository {
         return walkRequestsCollection
                 .whereEqualTo(FirestoreConstants.FIELD_OWNER_ID, ownerId)
                 .get();
+    }
+
+    public Task<DocumentSnapshot> getRequest(String requestId) {
+        return walkRequestsCollection.document(requestId).get();
     }
 
     public Task<QuerySnapshot> getAcceptedWalkRequestsForWalker(String walkerId) {

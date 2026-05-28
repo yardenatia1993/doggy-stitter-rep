@@ -30,6 +30,9 @@
             android:name=".activities.owner.OwnerRequestsActivity"
             android:exported="false" />
         <activity
+            android:name=".activities.owner.ReviewActivity"
+            android:exported="false" />
+        <activity
             android:name=".activities.owner.CreateWalkRequestActivity"
             android:exported="false" />
         <activity

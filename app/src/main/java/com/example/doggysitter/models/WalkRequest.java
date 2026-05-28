@@ -13,6 +13,8 @@ public class WalkRequest {
     private String notes;
     private String status;
     private String walkerId;
+    private Boolean reviewed;
+    private String reviewId;
     private Double pickupLat;
     private Double pickupLng;
     private String pickupLocationLabel;
@@ -126,6 +128,22 @@ public class WalkRequest {
 
     public void setWalkerId(String walkerId) {
         this.walkerId = walkerId;
+    }
+
+    public Boolean getReviewed() {
+        return reviewed;
+    }
+
+    public void setReviewed(Boolean reviewed) {
+        this.reviewed = reviewed;
+    }
+
+    public String getReviewId() {
+        return reviewId;
+    }
+
+    public void setReviewId(String reviewId) {
+        this.reviewId = reviewId;
     }
 
     public Double getPickupLat() {

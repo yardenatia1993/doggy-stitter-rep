@@ -62,6 +62,9 @@ public class WalkerProfileActivity extends AppCompatActivity {
     private EditText experienceYearsEditText;
     private EditText estimatedHourlyPriceEditText;
     private EditText serviceRadiusEditText;
+    private TextView averageRatingTextView;
+    private TextView ratingCountTextView;
+    private TextView noRatingsTextView;
     private TextView serviceLocationStatusTextView;
     private Button currentServiceLocationButton;
     private Button manualServiceLocationButton;
@@ -111,6 +114,9 @@ public class WalkerProfileActivity extends AppCompatActivity {
         experienceYearsEditText = findViewById(R.id.edit_experience_years);
         estimatedHourlyPriceEditText = findViewById(R.id.edit_estimated_hourly_price);
         serviceRadiusEditText = findViewById(R.id.edit_service_radius);
+        averageRatingTextView = findViewById(R.id.text_average_rating);
+        ratingCountTextView = findViewById(R.id.text_rating_count);
+        noRatingsTextView = findViewById(R.id.text_no_ratings);
         serviceLocationStatusTextView = findViewById(R.id.text_service_location_status);
         currentServiceLocationButton = findViewById(R.id.button_current_service_location);
         manualServiceLocationButton = findViewById(R.id.button_manual_service_location);
@@ -243,6 +249,8 @@ public class WalkerProfileActivity extends AppCompatActivity {
                     Log.d(TAG, "loadProfile success, exists=" + profileExists);
                     if (profileExists) {
                         populateProfile(documentSnapshot);
+                    } else {
+                        showNoRatings();
                     }
                 })
                 .addOnFailureListener(error -> {
@@ -290,6 +298,50 @@ public class WalkerProfileActivity extends AppCompatActivity {
         if (serviceRadiusValue instanceof Number) {
             serviceRadiusEditText.setText(String.valueOf(((Number) serviceRadiusValue).intValue()));
         }
+
+        populateRatingSummary(documentSnapshot);
+    }
+
+    private void populateRatingSummary(DocumentSnapshot documentSnapshot) {
+        long ratingCount = getLongNumber(documentSnapshot, FirestoreConstants.FIELD_RATING_COUNT);
+        if (ratingCount <= 0) {
+            showNoRatings();
+            return;
+        }
+
+        Double averageRating = getDoubleNumber(documentSnapshot, FirestoreConstants.FIELD_AVERAGE_RATING);
+        if (averageRating == null) {
+            long ratingSum = getLongNumber(documentSnapshot, FirestoreConstants.FIELD_RATING_SUM);
+            averageRating = (double) ratingSum / ratingCount;
+        }
+
+        noRatingsTextView.setVisibility(View.GONE);
+        averageRatingTextView.setVisibility(View.VISIBLE);
+        ratingCountTextView.setVisibility(View.VISIBLE);
+        averageRatingTextView.setText(getString(R.string.average_rating, averageRating));
+        ratingCountTextView.setText(getString(R.string.rating_count, ratingCount));
+    }
+
+    private void showNoRatings() {
+        averageRatingTextView.setVisibility(View.GONE);
+        ratingCountTextView.setVisibility(View.GONE);
+        noRatingsTextView.setVisibility(View.VISIBLE);
+    }
+
+    private long getLongNumber(DocumentSnapshot documentSnapshot, String fieldName) {
+        Object value = documentSnapshot.get(fieldName);
+        if (value instanceof Number) {
+            return ((Number) value).longValue();
+        }
+        return 0L;
+    }
+
+    private Double getDoubleNumber(DocumentSnapshot documentSnapshot, String fieldName) {
+        Object value = documentSnapshot.get(fieldName);
+        if (value instanceof Number) {
+            return ((Number) value).doubleValue();
+        }
+        return null;
     }
 
     private void populatePhone(DocumentSnapshot documentSnapshot) {

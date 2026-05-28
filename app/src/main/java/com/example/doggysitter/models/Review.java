@@ -4,8 +4,8 @@ package com.example.doggysitter.models;
 public class Review {
     private String id;
     private String requestId;
-    private String ownerUid;
-    private String walkerUid;
+    private String ownerId;
+    private String walkerId;
     private int rating;
     private String comment;
     private Object createdAt;
@@ -29,20 +29,20 @@ public class Review {
         this.requestId = requestId;
     }
 
-    public String getOwnerUid() {
-        return ownerUid;
+    public String getOwnerId() {
+        return ownerId;
     }
 
-    public void setOwnerUid(String ownerUid) {
-        this.ownerUid = ownerUid;
+    public void setOwnerId(String ownerId) {
+        this.ownerId = ownerId;
     }
 
-    public String getWalkerUid() {
-        return walkerUid;
+    public String getWalkerId() {
+        return walkerId;
     }
 
-    public void setWalkerUid(String walkerUid) {
-        this.walkerUid = walkerUid;
+    public void setWalkerId(String walkerId) {
+        this.walkerId = walkerId;
     }
 
     public int getRating() {

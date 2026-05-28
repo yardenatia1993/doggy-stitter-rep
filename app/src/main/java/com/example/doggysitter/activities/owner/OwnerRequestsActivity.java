@@ -8,6 +8,7 @@ import com.example.doggysitter.repositories.WalkRequestRepository;
 import com.example.doggysitter.utils.FirestoreConstants;
 import com.example.doggysitter.utils.ValidationUtils;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.View;
@@ -159,6 +160,13 @@ public class OwnerRequestsActivity extends AppCompatActivity implements OwnerWal
                 .setPositiveButton(R.string.confirm, (dialog, which) -> completeRequest(walkRequest))
                 .setNegativeButton(R.string.cancel, null)
                 .show();
+    }
+
+    @Override
+    public void onReviewWalker(WalkRequest walkRequest) {
+        Intent intent = new Intent(this, ReviewActivity.class);
+        intent.putExtra(ReviewActivity.EXTRA_REQUEST_ID, walkRequest.getId());
+        startActivity(intent);
     }
 
     private void cancelRequest(WalkRequest walkRequest) {

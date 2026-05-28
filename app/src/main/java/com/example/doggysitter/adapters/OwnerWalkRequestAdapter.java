@@ -29,6 +29,8 @@ public class OwnerWalkRequestAdapter
         void onCancelRequest(WalkRequest walkRequest);
 
         void onCompleteRequest(WalkRequest walkRequest);
+
+        void onReviewWalker(WalkRequest walkRequest);
     }
 
     private final List<WalkRequest> walkRequests = new ArrayList<>();
@@ -122,7 +124,9 @@ public class OwnerWalkRequestAdapter
 
     private void bindWalkerName(OwnerWalkRequestViewHolder holder, Context context, WalkRequest walkRequest) {
         String walkerId = ValidationUtils.normalizeSpaces(walkRequest.getWalkerId());
-        boolean shouldShowWalker = FirestoreConstants.WALK_REQUEST_STATUS_ACCEPTED.equals(walkRequest.getStatus())
+        boolean statusShowsWalker = FirestoreConstants.WALK_REQUEST_STATUS_ACCEPTED.equals(walkRequest.getStatus())
+                || FirestoreConstants.WALK_REQUEST_STATUS_COMPLETED.equals(walkRequest.getStatus());
+        boolean shouldShowWalker = statusShowsWalker
                 && !TextUtils.isEmpty(walkerId);
         holder.walkerNameTextView.setVisibility(shouldShowWalker ? View.VISIBLE : View.GONE);
         if (!shouldShowWalker) {
@@ -141,6 +145,15 @@ public class OwnerWalkRequestAdapter
     }
 
     private void bindActionButton(OwnerWalkRequestViewHolder holder, Context context, WalkRequest walkRequest) {
+        holder.reviewSentTextView.setVisibility(View.GONE);
+
+        if (Boolean.TRUE.equals(walkRequest.getReviewed())) {
+            holder.reviewSentTextView.setVisibility(View.VISIBLE);
+            holder.actionButton.setVisibility(View.GONE);
+            holder.actionButton.setOnClickListener(null);
+            return;
+        }
+
         if (FirestoreConstants.WALK_REQUEST_STATUS_OPEN.equals(walkRequest.getStatus())) {
             holder.actionButton.setVisibility(View.VISIBLE);
             holder.actionButton.setEnabled(actionsEnabled);
@@ -160,6 +173,18 @@ public class OwnerWalkRequestAdapter
             holder.actionButton.setOnClickListener(view -> {
                 if (listener != null) {
                     listener.onCompleteRequest(walkRequest);
+                }
+            });
+            return;
+        }
+
+        if (FirestoreConstants.WALK_REQUEST_STATUS_COMPLETED.equals(walkRequest.getStatus())) {
+            holder.actionButton.setVisibility(View.VISIBLE);
+            holder.actionButton.setEnabled(actionsEnabled);
+            holder.actionButton.setText(R.string.rate_walker);
+            holder.actionButton.setOnClickListener(view -> {
+                if (listener != null) {
+                    listener.onReviewWalker(walkRequest);
                 }
             });
             return;
@@ -194,6 +219,7 @@ public class OwnerWalkRequestAdapter
         private final TextView pickupLocationTextView;
         private final TextView statusTextView;
         private final TextView walkerNameTextView;
+        private final TextView reviewSentTextView;
         private final Button actionButton;
 
         OwnerWalkRequestViewHolder(@NonNull View itemView) {
@@ -206,6 +232,7 @@ public class OwnerWalkRequestAdapter
             pickupLocationTextView = itemView.findViewById(R.id.text_pickup_location);
             statusTextView = itemView.findViewById(R.id.text_status);
             walkerNameTextView = itemView.findViewById(R.id.text_walker_name);
+            reviewSentTextView = itemView.findViewById(R.id.text_review_sent);
             actionButton = itemView.findViewById(R.id.button_primary_action);
         }
     }

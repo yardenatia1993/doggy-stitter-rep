@@ -15,6 +15,7 @@ public final class FirestoreConstants {
     public static final String FIELD_CREATED_AT = "createdAt";
     public static final String FIELD_ID = "id";
     public static final String FIELD_OWNER_ID = "ownerId";
+    public static final String FIELD_REQUEST_ID = "requestId";
     public static final String FIELD_NAME = "name";
     public static final String FIELD_AGE = "age";
     public static final String FIELD_AGE_MONTHS = "ageMonths";
@@ -42,6 +43,13 @@ public final class FirestoreConstants {
     public static final String FIELD_ACCEPTED_AT = "acceptedAt";
     public static final String FIELD_COMPLETED_AT = "completedAt";
     public static final String FIELD_CANCELED_AT = "canceledAt";
+    public static final String FIELD_REVIEWED = "reviewed";
+    public static final String FIELD_REVIEW_ID = "reviewId";
+    public static final String FIELD_RATING = "rating";
+    public static final String FIELD_COMMENT = "comment";
+    public static final String FIELD_RATING_SUM = "ratingSum";
+    public static final String FIELD_RATING_COUNT = "ratingCount";
+    public static final String FIELD_AVERAGE_RATING = "averageRating";
     public static final String FIELD_PICKUP_LAT = "pickupLat";
     public static final String FIELD_PICKUP_LNG = "pickupLng";
     public static final String FIELD_PICKUP_LOCATION_LABEL = "pickupLocationLabel";
