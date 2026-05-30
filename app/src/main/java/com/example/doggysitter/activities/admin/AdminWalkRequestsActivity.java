@@ -17,7 +17,6 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -26,7 +25,7 @@ import com.google.firebase.firestore.DocumentSnapshot;
 import java.util.ArrayList;
 import java.util.List;
 
-public class AdminWalkRequestsActivity extends AppCompatActivity {
+public class AdminWalkRequestsActivity extends AdminBaseActivity {
     private final List<WalkRequest> allWalkRequests = new ArrayList<>();
     private AdminRepository adminRepository;
     private AdminWalkRequestAdapter adapter;
@@ -50,7 +49,7 @@ public class AdminWalkRequestsActivity extends AppCompatActivity {
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         recyclerView.setAdapter(adapter);
         setupStatusFilter();
-        loadWalkRequests();
+        requireAdminAccess(this::loadWalkRequests);
     }
 
     private void setupStatusFilter() {
@@ -100,7 +99,7 @@ public class AdminWalkRequestsActivity extends AppCompatActivity {
                 })
                 .addOnFailureListener(error -> {
                     setLoading(false);
-                    Toast.makeText(this, R.string.error_load_admin_data, Toast.LENGTH_SHORT).show();
+                    handleAdminDataLoadFailure("Failed to load admin walk requests", error);
                 });
     }
 

@@ -4,6 +4,7 @@ import com.example.doggysitter.R;
 import com.example.doggysitter.models.User;
 import com.example.doggysitter.repositories.AuthRepository;
 import com.example.doggysitter.repositories.UserRepository;
+import com.example.doggysitter.utils.FirestoreErrorUtils;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -96,8 +97,16 @@ public class RegisterActivity extends AppCompatActivity {
                     })
                     .addOnFailureListener(error -> {
                         setLoading(false);
-                        Log.e(TAG, "Failed to create user profile after registration", error);
-                        Toast.makeText(this, R.string.error_save_profile, Toast.LENGTH_SHORT).show();
+                        Toast.makeText(
+                                this,
+                                FirestoreErrorUtils.getWriteErrorMessageResId(
+                                        TAG,
+                                        "Failed to create user profile after registration",
+                                        error,
+                                        R.string.error_save_profile
+                                ),
+                                Toast.LENGTH_SHORT
+                        ).show();
                     });
         });
     }

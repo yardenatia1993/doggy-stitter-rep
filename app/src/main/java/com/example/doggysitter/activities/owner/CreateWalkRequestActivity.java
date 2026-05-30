@@ -8,6 +8,7 @@ import com.example.doggysitter.repositories.DogRepository;
 import com.example.doggysitter.repositories.WalkRequestRepository;
 import com.example.doggysitter.utils.DateTimeUtils;
 import com.example.doggysitter.utils.FirestoreConstants;
+import com.example.doggysitter.utils.FirestoreErrorUtils;
 import com.example.doggysitter.utils.IsraeliLocationPickerDialog;
 import com.example.doggysitter.utils.LocationUtils;
 import com.example.doggysitter.utils.ValidationUtils;
@@ -45,6 +46,7 @@ import java.util.Calendar;
 import java.util.List;
 
 public class CreateWalkRequestActivity extends AppCompatActivity {
+    private static final String TAG = "CreateWalkRequestActivity";
     private static final int REQUEST_PICKUP_LOCATION_PERMISSION = 2001;
 
     private Spinner dogSpinner;
@@ -208,7 +210,16 @@ public class CreateWalkRequestActivity extends AppCompatActivity {
                 })
                 .addOnFailureListener(error -> {
                     setLoading(false);
-                    Toast.makeText(this, R.string.error_load_dogs, Toast.LENGTH_SHORT).show();
+                    Toast.makeText(
+                            this,
+                            FirestoreErrorUtils.getReadErrorMessageResId(
+                                    TAG,
+                                    "Failed to load dogs for walk request",
+                                    error,
+                                    R.string.error_load_dogs
+                            ),
+                            Toast.LENGTH_SHORT
+                    ).show();
                 });
     }
 
@@ -283,7 +294,16 @@ public class CreateWalkRequestActivity extends AppCompatActivity {
                 })
                 .addOnFailureListener(error -> {
                     setLoading(false);
-                    Toast.makeText(this, R.string.error_create_walk_request, Toast.LENGTH_SHORT).show();
+                    Toast.makeText(
+                            this,
+                            FirestoreErrorUtils.getWriteErrorMessageResId(
+                                    TAG,
+                                    "Failed to create walk request",
+                                    error,
+                                    R.string.error_create_walk_request
+                            ),
+                            Toast.LENGTH_SHORT
+                    ).show();
                 });
     }
 

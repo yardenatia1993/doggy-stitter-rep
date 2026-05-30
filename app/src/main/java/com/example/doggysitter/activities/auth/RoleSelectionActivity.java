@@ -6,6 +6,7 @@ import com.example.doggysitter.activities.walker.WalkerDashboardActivity;
 import com.example.doggysitter.repositories.AuthRepository;
 import com.example.doggysitter.repositories.UserRepository;
 import com.example.doggysitter.utils.FirestoreConstants;
+import com.example.doggysitter.utils.FirestoreErrorUtils;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -19,6 +20,8 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.google.firebase.auth.FirebaseUser;
 
 public class RoleSelectionActivity extends AppCompatActivity {
+    private static final String TAG = "RoleSelectionActivity";
+
     private Button ownerButton;
     private Button walkerButton;
     private ProgressBar progressBar;
@@ -59,7 +62,16 @@ public class RoleSelectionActivity extends AppCompatActivity {
                 })
                 .addOnFailureListener(error -> {
                     setLoading(false);
-                    Toast.makeText(this, R.string.error_save_role, Toast.LENGTH_SHORT).show();
+                    Toast.makeText(
+                            this,
+                            FirestoreErrorUtils.getWriteErrorMessageResId(
+                                    TAG,
+                                    "Failed to save selected role",
+                                    error,
+                                    R.string.error_save_role
+                            ),
+                            Toast.LENGTH_SHORT
+                    ).show();
                 });
     }
 

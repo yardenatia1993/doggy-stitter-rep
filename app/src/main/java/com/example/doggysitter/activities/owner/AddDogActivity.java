@@ -3,6 +3,7 @@ package com.example.doggysitter.activities.owner;
 import com.example.doggysitter.R;
 import com.example.doggysitter.models.Dog;
 import com.example.doggysitter.repositories.DogRepository;
+import com.example.doggysitter.utils.FirestoreErrorUtils;
 import com.example.doggysitter.utils.ValidationUtils;
 
 import android.os.Bundle;
@@ -30,6 +31,7 @@ import java.util.List;
 
 public class AddDogActivity extends AppCompatActivity {
     public static final String EXTRA_DOG_ID = "dogId";
+    private static final String TAG = "AddDogActivity";
 
     private TextView titleTextView;
     private EditText dogNameEditText;
@@ -150,7 +152,16 @@ public class AddDogActivity extends AppCompatActivity {
                 })
                 .addOnFailureListener(error -> {
                     setLoading(false);
-                    Toast.makeText(this, R.string.error_load_dog, Toast.LENGTH_SHORT).show();
+                    Toast.makeText(
+                            this,
+                            FirestoreErrorUtils.getReadErrorMessageResId(
+                                    TAG,
+                                    "Failed to load dog for editing",
+                                    error,
+                                    R.string.error_load_dog
+                            ),
+                            Toast.LENGTH_SHORT
+                    ).show();
                     finish();
                 });
     }
@@ -235,7 +246,16 @@ public class AddDogActivity extends AppCompatActivity {
                     })
                     .addOnFailureListener(error -> {
                         setLoading(false);
-                        Toast.makeText(this, R.string.error_save_dog, Toast.LENGTH_SHORT).show();
+                        Toast.makeText(
+                                this,
+                                FirestoreErrorUtils.getWriteErrorMessageResId(
+                                        TAG,
+                                        "Failed to add dog",
+                                        error,
+                                        R.string.error_save_dog
+                                ),
+                                Toast.LENGTH_SHORT
+                        ).show();
                     });
         } else {
             dogRepository.updateDog(editingDogId, name, ageMonths, breed, notes)
@@ -246,7 +266,16 @@ public class AddDogActivity extends AppCompatActivity {
                     })
                     .addOnFailureListener(error -> {
                         setLoading(false);
-                        Toast.makeText(this, R.string.error_update_dog, Toast.LENGTH_SHORT).show();
+                        Toast.makeText(
+                                this,
+                                FirestoreErrorUtils.getWriteErrorMessageResId(
+                                        TAG,
+                                        "Failed to update dog",
+                                        error,
+                                        R.string.error_update_dog
+                                ),
+                                Toast.LENGTH_SHORT
+                        ).show();
                     });
         }
     }

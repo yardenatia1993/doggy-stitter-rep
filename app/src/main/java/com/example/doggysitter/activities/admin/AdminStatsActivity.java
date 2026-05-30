@@ -13,8 +13,6 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import androidx.appcompat.app.AppCompatActivity;
-
 import com.google.android.gms.tasks.Task;
 import com.google.android.gms.tasks.Tasks;
 import com.google.firebase.firestore.DocumentSnapshot;
@@ -22,7 +20,7 @@ import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.Locale;
 
-public class AdminStatsActivity extends AppCompatActivity {
+public class AdminStatsActivity extends AdminBaseActivity {
     private AdminRepository adminRepository;
     private ProgressBar progressBar;
     private TextView usersCountTextView;
@@ -54,7 +52,7 @@ public class AdminStatsActivity extends AppCompatActivity {
         reviewsCountTextView = findViewById(R.id.text_reviews_count);
         averageRatingTextView = findViewById(R.id.text_average_rating);
 
-        loadStats();
+        requireAdminAccess(this::loadStats);
     }
 
     private void loadStats() {
@@ -69,11 +67,21 @@ public class AdminStatsActivity extends AppCompatActivity {
                     if (!usersTask.isSuccessful()
                             || !walkRequestsTask.isSuccessful()
                             || !reviewsTask.isSuccessful()) {
-                        Toast.makeText(this, R.string.error_load_admin_data, Toast.LENGTH_SHORT).show();
+                        handleFailedStatsTasks(usersTask, walkRequestsTask, reviewsTask);
                         return;
                     }
                     bindStats(usersTask.getResult(), walkRequestsTask.getResult(), reviewsTask.getResult());
                 });
+    }
+
+    @SafeVarargs
+    private final void handleFailedStatsTasks(Task<QuerySnapshot>... tasks) {
+        for (Task<QuerySnapshot> task : tasks) {
+            if (!task.isSuccessful()) {
+                handleAdminDataLoadFailure("Failed to load admin statistics", task.getException());
+                return;
+            }
+        }
     }
 
     private void bindStats(QuerySnapshot usersSnapshot, QuerySnapshot walkRequestsSnapshot,

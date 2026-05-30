@@ -4,6 +4,7 @@ import com.example.doggysitter.R;
 import com.example.doggysitter.adapters.DogAdapter;
 import com.example.doggysitter.models.Dog;
 import com.example.doggysitter.repositories.DogRepository;
+import com.example.doggysitter.utils.FirestoreErrorUtils;
 
 import android.app.AlertDialog;
 import android.content.Intent;
@@ -26,6 +27,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class MyDogsActivity extends AppCompatActivity implements DogAdapter.Listener {
+    private static final String TAG = "MyDogsActivity";
+
     private LinearLayout emptyLayout;
     private RecyclerView dogsRecyclerView;
     private ProgressBar progressBar;
@@ -85,7 +88,16 @@ public class MyDogsActivity extends AppCompatActivity implements DogAdapter.List
                 })
                 .addOnFailureListener(error -> {
                     progressBar.setVisibility(View.GONE);
-                    Toast.makeText(this, R.string.error_load_dogs, Toast.LENGTH_SHORT).show();
+                    Toast.makeText(
+                            this,
+                            FirestoreErrorUtils.getReadErrorMessageResId(
+                                    TAG,
+                                    "Failed to load owner dogs",
+                                    error,
+                                    R.string.error_load_dogs
+                            ),
+                            Toast.LENGTH_SHORT
+                    ).show();
                 });
     }
 
@@ -116,7 +128,16 @@ public class MyDogsActivity extends AppCompatActivity implements DogAdapter.List
                 })
                 .addOnFailureListener(error -> {
                     progressBar.setVisibility(View.GONE);
-                    Toast.makeText(this, R.string.error_delete_dog, Toast.LENGTH_SHORT).show();
+                    Toast.makeText(
+                            this,
+                            FirestoreErrorUtils.getWriteErrorMessageResId(
+                                    TAG,
+                                    "Failed to delete dog",
+                                    error,
+                                    R.string.error_delete_dog
+                            ),
+                            Toast.LENGTH_SHORT
+                    ).show();
                 });
     }
 }

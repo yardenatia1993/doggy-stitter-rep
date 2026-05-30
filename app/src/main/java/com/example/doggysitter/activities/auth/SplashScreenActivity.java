@@ -7,6 +7,7 @@ import com.example.doggysitter.activities.walker.WalkerDashboardActivity;
 import com.example.doggysitter.repositories.AuthRepository;
 import com.example.doggysitter.repositories.UserRepository;
 import com.example.doggysitter.utils.FirestoreConstants;
+import com.example.doggysitter.utils.FirestoreErrorUtils;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -17,6 +18,8 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.google.firebase.auth.FirebaseUser;
 
 public class SplashScreenActivity extends AppCompatActivity {
+    private static final String TAG = "SplashScreenActivity";
+
     private AuthRepository authRepository;
     private UserRepository userRepository;
 
@@ -49,7 +52,16 @@ public class SplashScreenActivity extends AppCompatActivity {
                     routeByRole(role);
                 })
                 .addOnFailureListener(error -> {
-                    Toast.makeText(this, R.string.error_load_profile, Toast.LENGTH_SHORT).show();
+                    Toast.makeText(
+                            this,
+                            FirestoreErrorUtils.getReadErrorMessageResId(
+                                    TAG,
+                                    "Failed to load current user profile",
+                                    error,
+                                    R.string.error_load_profile
+                            ),
+                            Toast.LENGTH_SHORT
+                    ).show();
                     openAndFinish(LoginActivity.class);
                 });
     }

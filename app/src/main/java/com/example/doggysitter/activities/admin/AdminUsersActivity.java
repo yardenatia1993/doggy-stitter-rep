@@ -13,7 +13,6 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -22,7 +21,7 @@ import com.google.firebase.firestore.DocumentSnapshot;
 import java.util.ArrayList;
 import java.util.List;
 
-public class AdminUsersActivity extends AppCompatActivity {
+public class AdminUsersActivity extends AdminBaseActivity {
     private AdminRepository adminRepository;
     private AdminUserAdapter adapter;
     private RecyclerView recyclerView;
@@ -45,7 +44,7 @@ public class AdminUsersActivity extends AppCompatActivity {
         adapter = new AdminUserAdapter();
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         recyclerView.setAdapter(adapter);
-        loadUsers();
+        requireAdminAccess(this::loadUsers);
     }
 
     private void loadUsers() {
@@ -68,7 +67,7 @@ public class AdminUsersActivity extends AppCompatActivity {
                 })
                 .addOnFailureListener(error -> {
                     setLoading(false);
-                    Toast.makeText(this, R.string.error_load_admin_data, Toast.LENGTH_SHORT).show();
+                    handleAdminDataLoadFailure("Failed to load admin users", error);
                 });
     }
 

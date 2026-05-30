@@ -6,6 +6,7 @@ import com.example.doggysitter.models.WalkRequest;
 import com.example.doggysitter.repositories.WalkRequestRepository;
 import com.example.doggysitter.repositories.WalkerProfileRepository;
 import com.example.doggysitter.utils.FirestoreConstants;
+import com.example.doggysitter.utils.FirestoreErrorUtils;
 import com.example.doggysitter.utils.LocationUtils;
 
 import android.os.Bundle;
@@ -26,6 +27,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class AvailableWalkRequestsActivity extends AppCompatActivity implements WalkRequestAdapter.Listener {
+    private static final String TAG = "AvailableWalkRequestsActivity";
+
     private RecyclerView walkRequestsRecyclerView;
     private TextView emptyTextView;
     private ProgressBar progressBar;
@@ -92,7 +95,16 @@ public class AvailableWalkRequestsActivity extends AppCompatActivity implements 
                 })
                 .addOnFailureListener(error -> {
                     setLoading(false);
-                    Toast.makeText(this, R.string.error_load_walker_profile, Toast.LENGTH_SHORT).show();
+                    Toast.makeText(
+                            this,
+                            FirestoreErrorUtils.getReadErrorMessageResId(
+                                    TAG,
+                                    "Failed to load walker profile for available requests",
+                                    error,
+                                    R.string.error_load_walker_profile
+                            ),
+                            Toast.LENGTH_SHORT
+                    ).show();
                 });
     }
 
@@ -128,7 +140,16 @@ public class AvailableWalkRequestsActivity extends AppCompatActivity implements 
                 })
                 .addOnFailureListener(error -> {
                     setLoading(false);
-                    Toast.makeText(this, R.string.error_load_walk_requests, Toast.LENGTH_SHORT).show();
+                    Toast.makeText(
+                            this,
+                            FirestoreErrorUtils.getReadErrorMessageResId(
+                                    TAG,
+                                    "Failed to load open walk requests",
+                                    error,
+                                    R.string.error_load_walk_requests
+                            ),
+                            Toast.LENGTH_SHORT
+                    ).show();
                 });
     }
 
@@ -149,7 +170,16 @@ public class AvailableWalkRequestsActivity extends AppCompatActivity implements 
                 })
                 .addOnFailureListener(error -> {
                     setLoading(false);
-                    Toast.makeText(this, R.string.error_accept_walk_request, Toast.LENGTH_SHORT).show();
+                    Toast.makeText(
+                            this,
+                            FirestoreErrorUtils.getWriteErrorMessageResId(
+                                    TAG,
+                                    "Failed to accept walk request",
+                                    error,
+                                    R.string.error_accept_walk_request
+                            ),
+                            Toast.LENGTH_SHORT
+                    ).show();
                 });
     }
 

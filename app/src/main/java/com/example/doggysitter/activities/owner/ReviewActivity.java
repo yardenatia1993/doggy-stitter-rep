@@ -4,6 +4,7 @@ import com.example.doggysitter.R;
 import com.example.doggysitter.repositories.ReviewRepository;
 import com.example.doggysitter.repositories.WalkRequestRepository;
 import com.example.doggysitter.utils.FirestoreConstants;
+import com.example.doggysitter.utils.FirestoreErrorUtils;
 import com.example.doggysitter.utils.ValidationUtils;
 
 import android.os.Bundle;
@@ -23,6 +24,7 @@ import com.google.firebase.firestore.DocumentSnapshot;
 
 public class ReviewActivity extends AppCompatActivity {
     public static final String EXTRA_REQUEST_ID = "requestId";
+    private static final String TAG = "ReviewActivity";
 
     private RatingBar ratingBar;
     private EditText commentEditText;
@@ -72,7 +74,16 @@ public class ReviewActivity extends AppCompatActivity {
                 .addOnSuccessListener(this::handleRequestLoaded)
                 .addOnFailureListener(error -> {
                     setLoading(false);
-                    Toast.makeText(this, R.string.error_load_walk_request, Toast.LENGTH_SHORT).show();
+                    Toast.makeText(
+                            this,
+                            FirestoreErrorUtils.getReadErrorMessageResId(
+                                    TAG,
+                                    "Failed to load walk request for review",
+                                    error,
+                                    R.string.error_load_walk_request
+                            ),
+                            Toast.LENGTH_SHORT
+                    ).show();
                     finish();
                 });
     }
@@ -128,7 +139,16 @@ public class ReviewActivity extends AppCompatActivity {
                 })
                 .addOnFailureListener(error -> {
                     setLoading(false);
-                    Toast.makeText(this, R.string.error_submit_review, Toast.LENGTH_SHORT).show();
+                    Toast.makeText(
+                            this,
+                            FirestoreErrorUtils.getSecuritySensitiveWriteErrorMessageResId(
+                                    TAG,
+                                    "Failed to submit review",
+                                    error,
+                                    R.string.error_submit_review
+                            ),
+                            Toast.LENGTH_SHORT
+                    ).show();
                 });
     }
 

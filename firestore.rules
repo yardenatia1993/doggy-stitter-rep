@@ -70,7 +70,7 @@ service cloud.firestore {
         && request.resource.data.pickupLng == resource.data.pickupLng
         && request.resource.data.pickupLocationLabel == resource.data.pickupLocationLabel
         && request.resource.data.reviewed == resource.data.reviewed
-        && request.resource.data.reviewId == resource.data.reviewId;
+        && request.resource.data.get("reviewId", null) == resource.data.get("reviewId", null);
     }
 
     function unchangedWalkRequestForOwnerStatusChange() {
@@ -83,12 +83,12 @@ service cloud.firestore {
         && request.resource.data.durationMinutes == resource.data.durationMinutes
         && request.resource.data.maxPrice == resource.data.maxPrice
         && request.resource.data.notes == resource.data.notes
-        && request.resource.data.walkerId == resource.data.walkerId
+        && request.resource.data.get("walkerId", null) == resource.data.get("walkerId", null)
         && request.resource.data.pickupLat == resource.data.pickupLat
         && request.resource.data.pickupLng == resource.data.pickupLng
         && request.resource.data.pickupLocationLabel == resource.data.pickupLocationLabel
         && request.resource.data.reviewed == resource.data.reviewed
-        && request.resource.data.reviewId == resource.data.reviewId;
+        && request.resource.data.get("reviewId", null) == resource.data.get("reviewId", null);
     }
 
     function reviewPath(reviewId) {

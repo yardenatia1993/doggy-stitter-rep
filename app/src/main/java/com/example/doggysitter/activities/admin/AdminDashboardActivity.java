@@ -8,9 +8,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.widget.Button;
 
-import androidx.appcompat.app.AppCompatActivity;
-
-public class AdminDashboardActivity extends AppCompatActivity {
+public class AdminDashboardActivity extends AdminBaseActivity {
     private AuthRepository authRepository;
 
     @Override
@@ -26,6 +24,14 @@ public class AdminDashboardActivity extends AppCompatActivity {
         Button statisticsButton = findViewById(R.id.button_statistics);
         Button logoutButton = findViewById(R.id.button_logout);
 
+        setNavigationEnabled(
+                false,
+                usersButton,
+                walkerProfilesButton,
+                walkRequestsButton,
+                reviewsButton,
+                statisticsButton
+        );
         usersButton.setOnClickListener(view -> startActivity(new Intent(this, AdminUsersActivity.class)));
         walkerProfilesButton.setOnClickListener(
                 view -> startActivity(new Intent(this, AdminWalkerProfilesActivity.class))
@@ -36,6 +42,20 @@ public class AdminDashboardActivity extends AppCompatActivity {
         reviewsButton.setOnClickListener(view -> startActivity(new Intent(this, AdminReviewsActivity.class)));
         statisticsButton.setOnClickListener(view -> startActivity(new Intent(this, AdminStatsActivity.class)));
         logoutButton.setOnClickListener(view -> logout());
+        requireAdminAccess(() -> setNavigationEnabled(
+                true,
+                usersButton,
+                walkerProfilesButton,
+                walkRequestsButton,
+                reviewsButton,
+                statisticsButton
+        ));
+    }
+
+    private void setNavigationEnabled(boolean enabled, Button... buttons) {
+        for (Button button : buttons) {
+            button.setEnabled(enabled);
+        }
     }
 
     private void logout() {

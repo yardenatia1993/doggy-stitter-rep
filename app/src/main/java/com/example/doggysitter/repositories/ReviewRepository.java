@@ -64,6 +64,9 @@ public class ReviewRepository {
                     .collection(FirestoreConstants.COLLECTION_WALKER_PROFILES)
                     .document(walkerId);
             DocumentSnapshot walkerProfileSnapshot = transaction.get(walkerProfileReference);
+            if (!walkerProfileSnapshot.exists()) {
+                throw abort("פרופיל הדוגווקר לא נמצא");
+            }
 
             long ratingSum = getLongValue(walkerProfileSnapshot, FirestoreConstants.FIELD_RATING_SUM);
             long ratingCount = getLongValue(walkerProfileSnapshot, FirestoreConstants.FIELD_RATING_COUNT);

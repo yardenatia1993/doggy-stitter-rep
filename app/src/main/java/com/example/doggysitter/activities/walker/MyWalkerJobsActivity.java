@@ -6,6 +6,7 @@ import com.example.doggysitter.models.WalkRequest;
 import com.example.doggysitter.repositories.WalkRequestRepository;
 import com.example.doggysitter.repositories.WalkerProfileRepository;
 import com.example.doggysitter.utils.FirestoreConstants;
+import com.example.doggysitter.utils.FirestoreErrorUtils;
 import com.example.doggysitter.utils.LocationUtils;
 
 import android.os.Bundle;
@@ -26,6 +27,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class MyWalkerJobsActivity extends AppCompatActivity {
+    private static final String TAG = "MyWalkerJobsActivity";
+
     private RecyclerView jobsRecyclerView;
     private TextView emptyTextView;
     private ProgressBar progressBar;
@@ -70,7 +73,24 @@ public class MyWalkerJobsActivity extends AppCompatActivity {
                     Double serviceLng = getNumberField(documentSnapshot, FirestoreConstants.FIELD_SERVICE_LNG);
                     loadJobs(currentUser.getUid(), serviceLat, serviceLng);
                 })
-                .addOnFailureListener(error -> loadJobs(currentUser.getUid(), null, null));
+                .addOnFailureListener(error -> {
+                    if (FirestoreErrorUtils.isPermissionDenied(error)) {
+                        setLoading(false);
+                        Toast.makeText(
+                                this,
+                                FirestoreErrorUtils.getReadErrorMessageResId(
+                                        TAG,
+                                        "Permission denied while loading walker profile for jobs",
+                                        error,
+                                        R.string.error_load_walker_profile
+                                ),
+                                Toast.LENGTH_SHORT
+                        ).show();
+                        return;
+                    }
+                    FirestoreErrorUtils.log(TAG, "Failed to load walker profile for jobs", error);
+                    loadJobs(currentUser.getUid(), null, null);
+                });
     }
 
     private void loadJobs(String walkerId, Double serviceLat, Double serviceLng) {
@@ -104,7 +124,16 @@ public class MyWalkerJobsActivity extends AppCompatActivity {
                 })
                 .addOnFailureListener(error -> {
                     setLoading(false);
-                    Toast.makeText(this, R.string.error_load_walk_requests, Toast.LENGTH_SHORT).show();
+                    Toast.makeText(
+                            this,
+                            FirestoreErrorUtils.getReadErrorMessageResId(
+                                    TAG,
+                                    "Failed to load walker jobs",
+                                    error,
+                                    R.string.error_load_walk_requests
+                            ),
+                            Toast.LENGTH_SHORT
+                    ).show();
                 });
     }
 

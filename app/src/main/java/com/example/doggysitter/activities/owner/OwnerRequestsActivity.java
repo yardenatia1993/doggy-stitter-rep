@@ -6,6 +6,7 @@ import com.example.doggysitter.models.WalkRequest;
 import com.example.doggysitter.repositories.WalkerProfileRepository;
 import com.example.doggysitter.repositories.WalkRequestRepository;
 import com.example.doggysitter.utils.FirestoreConstants;
+import com.example.doggysitter.utils.FirestoreErrorUtils;
 import com.example.doggysitter.utils.ValidationUtils;
 
 import android.content.Intent;
@@ -35,6 +36,8 @@ import java.util.Map;
 import java.util.Set;
 
 public class OwnerRequestsActivity extends AppCompatActivity implements OwnerWalkRequestAdapter.Listener {
+    private static final String TAG = "OwnerRequestsActivity";
+
     private RecyclerView ownerRequestsRecyclerView;
     private TextView emptyTextView;
     private ProgressBar progressBar;
@@ -105,7 +108,16 @@ public class OwnerRequestsActivity extends AppCompatActivity implements OwnerWal
                 })
                 .addOnFailureListener(error -> {
                     setLoading(false);
-                    Toast.makeText(this, R.string.error_load_walk_requests, Toast.LENGTH_SHORT).show();
+                    Toast.makeText(
+                            this,
+                            FirestoreErrorUtils.getReadErrorMessageResId(
+                                    TAG,
+                                    "Failed to load owner walk requests",
+                                    error,
+                                    R.string.error_load_walk_requests
+                            ),
+                            Toast.LENGTH_SHORT
+                    ).show();
                 });
     }
 
@@ -137,6 +149,12 @@ public class OwnerRequestsActivity extends AppCompatActivity implements OwnerWal
                             if (!TextUtils.isEmpty(fullName)) {
                                 walkerName = fullName;
                             }
+                        } else {
+                            FirestoreErrorUtils.log(
+                                    TAG,
+                                    "Failed to load walker name",
+                                    walkerTask.getException()
+                            );
                         }
                         walkerNamesById.put(walkerId, walkerName);
                     }
@@ -181,7 +199,16 @@ public class OwnerRequestsActivity extends AppCompatActivity implements OwnerWal
                 })
                 .addOnFailureListener(error -> {
                     setLoading(false);
-                    Toast.makeText(this, R.string.error_cancel_walk_request, Toast.LENGTH_SHORT).show();
+                    Toast.makeText(
+                            this,
+                            FirestoreErrorUtils.getWriteErrorMessageResId(
+                                    TAG,
+                                    "Failed to cancel walk request",
+                                    error,
+                                    R.string.error_cancel_walk_request
+                            ),
+                            Toast.LENGTH_SHORT
+                    ).show();
                 });
     }
 
@@ -194,7 +221,16 @@ public class OwnerRequestsActivity extends AppCompatActivity implements OwnerWal
                 })
                 .addOnFailureListener(error -> {
                     setLoading(false);
-                    Toast.makeText(this, R.string.error_complete_walk_request, Toast.LENGTH_SHORT).show();
+                    Toast.makeText(
+                            this,
+                            FirestoreErrorUtils.getWriteErrorMessageResId(
+                                    TAG,
+                                    "Failed to complete walk request",
+                                    error,
+                                    R.string.error_complete_walk_request
+                            ),
+                            Toast.LENGTH_SHORT
+                    ).show();
                 });
     }
 

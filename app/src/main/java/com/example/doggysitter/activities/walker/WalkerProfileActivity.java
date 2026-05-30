@@ -7,6 +7,7 @@ import com.example.doggysitter.repositories.UserRepository;
 import com.example.doggysitter.repositories.WalkerProfileRepository;
 import com.example.doggysitter.utils.DateTimeUtils;
 import com.example.doggysitter.utils.FirestoreConstants;
+import com.example.doggysitter.utils.FirestoreErrorUtils;
 import com.example.doggysitter.utils.IsraeliLocationPickerDialog;
 import com.example.doggysitter.utils.LocationUtils;
 import com.example.doggysitter.utils.ValidationUtils;
@@ -257,8 +258,16 @@ public class WalkerProfileActivity extends AppCompatActivity {
                 })
                 .addOnFailureListener(error -> {
                     setLoading(false);
-                    Log.e(TAG, "loadProfile failure", error);
-                    Toast.makeText(this, R.string.error_load_walker_profile, Toast.LENGTH_SHORT).show();
+                    Toast.makeText(
+                            this,
+                            FirestoreErrorUtils.getReadErrorMessageResId(
+                                    TAG,
+                                    "Failed to load walker profile",
+                                    error,
+                                    R.string.error_load_walker_profile
+                            ),
+                            Toast.LENGTH_SHORT
+                    ).show();
                 });
     }
 
@@ -544,8 +553,16 @@ public class WalkerProfileActivity extends AppCompatActivity {
                 })
                 .addOnFailureListener(error -> {
                     setLoading(false);
-                    Log.e(TAG, "saveProfile failure", error);
-                    Toast.makeText(this, R.string.error_save_walker_profile, Toast.LENGTH_SHORT).show();
+                    Toast.makeText(
+                            this,
+                            FirestoreErrorUtils.getWriteErrorMessageResId(
+                                    TAG,
+                                    "Failed to save walker profile",
+                                    error,
+                                    R.string.error_save_walker_profile
+                            ),
+                            Toast.LENGTH_SHORT
+                    ).show();
                 });
     }
 

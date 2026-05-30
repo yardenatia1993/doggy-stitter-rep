@@ -232,6 +232,10 @@
     <string name="error_load_walk_requests">טעינת בקשות הטיול נכשלה</string>
     <string name="error_load_admin_data">טעינת הנתונים נכשלה</string>
     <string name="error_accept_walk_request">קבלת הבקשה נכשלה</string>
+    <string name="error_permission_denied_action">אין לך הרשאה לבצע פעולה זו</string>
+    <string name="error_permission_denied_view">אין לך הרשאה לצפות במידע זה</string>
+    <string name="error_action_blocked_security">הפעולה נחסמה מטעמי אבטחה</string>
+    <string name="error_admin_permission_required">אין לך הרשאת מנהל</string>
     <string name="service_area_section">אזור פעילות</string>
     <string name="use_current_location_service_area">השתמש במיקום הנוכחי כאזור פעילות</string>
     <string name="choose_manual_service_location">בחר יישוב ידנית</string>
