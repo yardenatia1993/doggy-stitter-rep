@@ -5,6 +5,7 @@ import com.example.doggysitter.models.WalkRequest;
 import com.example.doggysitter.utils.DateTimeUtils;
 import com.example.doggysitter.utils.FirestoreConstants;
 import com.example.doggysitter.utils.PriceUtils;
+import com.example.doggysitter.utils.StatusBadgeUtils;
 import com.example.doggysitter.utils.ValidationUtils;
 
 import android.content.Context;
@@ -16,6 +17,7 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.ArrayList;
@@ -111,6 +113,7 @@ public class OwnerWalkRequestAdapter
                 context.getString(R.string.status_label),
                 getDisplayStatus(context, walkRequest.getStatus())
         ));
+        StatusBadgeUtils.apply(holder.statusTextView, walkRequest.getStatus());
 
         bindWalkerName(holder, context, walkRequest);
         bindActionButton(holder, context, walkRequest);
@@ -156,6 +159,7 @@ public class OwnerWalkRequestAdapter
         if (FirestoreConstants.WALK_REQUEST_STATUS_OPEN.equals(walkRequest.getStatus())) {
             holder.actionButton.setVisibility(View.VISIBLE);
             holder.actionButton.setEnabled(actionsEnabled);
+            applyActionStyle(holder.actionButton, context, R.drawable.bg_button_danger, R.color.ds_on_danger);
             holder.actionButton.setText(R.string.cancel_request);
             holder.actionButton.setOnClickListener(view -> {
                 if (listener != null) {
@@ -168,6 +172,7 @@ public class OwnerWalkRequestAdapter
         if (FirestoreConstants.WALK_REQUEST_STATUS_COMPLETED.equals(walkRequest.getStatus())) {
             holder.actionButton.setVisibility(View.VISIBLE);
             holder.actionButton.setEnabled(actionsEnabled);
+            applyActionStyle(holder.actionButton, context, R.drawable.bg_button_primary, R.color.ds_on_primary);
             holder.actionButton.setText(R.string.rate_walker);
             holder.actionButton.setOnClickListener(view -> {
                 if (listener != null) {
@@ -179,6 +184,11 @@ public class OwnerWalkRequestAdapter
 
         holder.actionButton.setVisibility(View.GONE);
         holder.actionButton.setOnClickListener(null);
+    }
+
+    private void applyActionStyle(Button button, Context context, int backgroundResource, int textColorResource) {
+        button.setBackgroundResource(backgroundResource);
+        button.setTextColor(ContextCompat.getColor(context, textColorResource));
     }
 
     private String getDisplayStatus(Context context, String status) {

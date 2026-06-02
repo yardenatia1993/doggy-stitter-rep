@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="ds_primary">#FF86CDBF</color>
+    <color name="ds_primary_dark">#FF6AB5A7</color>
+    <color name="ds_primary_ripple">#5586CDBF</color>
+    <color name="ds_on_primary">#FF123832</color>
+    <color name="ds_secondary">#FFF2AD82</color>
+    <color name="ds_secondary_ripple">#55F2AD82</color>
+    <color name="ds_background">#FF15201F</color>
+    <color name="ds_surface">#FF202D2B</color>
+    <color name="ds_surface_soft">#FF273836</color>
+    <color name="ds_text_primary">#FFEDF6F3</color>
+    <color name="ds_text_secondary">#FFBDD0CB</color>
+    <color name="ds_outline">#FF3D5551</color>
+    <color name="ds_danger">#FFF08B8B</color>
+    <color name="ds_on_danger">#FF481B1B</color>
+    <color name="ds_danger_ripple">#55F08B8B</color>
+
+    <color name="ds_status_open_background">#FF25483E</color>
+    <color name="ds_status_open_text">#FF9AD8C3</color>
+    <color name="ds_status_accepted_background">#FF283F5A</color>
+    <color name="ds_status_accepted_text">#FFA9C9F0</color>
+    <color name="ds_status_completed_background">#FF403655</color>
+    <color name="ds_status_completed_text">#FFD4C0F4</color>
+    <color name="ds_status_canceled_background">#FF542F31</color>
+    <color name="ds_status_canceled_text">#FFF4B3B1</color>
+    <color name="ds_status_unknown_background">#FF344240</color>
+    <color name="ds_status_unknown_text">#FFC7D2CF</color>
+</resources>

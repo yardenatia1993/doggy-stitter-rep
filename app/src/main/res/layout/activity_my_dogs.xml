@@ -4,6 +4,8 @@
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:animateLayoutChanges="true"
+    android:background="@color/ds_background"
     android:layoutDirection="rtl"
     android:orientation="vertical"
     android:padding="24dp"
@@ -11,11 +13,10 @@
     tools:context=".activities.owner.MyDogsActivity">
 
     <TextView
+        style="@style/TextAppearance.DoggySitter.ScreenTitle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/title_my_dogs"
-        android:textSize="26sp"
-        android:textStyle="bold" />
+        android:text="@string/title_my_dogs" />
 
     <ProgressBar
         android:id="@+id/progress_bar"
@@ -30,19 +31,22 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="32dp"
+        android:background="@drawable/bg_empty_state"
         android:gravity="center_horizontal"
         android:orientation="vertical"
+        android:padding="20dp"
         android:visibility="gone">
 
         <TextView
             android:id="@+id/text_empty"
+            style="@style/TextAppearance.DoggySitter.EmptyState"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/no_dogs_yet"
-            android:textSize="18sp" />
+            android:text="@string/no_dogs_yet" />
 
         <Button
             android:id="@+id/button_add_dog"
+            style="@style/Widget.DoggySitter.Button.Primary"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
@@ -55,5 +59,7 @@
         android:layout_height="0dp"
         android:layout_marginTop="16dp"
         android:layout_weight="1"
-        android:clipToPadding="false" />
+        android:clipToPadding="false"
+        android:layoutAnimation="@anim/layout_list_fade_in"
+        android:paddingBottom="8dp" />
 </LinearLayout>

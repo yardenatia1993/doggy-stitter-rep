@@ -4,6 +4,7 @@
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/ds_background"
     android:layoutDirection="rtl"
     android:orientation="vertical"
     android:padding="24dp"
@@ -11,14 +12,14 @@
     tools:context=".activities.walker.WalkerDashboardActivity">
 
     <TextView
+        style="@style/TextAppearance.DoggySitter.ScreenTitle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/title_walker_dashboard"
-        android:textSize="26sp"
-        android:textStyle="bold" />
+        android:text="@string/title_walker_dashboard" />
 
     <Button
         android:id="@+id/button_my_profile"
+        style="@style/Widget.DoggySitter.Button.Primary"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="24dp"
@@ -26,18 +27,23 @@
 
     <Button
         android:id="@+id/button_available_walk_requests"
+        style="@style/Widget.DoggySitter.Button.Primary"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
         android:text="@string/available_walk_requests" />
 
     <Button
         android:id="@+id/button_my_jobs"
+        style="@style/Widget.DoggySitter.Button.Primary"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
         android:text="@string/my_jobs" />
 
     <Button
         android:id="@+id/button_logout"
+        style="@style/Widget.DoggySitter.Button.Danger"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="24dp"

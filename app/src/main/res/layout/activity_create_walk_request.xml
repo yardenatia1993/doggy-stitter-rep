@@ -3,6 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/ds_background"
     android:fillViewport="true"
     android:layoutDirection="rtl"
     tools:context=".activities.owner.CreateWalkRequestActivity">
@@ -16,13 +17,13 @@
         android:textDirection="rtl">
 
         <TextView
+            style="@style/TextAppearance.DoggySitter.ScreenTitle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/title_create_walk_request"
-            android:textSize="26sp"
-            android:textStyle="bold" />
+            android:text="@string/title_create_walk_request" />
 
         <TextView
+            style="@style/TextAppearance.DoggySitter.SectionTitle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="24dp"
@@ -115,9 +116,7 @@
             android:layout_marginTop="20dp"
             android:text="@string/pickup_location_section"
             android:textAlignment="viewStart"
-            android:textDirection="rtl"
-            android:textSize="18sp"
-            android:textStyle="bold" />
+            android:textDirection="rtl" />
 
         <Button
             android:id="@+id/button_current_pickup_location"
@@ -191,6 +190,7 @@
 
         <Button
             android:id="@+id/button_create_request"
+            style="@style/Widget.DoggySitter.Button.Primary"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="20dp"

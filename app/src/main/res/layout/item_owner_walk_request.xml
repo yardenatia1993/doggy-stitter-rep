@@ -5,9 +5,12 @@
     android:layout_height="wrap_content"
     android:layout_marginBottom="12dp"
     android:layoutDirection="rtl"
-    app:cardCornerRadius="8dp"
-    app:cardElevation="2dp"
-    app:contentPadding="16dp">
+    app:cardBackgroundColor="@color/ds_surface"
+    app:cardCornerRadius="18dp"
+    app:cardElevation="1dp"
+    app:contentPadding="16dp"
+    app:strokeColor="@color/ds_outline"
+    app:strokeWidth="1dp">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -19,6 +22,7 @@
             android:id="@+id/text_dog_name"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:textColor="@color/ds_text_primary"
             android:textSize="20sp"
             android:textStyle="bold" />
 
@@ -27,6 +31,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="6dp"
+            android:textColor="@color/ds_text_primary"
             android:textSize="16sp" />
 
         <TextView
@@ -34,6 +39,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="4dp"
+            android:textColor="@color/ds_text_primary"
             android:textSize="16sp" />
 
         <TextView
@@ -41,6 +47,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="4dp"
+            android:textColor="@color/ds_text_primary"
             android:textSize="16sp" />
 
         <TextView
@@ -48,6 +55,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="4dp"
+            android:textColor="@color/ds_text_primary"
             android:textSize="16sp" />
 
         <TextView
@@ -55,35 +63,50 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="6dp"
+            android:textColor="@color/ds_text_secondary"
             android:textSize="15sp"
             android:visibility="gone" />
 
         <TextView
             android:id="@+id/text_status"
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="6dp"
-            android:textSize="16sp" />
+            android:background="@drawable/bg_status_unknown"
+            android:paddingStart="10dp"
+            android:paddingTop="5dp"
+            android:paddingEnd="10dp"
+            android:paddingBottom="5dp"
+            android:textColor="@color/ds_status_unknown_text"
+            android:textSize="14sp" />
 
         <TextView
             android:id="@+id/text_walker_name"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="6dp"
+            android:textColor="@color/ds_text_secondary"
             android:textSize="16sp"
             android:visibility="gone" />
 
         <TextView
             android:id="@+id/text_review_sent"
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
+            android:background="@drawable/bg_status_completed"
+            android:paddingStart="10dp"
+            android:paddingTop="5dp"
+            android:paddingEnd="10dp"
+            android:paddingBottom="5dp"
             android:text="@string/review_sent"
-            android:textSize="16sp"
+            android:textColor="@color/ds_status_completed_text"
+            android:textSize="14sp"
             android:visibility="gone" />
 
         <Button
             android:id="@+id/button_primary_action"
+            style="@style/Widget.DoggySitter.Button.Primary"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="12dp"

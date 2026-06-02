@@ -6,6 +6,7 @@ import com.example.doggysitter.utils.DateTimeUtils;
 import com.example.doggysitter.utils.FirestoreConstants;
 import com.example.doggysitter.utils.LocationUtils;
 import com.example.doggysitter.utils.PriceUtils;
+import com.example.doggysitter.utils.StatusBadgeUtils;
 import com.example.doggysitter.utils.ValidationUtils;
 
 import android.content.Context;
@@ -134,6 +135,7 @@ public class WalkRequestAdapter extends RecyclerView.Adapter<WalkRequestAdapter.
                 context.getString(R.string.status_label),
                 getDisplayStatus(context, walkRequest.getStatus())
         ));
+        StatusBadgeUtils.apply(holder.statusTextView, walkRequest.getStatus());
 
         boolean showActionButton = showAcceptButton || showCompleteButton;
         holder.acceptButton.setVisibility(showActionButton ? View.VISIBLE : View.GONE);
