@@ -237,7 +237,7 @@ public class WalkerProfileActivity extends AppCompatActivity {
         setLoading(true);
         userRepository.getUser(currentUser.getUid())
                 .addOnSuccessListener(documentSnapshot -> {
-                    currentFullName = documentSnapshot.getString(FirestoreConstants.FIELD_FULL_NAME);
+                    currentFullName = getStringField(documentSnapshot, FirestoreConstants.FIELD_FULL_NAME);
                     Log.d(TAG, "user name load success");
                 })
                 .addOnFailureListener(error -> {
@@ -273,18 +273,24 @@ public class WalkerProfileActivity extends AppCompatActivity {
 
     private void populateProfile(DocumentSnapshot documentSnapshot) {
         populatePhone(documentSnapshot);
-        descriptionEditText.setText(documentSnapshot.getString(FirestoreConstants.FIELD_DESCRIPTION));
+        descriptionEditText.setText(getStringField(documentSnapshot, FirestoreConstants.FIELD_DESCRIPTION));
 
-        Long experienceYears = documentSnapshot.getLong(FirestoreConstants.FIELD_EXPERIENCE_YEARS);
+        Long experienceYears = getLongNumberOrNull(documentSnapshot, FirestoreConstants.FIELD_EXPERIENCE_YEARS);
         if (experienceYears != null) {
             experienceYearsEditText.setText(String.valueOf(experienceYears));
         }
 
-        Long estimatedHourlyPrice = documentSnapshot.getLong(FirestoreConstants.FIELD_ESTIMATED_HOURLY_PRICE);
+        Long estimatedHourlyPrice = getLongNumberOrNull(
+                documentSnapshot,
+                FirestoreConstants.FIELD_ESTIMATED_HOURLY_PRICE
+        );
         if (estimatedHourlyPrice != null) {
             estimatedHourlyPriceEditText.setText(String.valueOf(estimatedHourlyPrice));
         } else {
-            Double legacyPricePerWalk = documentSnapshot.getDouble(FirestoreConstants.FIELD_PRICE_PER_WALK);
+            Double legacyPricePerWalk = getDoubleNumber(
+                    documentSnapshot,
+                    FirestoreConstants.FIELD_PRICE_PER_WALK
+            );
             if (legacyPricePerWalk != null) {
                 estimatedHourlyPriceEditText.setText(String.valueOf(Math.round(legacyPricePerWalk)));
             }
@@ -292,10 +298,10 @@ public class WalkerProfileActivity extends AppCompatActivity {
 
         populateAvailability(documentSnapshot);
 
-        serviceLat = documentSnapshot.getDouble(FirestoreConstants.FIELD_SERVICE_LAT);
-        serviceLng = documentSnapshot.getDouble(FirestoreConstants.FIELD_SERVICE_LNG);
+        serviceLat = getDoubleNumber(documentSnapshot, FirestoreConstants.FIELD_SERVICE_LAT);
+        serviceLng = getDoubleNumber(documentSnapshot, FirestoreConstants.FIELD_SERVICE_LNG);
         serviceLocationLabel = ValidationUtils.normalizeSpaces(
-                documentSnapshot.getString(FirestoreConstants.FIELD_SERVICE_LOCATION_LABEL)
+                getStringField(documentSnapshot, FirestoreConstants.FIELD_SERVICE_LOCATION_LABEL)
         );
         if (serviceLat != null && serviceLng != null) {
             serviceLocationStatusTextView.setText(
@@ -352,11 +358,16 @@ public class WalkerProfileActivity extends AppCompatActivity {
     }
 
     private long getLongNumber(DocumentSnapshot documentSnapshot, String fieldName) {
+        Long value = getLongNumberOrNull(documentSnapshot, fieldName);
+        return value == null ? 0L : value;
+    }
+
+    private Long getLongNumberOrNull(DocumentSnapshot documentSnapshot, String fieldName) {
         Object value = documentSnapshot.get(fieldName);
         if (value instanceof Number) {
             return ((Number) value).longValue();
         }
-        return 0L;
+        return null;
     }
 
     private Double getDoubleNumber(DocumentSnapshot documentSnapshot, String fieldName) {
@@ -367,10 +378,15 @@ public class WalkerProfileActivity extends AppCompatActivity {
         return null;
     }
 
+    private String getStringField(DocumentSnapshot documentSnapshot, String fieldName) {
+        Object value = documentSnapshot.get(fieldName);
+        return value instanceof String ? (String) value : "";
+    }
+
     private void populatePhone(DocumentSnapshot documentSnapshot) {
-        String prefix = documentSnapshot.getString(FirestoreConstants.FIELD_PHONE_PREFIX);
-        String number = documentSnapshot.getString(FirestoreConstants.FIELD_PHONE_NUMBER);
-        String fullPhone = documentSnapshot.getString(FirestoreConstants.FIELD_PHONE);
+        String prefix = getStringField(documentSnapshot, FirestoreConstants.FIELD_PHONE_PREFIX);
+        String number = getStringField(documentSnapshot, FirestoreConstants.FIELD_PHONE_NUMBER);
+        String fullPhone = getStringField(documentSnapshot, FirestoreConstants.FIELD_PHONE);
 
         if (TextUtils.isEmpty(prefix) || TextUtils.isEmpty(number)) {
             String[] parsedPhone = parseLegacyPhone(fullPhone);

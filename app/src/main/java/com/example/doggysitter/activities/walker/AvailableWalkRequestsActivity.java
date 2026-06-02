@@ -47,7 +47,7 @@ public class AvailableWalkRequestsActivity extends AppCompatActivity implements 
         emptyTextView = findViewById(R.id.text_empty);
         progressBar = findViewById(R.id.progress_bar);
 
-        walkRequestAdapter = new WalkRequestAdapter(this, true, false);
+        walkRequestAdapter = new WalkRequestAdapter(this, true, false, false);
         walkRequestsRecyclerView.setLayoutManager(new LinearLayoutManager(this));
         walkRequestsRecyclerView.setAdapter(walkRequestAdapter);
     }
@@ -170,16 +170,13 @@ public class AvailableWalkRequestsActivity extends AppCompatActivity implements 
                 })
                 .addOnFailureListener(error -> {
                     setLoading(false);
-                    Toast.makeText(
+                    Toast.makeText(this, FirestoreErrorUtils.getTransitionWriteErrorMessage(
                             this,
-                            FirestoreErrorUtils.getWriteErrorMessageResId(
-                                    TAG,
-                                    "Failed to accept walk request",
-                                    error,
-                                    R.string.error_accept_walk_request
-                            ),
-                            Toast.LENGTH_SHORT
-                    ).show();
+                            TAG,
+                            "Failed to accept walk request",
+                            error,
+                            R.string.error_accept_walk_request
+                    ), Toast.LENGTH_SHORT).show();
                 });
     }
 
@@ -197,6 +194,9 @@ public class AvailableWalkRequestsActivity extends AppCompatActivity implements 
 
     private void setLoading(boolean loading) {
         progressBar.setVisibility(loading ? View.VISIBLE : View.GONE);
+        if (walkRequestAdapter != null) {
+            walkRequestAdapter.setActionsEnabled(!loading);
+        }
     }
 
     private Double getNumberField(DocumentSnapshot documentSnapshot, String fieldName) {

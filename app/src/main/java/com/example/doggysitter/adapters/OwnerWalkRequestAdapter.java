@@ -29,8 +29,6 @@ public class OwnerWalkRequestAdapter
     public interface Listener {
         void onCancelRequest(WalkRequest walkRequest);
 
-        void onCompleteRequest(WalkRequest walkRequest);
-
         void onReviewWalker(WalkRequest walkRequest);
     }
 
@@ -162,18 +160,6 @@ public class OwnerWalkRequestAdapter
             holder.actionButton.setOnClickListener(view -> {
                 if (listener != null) {
                     listener.onCancelRequest(walkRequest);
-                }
-            });
-            return;
-        }
-
-        if (FirestoreConstants.WALK_REQUEST_STATUS_ACCEPTED.equals(walkRequest.getStatus())) {
-            holder.actionButton.setVisibility(View.VISIBLE);
-            holder.actionButton.setEnabled(actionsEnabled);
-            holder.actionButton.setText(R.string.complete_request);
-            holder.actionButton.setOnClickListener(view -> {
-                if (listener != null) {
-                    listener.onCompleteRequest(walkRequest);
                 }
             });
             return;

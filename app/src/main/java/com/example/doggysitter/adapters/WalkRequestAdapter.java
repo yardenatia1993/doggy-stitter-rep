@@ -25,23 +25,39 @@ import java.util.Locale;
 
 public class WalkRequestAdapter extends RecyclerView.Adapter<WalkRequestAdapter.WalkRequestViewHolder> {
     public interface Listener {
-        void onAcceptWalkRequest(WalkRequest walkRequest);
+        default void onAcceptWalkRequest(WalkRequest walkRequest) {
+        }
+
+        default void onCompleteWalkRequest(WalkRequest walkRequest) {
+        }
     }
 
     private final List<WalkRequest> walkRequests = new ArrayList<>();
     private final Listener listener;
     private final boolean showAcceptButton;
+    private final boolean showCompleteButton;
     private final boolean showStatus;
+    private boolean actionsEnabled = true;
 
-    public WalkRequestAdapter(Listener listener, boolean showAcceptButton, boolean showStatus) {
+    public WalkRequestAdapter(Listener listener, boolean showAcceptButton, boolean showCompleteButton,
+                              boolean showStatus) {
         this.listener = listener;
         this.showAcceptButton = showAcceptButton;
+        this.showCompleteButton = showCompleteButton;
         this.showStatus = showStatus;
     }
 
     public void submitList(List<WalkRequest> newWalkRequests) {
         walkRequests.clear();
         walkRequests.addAll(newWalkRequests);
+        notifyDataSetChanged();
+    }
+
+    public void setActionsEnabled(boolean actionsEnabled) {
+        if (this.actionsEnabled == actionsEnabled) {
+            return;
+        }
+        this.actionsEnabled = actionsEnabled;
         notifyDataSetChanged();
     }
 
@@ -119,10 +135,15 @@ public class WalkRequestAdapter extends RecyclerView.Adapter<WalkRequestAdapter.
                 getDisplayStatus(context, walkRequest.getStatus())
         ));
 
-        holder.acceptButton.setVisibility(showAcceptButton ? View.VISIBLE : View.GONE);
+        boolean showActionButton = showAcceptButton || showCompleteButton;
+        holder.acceptButton.setVisibility(showActionButton ? View.VISIBLE : View.GONE);
+        holder.acceptButton.setEnabled(actionsEnabled);
+        holder.acceptButton.setText(showCompleteButton ? R.string.complete_request : R.string.accept_request);
         holder.acceptButton.setOnClickListener(view -> {
-            if (listener != null) {
+            if (listener != null && actionsEnabled && showAcceptButton) {
                 listener.onAcceptWalkRequest(walkRequest);
+            } else if (listener != null && actionsEnabled && showCompleteButton) {
+                listener.onCompleteWalkRequest(walkRequest);
             }
         });
     }

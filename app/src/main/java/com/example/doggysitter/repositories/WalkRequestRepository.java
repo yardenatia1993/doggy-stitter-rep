@@ -3,21 +3,28 @@ package com.example.doggysitter.repositories;
 import com.example.doggysitter.models.WalkRequest;
 import com.example.doggysitter.utils.FirestoreConstants;
 
+import android.text.TextUtils;
+
 import com.google.android.gms.tasks.Task;
+import com.google.android.gms.tasks.Tasks;
 import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.HashMap;
 import java.util.Map;
 
 public class WalkRequestRepository {
+    private final FirebaseFirestore firestore;
     private final CollectionReference walkRequestsCollection;
 
     public WalkRequestRepository() {
-        walkRequestsCollection = FirebaseFirestore.getInstance()
+        firestore = FirebaseFirestore.getInstance();
+        walkRequestsCollection = firestore
                 .collection(FirestoreConstants.COLLECTION_WALK_REQUESTS);
     }
 
@@ -68,27 +75,132 @@ public class WalkRequestRepository {
     }
 
     public Task<Void> acceptWalkRequest(String requestId, String walkerId) {
-        Map<String, Object> requestData = new HashMap<>();
-        requestData.put(FirestoreConstants.FIELD_STATUS, FirestoreConstants.WALK_REQUEST_STATUS_ACCEPTED);
-        requestData.put(FirestoreConstants.FIELD_WALKER_ID, walkerId);
-        requestData.put(FirestoreConstants.FIELD_ACCEPTED_AT, FieldValue.serverTimestamp());
+        if (TextUtils.isEmpty(requestId) || TextUtils.isEmpty(walkerId)) {
+            return Tasks.forException(abort("לא ניתן לקבל את הבקשה. יש להתחבר מחדש ולנסות שוב"));
+        }
 
-        return walkRequestsCollection.document(requestId).update(requestData);
+        DocumentReference requestReference = walkRequestsCollection.document(requestId);
+        return firestore.runTransaction(transaction -> {
+            DocumentSnapshot requestSnapshot = transaction.get(requestReference);
+            if (!requestSnapshot.exists()) {
+                throw abort("בקשת הטיול לא נמצאה");
+            }
+
+            String status = getStringValue(requestSnapshot, FirestoreConstants.FIELD_STATUS);
+            if (!FirestoreConstants.WALK_REQUEST_STATUS_OPEN.equals(status)) {
+                throw abort(getAcceptErrorMessage(status));
+            }
+
+            Map<String, Object> requestData = new HashMap<>();
+            requestData.put(FirestoreConstants.FIELD_STATUS, FirestoreConstants.WALK_REQUEST_STATUS_ACCEPTED);
+            requestData.put(FirestoreConstants.FIELD_WALKER_ID, walkerId);
+            requestData.put(FirestoreConstants.FIELD_ACCEPTED_AT, FieldValue.serverTimestamp());
+            transaction.update(requestReference, requestData);
+            return null;
+        });
     }
 
-    public Task<Void> cancelRequest(String requestId) {
-        Map<String, Object> requestData = new HashMap<>();
-        requestData.put(FirestoreConstants.FIELD_STATUS, FirestoreConstants.WALK_REQUEST_STATUS_CANCELED);
-        requestData.put(FirestoreConstants.FIELD_CANCELED_AT, FieldValue.serverTimestamp());
+    public Task<Void> cancelRequest(String requestId, String ownerId) {
+        if (TextUtils.isEmpty(requestId) || TextUtils.isEmpty(ownerId)) {
+            return Tasks.forException(abort("לא ניתן לבטל את הבקשה. יש להתחבר מחדש ולנסות שוב"));
+        }
 
-        return walkRequestsCollection.document(requestId).update(requestData);
+        DocumentReference requestReference = walkRequestsCollection.document(requestId);
+        return firestore.runTransaction(transaction -> {
+            DocumentSnapshot requestSnapshot = transaction.get(requestReference);
+            if (!requestSnapshot.exists()) {
+                throw abort("בקשת הטיול לא נמצאה");
+            }
+            if (!ownerId.equals(getStringValue(requestSnapshot, FirestoreConstants.FIELD_OWNER_ID))) {
+                throw abort("אין הרשאה לבטל בקשה זו");
+            }
+
+            String status = getStringValue(requestSnapshot, FirestoreConstants.FIELD_STATUS);
+            if (!FirestoreConstants.WALK_REQUEST_STATUS_OPEN.equals(status)) {
+                throw abort(getCancelErrorMessage(status));
+            }
+
+            Map<String, Object> requestData = new HashMap<>();
+            requestData.put(FirestoreConstants.FIELD_STATUS, FirestoreConstants.WALK_REQUEST_STATUS_CANCELED);
+            requestData.put(FirestoreConstants.FIELD_CANCELED_AT, FieldValue.serverTimestamp());
+            transaction.update(requestReference, requestData);
+            return null;
+        });
     }
 
-    public Task<Void> completeRequest(String requestId) {
-        Map<String, Object> requestData = new HashMap<>();
-        requestData.put(FirestoreConstants.FIELD_STATUS, FirestoreConstants.WALK_REQUEST_STATUS_COMPLETED);
-        requestData.put(FirestoreConstants.FIELD_COMPLETED_AT, FieldValue.serverTimestamp());
+    public Task<Void> completeRequest(String requestId, String walkerId) {
+        if (TextUtils.isEmpty(requestId) || TextUtils.isEmpty(walkerId)) {
+            return Tasks.forException(abort("לא ניתן להשלים את הטיול. יש להתחבר מחדש ולנסות שוב"));
+        }
 
-        return walkRequestsCollection.document(requestId).update(requestData);
+        DocumentReference requestReference = walkRequestsCollection.document(requestId);
+        return firestore.runTransaction(transaction -> {
+            DocumentSnapshot requestSnapshot = transaction.get(requestReference);
+            if (!requestSnapshot.exists()) {
+                throw abort("בקשת הטיול לא נמצאה");
+            }
+            if (!walkerId.equals(getStringValue(requestSnapshot, FirestoreConstants.FIELD_WALKER_ID))) {
+                throw abort("רק הדוגווקר שקיבל את הבקשה יכול להשלים אותה");
+            }
+
+            String status = getStringValue(requestSnapshot, FirestoreConstants.FIELD_STATUS);
+            if (!FirestoreConstants.WALK_REQUEST_STATUS_ACCEPTED.equals(status)) {
+                throw abort(getCompleteErrorMessage(status));
+            }
+
+            Map<String, Object> requestData = new HashMap<>();
+            requestData.put(FirestoreConstants.FIELD_STATUS, FirestoreConstants.WALK_REQUEST_STATUS_COMPLETED);
+            requestData.put(FirestoreConstants.FIELD_COMPLETED_AT, FieldValue.serverTimestamp());
+            transaction.update(requestReference, requestData);
+            return null;
+        });
+    }
+
+    private String getAcceptErrorMessage(String status) {
+        if (FirestoreConstants.WALK_REQUEST_STATUS_ACCEPTED.equals(status)) {
+            return "הבקשה כבר התקבלה על ידי דוגווקר אחר";
+        }
+        if (FirestoreConstants.WALK_REQUEST_STATUS_CANCELED.equals(status)) {
+            return "הבקשה כבר בוטלה";
+        }
+        if (FirestoreConstants.WALK_REQUEST_STATUS_COMPLETED.equals(status)) {
+            return "הבקשה כבר הושלמה";
+        }
+        return "לא ניתן לקבל בקשה במצב הנוכחי";
+    }
+
+    private String getCancelErrorMessage(String status) {
+        if (FirestoreConstants.WALK_REQUEST_STATUS_ACCEPTED.equals(status)) {
+            return "לא ניתן לבטל בקשה שכבר התקבלה";
+        }
+        if (FirestoreConstants.WALK_REQUEST_STATUS_CANCELED.equals(status)) {
+            return "הבקשה כבר בוטלה";
+        }
+        if (FirestoreConstants.WALK_REQUEST_STATUS_COMPLETED.equals(status)) {
+            return "לא ניתן לבטל טיול שכבר הושלם";
+        }
+        return "לא ניתן לבטל בקשה במצב הנוכחי";
+    }
+
+    private String getCompleteErrorMessage(String status) {
+        if (FirestoreConstants.WALK_REQUEST_STATUS_OPEN.equals(status)) {
+            return "לא ניתן להשלים בקשה שעדיין פתוחה";
+        }
+        if (FirestoreConstants.WALK_REQUEST_STATUS_CANCELED.equals(status)) {
+            return "לא ניתן להשלים בקשה שבוטלה";
+        }
+        if (FirestoreConstants.WALK_REQUEST_STATUS_COMPLETED.equals(status)) {
+            return "הטיול כבר סומן כהושלם";
+        }
+        return "לא ניתן להשלים בקשה במצב הנוכחי";
+    }
+
+    private String getStringValue(DocumentSnapshot documentSnapshot, String fieldName) {
+        Object value = documentSnapshot.get(fieldName);
+        return value instanceof String ? (String) value : null;
+    }
+
+    private FirebaseFirestoreException abort(String message) {
+        return new FirebaseFirestoreException(message, FirebaseFirestoreException.Code.ABORTED);
     }
 }

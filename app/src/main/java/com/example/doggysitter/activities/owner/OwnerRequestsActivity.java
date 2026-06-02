@@ -175,15 +175,6 @@ public class OwnerRequestsActivity extends AppCompatActivity implements OwnerWal
     }
 
     @Override
-    public void onCompleteRequest(WalkRequest walkRequest) {
-        new AlertDialog.Builder(this)
-                .setMessage(R.string.complete_request_confirmation)
-                .setPositiveButton(R.string.confirm, (dialog, which) -> completeRequest(walkRequest))
-                .setNegativeButton(R.string.cancel, null)
-                .show();
-    }
-
-    @Override
     public void onReviewWalker(WalkRequest walkRequest) {
         Intent intent = new Intent(this, ReviewActivity.class);
         intent.putExtra(ReviewActivity.EXTRA_REQUEST_ID, walkRequest.getId());
@@ -191,46 +182,28 @@ public class OwnerRequestsActivity extends AppCompatActivity implements OwnerWal
     }
 
     private void cancelRequest(WalkRequest walkRequest) {
+        FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
+        if (currentUser == null) {
+            Toast.makeText(this, R.string.error_login_required, Toast.LENGTH_SHORT).show();
+            finish();
+            return;
+        }
+
         setLoading(true);
-        walkRequestRepository.cancelRequest(walkRequest.getId())
+        walkRequestRepository.cancelRequest(walkRequest.getId(), currentUser.getUid())
                 .addOnSuccessListener(unused -> {
                     Toast.makeText(this, R.string.walk_request_canceled, Toast.LENGTH_SHORT).show();
                     loadOwnerRequests();
                 })
                 .addOnFailureListener(error -> {
                     setLoading(false);
-                    Toast.makeText(
+                    Toast.makeText(this, FirestoreErrorUtils.getTransitionWriteErrorMessage(
                             this,
-                            FirestoreErrorUtils.getWriteErrorMessageResId(
-                                    TAG,
-                                    "Failed to cancel walk request",
-                                    error,
-                                    R.string.error_cancel_walk_request
-                            ),
-                            Toast.LENGTH_SHORT
-                    ).show();
-                });
-    }
-
-    private void completeRequest(WalkRequest walkRequest) {
-        setLoading(true);
-        walkRequestRepository.completeRequest(walkRequest.getId())
-                .addOnSuccessListener(unused -> {
-                    Toast.makeText(this, R.string.walk_request_completed, Toast.LENGTH_SHORT).show();
-                    loadOwnerRequests();
-                })
-                .addOnFailureListener(error -> {
-                    setLoading(false);
-                    Toast.makeText(
-                            this,
-                            FirestoreErrorUtils.getWriteErrorMessageResId(
-                                    TAG,
-                                    "Failed to complete walk request",
-                                    error,
-                                    R.string.error_complete_walk_request
-                            ),
-                            Toast.LENGTH_SHORT
-                    ).show();
+                            TAG,
+                            "Failed to cancel walk request",
+                            error,
+                            R.string.error_cancel_walk_request
+                    ), Toast.LENGTH_SHORT).show();
                 });
     }
 

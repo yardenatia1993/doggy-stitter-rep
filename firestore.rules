@@ -73,7 +73,7 @@ service cloud.firestore {
         && request.resource.data.get("reviewId", null) == resource.data.get("reviewId", null);
     }
 
-    function unchangedWalkRequestForOwnerStatusChange() {
+    function unchangedWalkRequestForStatusChange() {
       return request.resource.data.id == resource.data.id
         && request.resource.data.ownerId == resource.data.ownerId
         && request.resource.data.dogId == resource.data.dogId
@@ -189,16 +189,16 @@ service cloud.firestore {
         && resource.data.status == "OPEN"
         && request.resource.data.status == "CANCELED"
         && changedKeys().hasOnly(["status", "canceledAt"])
-        && unchangedWalkRequestForOwnerStatusChange();
+        && unchangedWalkRequestForStatusChange();
     }
 
-    function validOwnerCompleteRequest() {
-      return isOwner()
-        && resource.data.ownerId == request.auth.uid
+    function validWalkerCompleteRequest() {
+      return isWalker()
+        && resource.data.walkerId == request.auth.uid
         && resource.data.status == "ACCEPTED"
         && request.resource.data.status == "COMPLETED"
         && changedKeys().hasOnly(["status", "completedAt"])
-        && unchangedWalkRequestForOwnerStatusChange();
+        && unchangedWalkRequestForStatusChange();
     }
 
     function validOwnerReviewMark(requestId) {
@@ -311,7 +311,7 @@ service cloud.firestore {
       allow create: if validWalkRequestCreate(requestId);
       allow update: if validWalkerAcceptRequest()
         || validOwnerCancelRequest()
-        || validOwnerCompleteRequest()
+        || validWalkerCompleteRequest()
         || validOwnerReviewMark(requestId);
       allow delete: if false;
     }

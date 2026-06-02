@@ -15,6 +15,7 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -26,7 +27,7 @@ import com.google.firebase.firestore.DocumentSnapshot;
 import java.util.ArrayList;
 import java.util.List;
 
-public class MyWalkerJobsActivity extends AppCompatActivity {
+public class MyWalkerJobsActivity extends AppCompatActivity implements WalkRequestAdapter.Listener {
     private static final String TAG = "MyWalkerJobsActivity";
 
     private RecyclerView jobsRecyclerView;
@@ -47,7 +48,7 @@ public class MyWalkerJobsActivity extends AppCompatActivity {
         emptyTextView = findViewById(R.id.text_empty);
         progressBar = findViewById(R.id.progress_bar);
 
-        walkRequestAdapter = new WalkRequestAdapter(null, false, true);
+        walkRequestAdapter = new WalkRequestAdapter(this, false, true, true);
         jobsRecyclerView.setLayoutManager(new LinearLayoutManager(this));
         jobsRecyclerView.setAdapter(walkRequestAdapter);
     }
@@ -142,8 +143,46 @@ public class MyWalkerJobsActivity extends AppCompatActivity {
         jobsRecyclerView.setVisibility(isEmpty ? View.GONE : View.VISIBLE);
     }
 
+    @Override
+    public void onCompleteWalkRequest(WalkRequest walkRequest) {
+        new AlertDialog.Builder(this)
+                .setMessage(R.string.complete_request_confirmation)
+                .setPositiveButton(R.string.confirm, (dialog, which) -> completeWalkRequest(walkRequest))
+                .setNegativeButton(R.string.cancel, null)
+                .show();
+    }
+
+    private void completeWalkRequest(WalkRequest walkRequest) {
+        FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
+        if (currentUser == null) {
+            Toast.makeText(this, R.string.error_login_required, Toast.LENGTH_SHORT).show();
+            finish();
+            return;
+        }
+
+        setLoading(true);
+        walkRequestRepository.completeRequest(walkRequest.getId(), currentUser.getUid())
+                .addOnSuccessListener(unused -> {
+                    Toast.makeText(this, R.string.walk_request_completed, Toast.LENGTH_SHORT).show();
+                    loadProfileAndJobs();
+                })
+                .addOnFailureListener(error -> {
+                    setLoading(false);
+                    Toast.makeText(this, FirestoreErrorUtils.getTransitionWriteErrorMessage(
+                            this,
+                            TAG,
+                            "Failed to complete walk request",
+                            error,
+                            R.string.error_complete_walk_request
+                    ), Toast.LENGTH_SHORT).show();
+                });
+    }
+
     private void setLoading(boolean loading) {
         progressBar.setVisibility(loading ? View.VISIBLE : View.GONE);
+        if (walkRequestAdapter != null) {
+            walkRequestAdapter.setActionsEnabled(!loading);
+        }
     }
 
     private Double getNumberField(DocumentSnapshot documentSnapshot, String fieldName) {

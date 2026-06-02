@@ -5,6 +5,7 @@ import com.example.doggysitter.utils.FirestoreConstants;
 import android.text.TextUtils;
 
 import com.google.android.gms.tasks.Task;
+import com.google.android.gms.tasks.Tasks;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FieldValue;
@@ -23,6 +24,10 @@ public class ReviewRepository {
     }
 
     public Task<Void> submitReview(String requestId, String ownerId, int rating, String comment) {
+        if (TextUtils.isEmpty(requestId) || TextUtils.isEmpty(ownerId)) {
+            return Tasks.forException(abort("לא ניתן לשלוח דירוג. יש להתחבר מחדש ולנסות שוב"));
+        }
+
         DocumentReference requestReference = firestore
                 .collection(FirestoreConstants.COLLECTION_WALK_REQUESTS)
                 .document(requestId);
@@ -37,21 +42,21 @@ public class ReviewRepository {
                 throw abort("בקשת הטיול לא נמצאה");
             }
 
-            String requestOwnerId = requestSnapshot.getString(FirestoreConstants.FIELD_OWNER_ID);
+            String requestOwnerId = getStringValue(requestSnapshot, FirestoreConstants.FIELD_OWNER_ID);
             if (!ownerId.equals(requestOwnerId)) {
                 throw abort("אין הרשאה לדרג בקשה זו");
             }
 
-            String status = requestSnapshot.getString(FirestoreConstants.FIELD_STATUS);
+            String status = getStringValue(requestSnapshot, FirestoreConstants.FIELD_STATUS);
             if (!FirestoreConstants.WALK_REQUEST_STATUS_COMPLETED.equals(status)) {
                 throw abort("ניתן לדרג רק טיול שהושלם");
             }
 
-            if (Boolean.TRUE.equals(requestSnapshot.getBoolean(FirestoreConstants.FIELD_REVIEWED))) {
+            if (Boolean.TRUE.equals(requestSnapshot.get(FirestoreConstants.FIELD_REVIEWED))) {
                 throw abort("כבר נשלח דירוג עבור הבקשה");
             }
 
-            String walkerId = requestSnapshot.getString(FirestoreConstants.FIELD_WALKER_ID);
+            String walkerId = getStringValue(requestSnapshot, FirestoreConstants.FIELD_WALKER_ID);
             if (TextUtils.isEmpty(walkerId)) {
                 throw abort("לא נמצא דוגווקר עבור הבקשה");
             }
@@ -80,7 +85,7 @@ public class ReviewRepository {
             reviewData.put(FirestoreConstants.FIELD_OWNER_ID, ownerId);
             reviewData.put(FirestoreConstants.FIELD_WALKER_ID, walkerId);
             reviewData.put(FirestoreConstants.FIELD_RATING, rating);
-            reviewData.put(FirestoreConstants.FIELD_COMMENT, comment);
+            reviewData.put(FirestoreConstants.FIELD_COMMENT, comment == null ? "" : comment);
             reviewData.put(FirestoreConstants.FIELD_CREATED_AT, FieldValue.serverTimestamp());
 
             Map<String, Object> requestData = new HashMap<>();
@@ -109,5 +114,10 @@ public class ReviewRepository {
             return ((Number) value).longValue();
         }
         return 0L;
+    }
+
+    private String getStringValue(DocumentSnapshot documentSnapshot, String fieldName) {
+        Object value = documentSnapshot.get(fieldName);
+        return value instanceof String ? (String) value : null;
     }
 }
