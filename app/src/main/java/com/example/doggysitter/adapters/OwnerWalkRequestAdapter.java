@@ -18,6 +18,7 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.core.content.ContextCompat;
+import androidx.core.view.ViewCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.ArrayList;
@@ -165,7 +166,7 @@ public class OwnerWalkRequestAdapter
                 && !isExpiredOpenRequest(walkRequest)) {
             holder.actionButton.setVisibility(View.VISIBLE);
             holder.actionButton.setEnabled(actionsEnabled);
-            applyActionStyle(holder.actionButton, context, R.drawable.bg_button_danger, R.color.ds_on_danger);
+            applyActionStyle(holder.actionButton, context, R.drawable.bg_button_danger, R.color.ds_button_danger_text);
             holder.actionButton.setText(R.string.cancel_request);
             holder.actionButton.setOnClickListener(view -> {
                 if (listener != null) {
@@ -178,7 +179,7 @@ public class OwnerWalkRequestAdapter
         if (FirestoreConstants.WALK_REQUEST_STATUS_COMPLETED.equals(walkRequest.getStatus())) {
             holder.actionButton.setVisibility(View.VISIBLE);
             holder.actionButton.setEnabled(actionsEnabled);
-            applyActionStyle(holder.actionButton, context, R.drawable.bg_button_primary, R.color.ds_on_primary);
+            applyActionStyle(holder.actionButton, context, R.drawable.bg_button_primary, R.color.ds_button_primary_text);
             holder.actionButton.setText(R.string.rate_walker);
             holder.actionButton.setOnClickListener(view -> {
                 if (listener != null) {
@@ -194,7 +195,8 @@ public class OwnerWalkRequestAdapter
 
     private void applyActionStyle(Button button, Context context, int backgroundResource, int textColorResource) {
         button.setBackgroundResource(backgroundResource);
-        button.setTextColor(ContextCompat.getColor(context, textColorResource));
+        ViewCompat.setBackgroundTintList(button, null);
+        button.setTextColor(ContextCompat.getColorStateList(context, textColorResource));
     }
 
     private String getDisplayStatus(Context context, WalkRequest walkRequest) {

@@ -6,6 +6,8 @@
         <item name="colorSurface">@color/ds_surface</item>
         <item name="android:colorAccent">@color/ds_secondary</item>
         <item name="android:colorBackground">@color/ds_background</item>
+        <item name="android:textColorPrimary">@color/ds_text_primary</item>
+        <item name="android:textColorSecondary">@color/ds_text_secondary</item>
         <item name="android:navigationBarColor">@color/ds_background</item>
         <item name="android:statusBarColor">@color/ds_background</item>
         <item name="android:windowBackground">@color/ds_background</item>

@@ -12,10 +12,13 @@
         android:id="@+id/main"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_margin="16dp"
+        android:background="@drawable/bg_form_section"
+        android:elevation="2dp"
         android:focusable="true"
         android:focusableInTouchMode="true"
         android:orientation="vertical"
-        android:padding="24dp"
+        android:padding="20dp"
         android:textDirection="rtl">
 
         <TextView
@@ -26,10 +29,10 @@
 
         <TextView
             android:id="@+id/text_average_rating"
+            style="@style/TextAppearance.DoggySitter.Body"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
-            android:textSize="16sp"
             android:visibility="gone" />
 
         <TextView
@@ -42,45 +45,47 @@
 
         <TextView
             android:id="@+id/text_rating_count"
+            style="@style/TextAppearance.DoggySitter.BodySecondary"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="4dp"
-            android:textSize="16sp"
             android:visibility="gone" />
 
         <TextView
             android:id="@+id/text_no_ratings"
+            style="@style/TextAppearance.DoggySitter.EmptyState"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
+            android:background="@drawable/bg_empty_state"
+            android:padding="18dp"
             android:text="@string/no_ratings_yet"
-            android:textSize="16sp"
             android:visibility="gone" />
 
         <TextView
-            style="@style/TextAppearance.DoggySitter.SectionTitle"
+            style="@style/TextAppearance.DoggySitter.FieldLabel"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="24dp"
             android:text="@string/phone_prefix_required_label"
             android:textAlignment="viewStart"
-            android:textDirection="rtl"
-            android:textSize="15sp" />
+            android:textDirection="rtl" />
 
         <Spinner
             android:id="@+id/spinner_phone_prefix"
+            style="@style/Widget.DoggySitter.Spinner"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="4dp" />
 
         <TextView
+            style="@style/TextAppearance.DoggySitter.FieldLabel"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="14dp"
             android:text="@string/phone_number_required_label"
             android:textAlignment="viewStart"
-            android:textDirection="rtl"
-            android:textSize="15sp" />
+            android:textDirection="rtl" />
 
         <EditText
             android:id="@+id/edit_phone_number"
@@ -93,13 +98,13 @@
             android:textDirection="ltr" />
 
         <TextView
+            style="@style/TextAppearance.DoggySitter.FieldLabel"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="14dp"
             android:text="@string/short_description_required_label"
             android:textAlignment="viewStart"
-            android:textDirection="rtl"
-            android:textSize="15sp" />
+            android:textDirection="rtl" />
 
         <EditText
             android:id="@+id/edit_description"
@@ -113,13 +118,13 @@
             android:textDirection="anyRtl" />
 
         <TextView
+            style="@style/TextAppearance.DoggySitter.FieldLabel"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="14dp"
             android:text="@string/experience_years_required_label"
             android:textAlignment="viewStart"
-            android:textDirection="rtl"
-            android:textSize="15sp" />
+            android:textDirection="rtl" />
 
         <EditText
             android:id="@+id/edit_experience_years"
@@ -130,13 +135,13 @@
             android:inputType="number" />
 
         <TextView
+            style="@style/TextAppearance.DoggySitter.FieldLabel"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="14dp"
             android:text="@string/estimated_hourly_price_required_label"
             android:textAlignment="viewStart"
-            android:textDirection="rtl"
-            android:textSize="15sp" />
+            android:textDirection="rtl" />
 
         <EditText
             android:id="@+id/edit_estimated_hourly_price"
@@ -147,6 +152,7 @@
             android:inputType="number" />
 
         <TextView
+            style="@style/TextAppearance.DoggySitter.SectionTitle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
@@ -181,6 +187,7 @@
 
                 <Button
                     android:id="@+id/button_sunday_start"
+                    style="@style/Widget.DoggySitter.Button.Secondary"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="@string/choose_time" />
@@ -201,6 +208,7 @@
 
                 <Button
                     android:id="@+id/button_sunday_end"
+                    style="@style/Widget.DoggySitter.Button.Secondary"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="@string/choose_time" />
@@ -234,6 +242,7 @@
 
                 <Button
                     android:id="@+id/button_monday_start"
+                    style="@style/Widget.DoggySitter.Button.Secondary"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="@string/choose_time" />
@@ -254,6 +263,7 @@
 
                 <Button
                     android:id="@+id/button_monday_end"
+                    style="@style/Widget.DoggySitter.Button.Secondary"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="@string/choose_time" />
@@ -287,6 +297,7 @@
 
                 <Button
                     android:id="@+id/button_tuesday_start"
+                    style="@style/Widget.DoggySitter.Button.Secondary"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="@string/choose_time" />
@@ -307,6 +318,7 @@
 
                 <Button
                     android:id="@+id/button_tuesday_end"
+                    style="@style/Widget.DoggySitter.Button.Secondary"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="@string/choose_time" />
@@ -340,6 +352,7 @@
 
                 <Button
                     android:id="@+id/button_wednesday_start"
+                    style="@style/Widget.DoggySitter.Button.Secondary"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="@string/choose_time" />
@@ -360,6 +373,7 @@
 
                 <Button
                     android:id="@+id/button_wednesday_end"
+                    style="@style/Widget.DoggySitter.Button.Secondary"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="@string/choose_time" />
@@ -393,6 +407,7 @@
 
                 <Button
                     android:id="@+id/button_thursday_start"
+                    style="@style/Widget.DoggySitter.Button.Secondary"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="@string/choose_time" />
@@ -413,6 +428,7 @@
 
                 <Button
                     android:id="@+id/button_thursday_end"
+                    style="@style/Widget.DoggySitter.Button.Secondary"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="@string/choose_time" />
@@ -446,6 +462,7 @@
 
                 <Button
                     android:id="@+id/button_friday_start"
+                    style="@style/Widget.DoggySitter.Button.Secondary"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="@string/choose_time" />
@@ -466,6 +483,7 @@
 
                 <Button
                     android:id="@+id/button_friday_end"
+                    style="@style/Widget.DoggySitter.Button.Secondary"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="@string/choose_time" />
@@ -499,6 +517,7 @@
 
                 <Button
                     android:id="@+id/button_saturday_start"
+                    style="@style/Widget.DoggySitter.Button.Secondary"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="@string/choose_time" />
@@ -519,6 +538,7 @@
 
                 <Button
                     android:id="@+id/button_saturday_end"
+                    style="@style/Widget.DoggySitter.Button.Secondary"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="@string/choose_time" />
@@ -536,6 +556,7 @@
 
         <Button
             android:id="@+id/button_current_service_location"
+            style="@style/Widget.DoggySitter.Button.Secondary"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
@@ -543,6 +564,7 @@
 
         <Button
             android:id="@+id/button_manual_service_location"
+            style="@style/Widget.DoggySitter.Button.Secondary"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
@@ -550,22 +572,22 @@
 
         <TextView
             android:id="@+id/text_service_location_status"
+            style="@style/TextAppearance.DoggySitter.BodySecondary"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
             android:text="@string/service_location_not_selected"
             android:textAlignment="viewStart"
-            android:textDirection="rtl"
-            android:textSize="15sp" />
+            android:textDirection="rtl" />
 
         <TextView
+            style="@style/TextAppearance.DoggySitter.FieldLabel"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="14dp"
             android:text="@string/service_radius_required_label"
             android:textAlignment="viewStart"
-            android:textDirection="rtl"
-            android:textSize="15sp" />
+            android:textDirection="rtl" />
 
         <EditText
             android:id="@+id/edit_service_radius"

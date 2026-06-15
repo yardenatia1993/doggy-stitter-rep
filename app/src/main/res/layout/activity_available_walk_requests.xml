@@ -8,7 +8,7 @@
     android:background="@color/ds_background"
     android:layoutDirection="rtl"
     android:orientation="vertical"
-    android:padding="24dp"
+    android:padding="20dp"
     android:textDirection="rtl"
     tools:context=".activities.walker.AvailableWalkRequestsActivity">
 
@@ -33,7 +33,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="24dp"
         android:background="@drawable/bg_empty_state"
-        android:padding="20dp"
+        android:padding="24dp"
         android:text="@string/no_available_walk_requests"
         android:visibility="gone" />
 
@@ -45,5 +45,5 @@
         android:layout_weight="1"
         android:clipToPadding="false"
         android:layoutAnimation="@anim/layout_list_fade_in"
-        android:paddingBottom="8dp" />
+        android:paddingBottom="16dp" />
 </LinearLayout>

@@ -20,7 +20,6 @@ public class AdminDashboardActivity extends AdminBaseActivity {
         authRepository = new AuthRepository();
         ExitConfirmationUtils.install(this);
         Button usersButton = findViewById(R.id.button_users);
-        Button walkerProfilesButton = findViewById(R.id.button_walker_profiles);
         Button walkRequestsButton = findViewById(R.id.button_walk_requests);
         Button reviewsButton = findViewById(R.id.button_reviews);
         Button statisticsButton = findViewById(R.id.button_statistics);
@@ -29,15 +28,11 @@ public class AdminDashboardActivity extends AdminBaseActivity {
         setNavigationEnabled(
                 false,
                 usersButton,
-                walkerProfilesButton,
                 walkRequestsButton,
                 reviewsButton,
                 statisticsButton
         );
         usersButton.setOnClickListener(view -> startActivity(new Intent(this, AdminUsersActivity.class)));
-        walkerProfilesButton.setOnClickListener(
-                view -> startActivity(new Intent(this, AdminWalkerProfilesActivity.class))
-        );
         walkRequestsButton.setOnClickListener(
                 view -> startActivity(new Intent(this, AdminWalkRequestsActivity.class))
         );
@@ -47,7 +42,6 @@ public class AdminDashboardActivity extends AdminBaseActivity {
         requireAdminAccess(() -> setNavigationEnabled(
                 true,
                 usersButton,
-                walkerProfilesButton,
                 walkRequestsButton,
                 reviewsButton,
                 statisticsButton

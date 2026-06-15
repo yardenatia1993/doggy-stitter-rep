@@ -9,6 +9,8 @@
     <color name="ds_background">#FF15201F</color>
     <color name="ds_surface">#FF202D2B</color>
     <color name="ds_surface_soft">#FF273836</color>
+    <color name="ds_surface_warm">#FF243230</color>
+    <color name="ds_accent_soft">#FF3A302A</color>
     <color name="ds_text_primary">#FFEDF6F3</color>
     <color name="ds_text_secondary">#FFBDD0CB</color>
     <color name="ds_outline">#FF3D5551</color>

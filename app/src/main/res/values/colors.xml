@@ -12,6 +12,8 @@
     <color name="ds_background">#FFF8F3EE</color>
     <color name="ds_surface">#FFFFFFFF</color>
     <color name="ds_surface_soft">#FFF0F6F4</color>
+    <color name="ds_surface_warm">#FFFFFBF7</color>
+    <color name="ds_accent_soft">#FFFFF0E7</color>
     <color name="ds_text_primary">#FF20312E</color>
     <color name="ds_text_secondary">#FF5E6D69</color>
     <color name="ds_outline">#FFD5E0DC</color>

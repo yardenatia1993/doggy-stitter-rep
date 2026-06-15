@@ -21,6 +21,10 @@ public class AdminRepository {
         return firestore.collection(FirestoreConstants.COLLECTION_WALKER_PROFILES).get();
     }
 
+    public Task<QuerySnapshot> getAllDogs() {
+        return firestore.collection(FirestoreConstants.COLLECTION_DOGS).get();
+    }
+
     public Task<QuerySnapshot> getAllWalkRequests() {
         return firestore.collection(FirestoreConstants.COLLECTION_WALK_REQUESTS).get();
     }

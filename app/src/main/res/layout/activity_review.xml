@@ -12,8 +12,11 @@
         android:id="@+id/main"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_margin="16dp"
+        android:background="@drawable/bg_form_section"
+        android:elevation="2dp"
         android:orientation="vertical"
-        android:padding="24dp"
+        android:padding="20dp"
         android:textDirection="rtl">
 
         <TextView
@@ -23,13 +26,13 @@
             android:text="@string/title_review_walker" />
 
         <TextView
+            style="@style/TextAppearance.DoggySitter.FieldLabel"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="24dp"
             android:text="@string/rating_label"
             android:textAlignment="viewStart"
-            android:textDirection="rtl"
-            android:textSize="16sp" />
+            android:textDirection="rtl" />
 
         <RatingBar
             android:id="@+id/rating_bar"
@@ -42,22 +45,22 @@
             android:stepSize="1" />
 
         <TextView
+            style="@style/TextAppearance.DoggySitter.BodySecondary"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="6dp"
             android:text="@string/rating_helper"
             android:textAlignment="viewStart"
-            android:textDirection="rtl"
-            android:textSize="14sp" />
+            android:textDirection="rtl" />
 
         <TextView
+            style="@style/TextAppearance.DoggySitter.FieldLabel"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="20dp"
             android:text="@string/comment_label"
             android:textAlignment="viewStart"
-            android:textDirection="rtl"
-            android:textSize="16sp" />
+            android:textDirection="rtl" />
 
         <EditText
             android:id="@+id/edit_comment"

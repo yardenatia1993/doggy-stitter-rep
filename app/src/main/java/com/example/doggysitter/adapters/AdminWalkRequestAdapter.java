@@ -5,6 +5,7 @@ import com.example.doggysitter.models.WalkRequest;
 import com.example.doggysitter.utils.AdminDisplayUtils;
 import com.example.doggysitter.utils.DateTimeUtils;
 import com.example.doggysitter.utils.PriceUtils;
+import com.example.doggysitter.utils.StatusBadgeUtils;
 import com.example.doggysitter.utils.ValidationUtils;
 
 import android.text.TextUtils;
@@ -68,6 +69,7 @@ public class AdminWalkRequestAdapter
 
         holder.statusTextView.setText("סטטוס: "
                 + AdminDisplayUtils.formatWalkRequestStatus(walkRequest.getStatus()));
+        StatusBadgeUtils.apply(holder.statusTextView, walkRequest.getStatus());
         holder.reviewedTextView.setText("האם דורג: " + AdminDisplayUtils.formatReviewed(walkRequest.getReviewed()));
     }
 

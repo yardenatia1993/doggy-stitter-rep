@@ -46,16 +46,19 @@
             android:exported="false" />
         <activity
             android:name=".activities.owner.ReviewActivity"
-            android:exported="false" />
+            android:exported="false"
+            android:windowSoftInputMode="adjustResize" />
         <activity
             android:name=".activities.owner.CreateWalkRequestActivity"
-            android:exported="false" />
+            android:exported="false"
+            android:windowSoftInputMode="adjustResize" />
         <activity
             android:name=".activities.owner.MyDogsActivity"
             android:exported="false" />
         <activity
             android:name=".activities.owner.AddDogActivity"
-            android:exported="false" />
+            android:exported="false"
+            android:windowSoftInputMode="adjustResize" />
         <activity
             android:name=".activities.admin.AdminDashboardActivity"
             android:exported="false" />
@@ -70,10 +73,12 @@
             android:exported="false" />
         <activity
             android:name=".activities.auth.RegisterActivity"
-            android:exported="false" />
+            android:exported="false"
+            android:windowSoftInputMode="adjustResize" />
         <activity
             android:name=".activities.auth.LoginActivity"
-            android:exported="false" />
+            android:exported="false"
+            android:windowSoftInputMode="adjustResize" />
         <activity
             android:name=".activities.auth.SplashScreenActivity"
             android:exported="true">

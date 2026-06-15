@@ -12,8 +12,11 @@
         android:id="@+id/main"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_margin="16dp"
+        android:background="@drawable/bg_form_section"
+        android:elevation="2dp"
         android:orientation="vertical"
-        android:padding="24dp"
+        android:padding="20dp"
         android:textDirection="rtl">
 
         <TextView
@@ -23,29 +26,29 @@
             android:text="@string/title_create_walk_request" />
 
         <TextView
-            style="@style/TextAppearance.DoggySitter.SectionTitle"
+            style="@style/TextAppearance.DoggySitter.FieldLabel"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="24dp"
             android:text="@string/select_dog_required_label"
             android:textAlignment="viewStart"
-            android:textDirection="rtl"
-            android:textSize="15sp" />
+            android:textDirection="rtl" />
 
         <Spinner
             android:id="@+id/spinner_dogs"
+            style="@style/Widget.DoggySitter.Spinner"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="4dp" />
 
         <TextView
+            style="@style/TextAppearance.DoggySitter.FieldLabel"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="14dp"
             android:text="@string/date_required_label"
             android:textAlignment="viewStart"
-            android:textDirection="rtl"
-            android:textSize="15sp" />
+            android:textDirection="rtl" />
 
         <EditText
             android:id="@+id/edit_date"
@@ -59,13 +62,13 @@
             android:textDirection="rtl" />
 
         <TextView
+            style="@style/TextAppearance.DoggySitter.FieldLabel"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="14dp"
             android:text="@string/time_required_label"
             android:textAlignment="viewStart"
-            android:textDirection="rtl"
-            android:textSize="15sp" />
+            android:textDirection="rtl" />
 
         <EditText
             android:id="@+id/edit_time"
@@ -79,28 +82,29 @@
             android:textDirection="rtl" />
 
         <TextView
+            style="@style/TextAppearance.DoggySitter.FieldLabel"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="14dp"
             android:text="@string/duration_required_label"
             android:textAlignment="viewStart"
-            android:textDirection="rtl"
-            android:textSize="15sp" />
+            android:textDirection="rtl" />
 
         <Spinner
             android:id="@+id/spinner_duration"
+            style="@style/Widget.DoggySitter.Spinner"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="4dp" />
 
         <TextView
+            style="@style/TextAppearance.DoggySitter.FieldLabel"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="14dp"
             android:text="@string/max_price_required_label"
             android:textAlignment="viewStart"
-            android:textDirection="rtl"
-            android:textSize="15sp" />
+            android:textDirection="rtl" />
 
         <EditText
             android:id="@+id/edit_max_price"
@@ -111,6 +115,7 @@
             android:inputType="numberDecimal" />
 
         <TextView
+            style="@style/TextAppearance.DoggySitter.SectionTitle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="20dp"
@@ -120,6 +125,7 @@
 
         <Button
             android:id="@+id/button_current_pickup_location"
+            style="@style/Widget.DoggySitter.Button.Secondary"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
@@ -127,6 +133,7 @@
 
         <Button
             android:id="@+id/button_manual_pickup_location"
+            style="@style/Widget.DoggySitter.Button.Secondary"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
@@ -134,22 +141,22 @@
 
         <TextView
             android:id="@+id/text_pickup_location_status"
+            style="@style/TextAppearance.DoggySitter.BodySecondary"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
             android:text="@string/location_not_selected"
             android:textAlignment="viewStart"
-            android:textDirection="rtl"
-            android:textSize="15sp" />
+            android:textDirection="rtl" />
 
         <TextView
+            style="@style/TextAppearance.DoggySitter.FieldLabel"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="14dp"
             android:text="@string/pickup_location_label"
             android:textAlignment="viewStart"
-            android:textDirection="rtl"
-            android:textSize="15sp" />
+            android:textDirection="rtl" />
 
         <EditText
             android:id="@+id/edit_pickup_location_label"
@@ -161,13 +168,13 @@
             android:textDirection="anyRtl" />
 
         <TextView
+            style="@style/TextAppearance.DoggySitter.FieldLabel"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="14dp"
             android:text="@string/notes_optional_label"
             android:textAlignment="viewStart"
-            android:textDirection="rtl"
-            android:textSize="15sp" />
+            android:textDirection="rtl" />
 
         <EditText
             android:id="@+id/edit_notes"

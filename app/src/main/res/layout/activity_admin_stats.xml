@@ -3,6 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/ds_background"
     android:fillViewport="true"
     android:layoutDirection="rtl"
     tools:context=".activities.admin.AdminStatsActivity">
@@ -12,15 +13,15 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:padding="24dp"
+        android:padding="20dp"
         android:textDirection="rtl">
 
         <TextView
-            android:layout_width="wrap_content"
+            style="@style/TextAppearance.DoggySitter.ScreenTitle"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="@string/statistics"
-            android:textSize="26sp"
-            android:textStyle="bold" />
+            android:textAlignment="viewStart" />
 
         <ProgressBar
             android:id="@+id/progress_bar"
@@ -30,74 +31,436 @@
             android:layout_marginTop="16dp"
             android:visibility="gone" />
 
-        <TextView
-            android:id="@+id/text_users_count"
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="24dp"
-            android:textSize="18sp" />
+            android:layout_marginTop="16dp"
+            android:baselineAligned="false"
+            android:orientation="horizontal">
 
-        <TextView
-            android:id="@+id/text_owners_count"
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="6dp"
+                android:layout_weight="1"
+                android:background="@drawable/bg_form_section"
+                android:elevation="1dp"
+                android:minHeight="94dp"
+                android:orientation="vertical"
+                android:padding="16dp">
+
+                <TextView
+                    style="@style/TextAppearance.DoggySitter.CardMeta"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/admin_stats_users_title" />
+
+                <TextView
+                    android:id="@+id/text_users_count"
+                    style="@style/TextAppearance.DoggySitter.ScreenTitle"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="6dp" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="6dp"
+                android:layout_weight="1"
+                android:background="@drawable/bg_form_section"
+                android:elevation="1dp"
+                android:minHeight="94dp"
+                android:orientation="vertical"
+                android:padding="16dp">
+
+                <TextView
+                    style="@style/TextAppearance.DoggySitter.CardMeta"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/admin_stats_owners_title" />
+
+                <TextView
+                    android:id="@+id/text_owners_count"
+                    style="@style/TextAppearance.DoggySitter.ScreenTitle"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="6dp" />
+            </LinearLayout>
+        </LinearLayout>
+
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:textSize="18sp" />
+            android:layout_marginTop="12dp"
+            android:baselineAligned="false"
+            android:orientation="horizontal">
 
-        <TextView
-            android:id="@+id/text_walkers_count"
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="6dp"
+                android:layout_weight="1"
+                android:background="@drawable/bg_form_section"
+                android:elevation="1dp"
+                android:minHeight="94dp"
+                android:orientation="vertical"
+                android:padding="16dp">
+
+                <TextView
+                    style="@style/TextAppearance.DoggySitter.CardMeta"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/admin_stats_walkers_title" />
+
+                <TextView
+                    android:id="@+id/text_walkers_count"
+                    style="@style/TextAppearance.DoggySitter.ScreenTitle"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="6dp" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="6dp"
+                android:layout_weight="1"
+                android:background="@drawable/bg_form_section"
+                android:elevation="1dp"
+                android:minHeight="94dp"
+                android:orientation="vertical"
+                android:padding="16dp">
+
+                <TextView
+                    style="@style/TextAppearance.DoggySitter.CardMeta"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/admin_stats_admins_title" />
+
+                <TextView
+                    android:id="@+id/text_admins_count"
+                    style="@style/TextAppearance.DoggySitter.ScreenTitle"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="6dp" />
+            </LinearLayout>
+        </LinearLayout>
+
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:textSize="18sp" />
+            android:layout_marginTop="12dp"
+            android:baselineAligned="false"
+            android:orientation="horizontal">
 
-        <TextView
-            android:id="@+id/text_admins_count"
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="6dp"
+                android:layout_weight="1"
+                android:background="@drawable/bg_form_section"
+                android:elevation="1dp"
+                android:minHeight="94dp"
+                android:orientation="vertical"
+                android:padding="16dp">
+
+                <TextView
+                    style="@style/TextAppearance.DoggySitter.CardMeta"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/admin_stats_dogs_title" />
+
+                <TextView
+                    android:id="@+id/text_dogs_count"
+                    style="@style/TextAppearance.DoggySitter.ScreenTitle"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="6dp" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="6dp"
+                android:layout_weight="1"
+                android:background="@drawable/bg_form_section"
+                android:elevation="1dp"
+                android:minHeight="94dp"
+                android:orientation="vertical"
+                android:padding="16dp">
+
+                <TextView
+                    style="@style/TextAppearance.DoggySitter.CardMeta"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/admin_stats_requests_title" />
+
+                <TextView
+                    android:id="@+id/text_walk_requests_count"
+                    style="@style/TextAppearance.DoggySitter.ScreenTitle"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="6dp" />
+            </LinearLayout>
+        </LinearLayout>
+
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:textSize="18sp" />
+            android:layout_marginTop="12dp"
+            android:baselineAligned="false"
+            android:orientation="horizontal">
 
-        <TextView
-            android:id="@+id/text_open_requests_count"
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="6dp"
+                android:layout_weight="1"
+                android:background="@drawable/bg_form_section"
+                android:elevation="1dp"
+                android:minHeight="94dp"
+                android:orientation="vertical"
+                android:padding="16dp">
+
+                <TextView
+                    style="@style/TextAppearance.DoggySitter.CardMeta"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/admin_stats_reviews_title" />
+
+                <TextView
+                    android:id="@+id/text_reviews_count"
+                    style="@style/TextAppearance.DoggySitter.ScreenTitle"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="6dp" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="6dp"
+                android:layout_weight="1"
+                android:background="@drawable/bg_form_section"
+                android:elevation="1dp"
+                android:minHeight="94dp"
+                android:orientation="vertical"
+                android:padding="16dp">
+
+                <TextView
+                    style="@style/TextAppearance.DoggySitter.CardMeta"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/admin_stats_average_rating_title" />
+
+                <TextView
+                    android:id="@+id/text_average_rating"
+                    style="@style/TextAppearance.DoggySitter.SectionTitle"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp" />
+            </LinearLayout>
+        </LinearLayout>
+
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="20dp"
-            android:textSize="18sp" />
+            android:background="@drawable/bg_form_section"
+            android:elevation="1dp"
+            android:orientation="vertical"
+            android:padding="16dp">
 
-        <TextView
-            android:id="@+id/text_accepted_requests_count"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:textSize="18sp" />
+            <TextView
+                style="@style/TextAppearance.DoggySitter.SectionTitle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/admin_stats_status_distribution" />
 
-        <TextView
-            android:id="@+id/text_completed_requests_count"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:textSize="18sp" />
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:orientation="vertical">
 
-        <TextView
-            android:id="@+id/text_canceled_requests_count"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:textSize="18sp" />
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal">
 
-        <TextView
-            android:id="@+id/text_reviews_count"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="20dp"
-            android:textSize="18sp" />
+                    <TextView
+                        style="@style/TextAppearance.DoggySitter.Body"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="@string/filter_open_requests" />
 
-        <TextView
-            android:id="@+id/text_average_rating"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:textSize="18sp" />
+                    <TextView
+                        android:id="@+id/text_open_requests_count"
+                        style="@style/TextAppearance.DoggySitter.BodySecondary"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="12dp"
+                    android:layout_marginTop="6dp"
+                    android:background="@drawable/bg_chart_track"
+                    android:orientation="horizontal">
+
+                    <View
+                        android:id="@+id/bar_open_requests"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:background="@drawable/bg_bar_open" />
+
+                    <View
+                        android:id="@+id/bar_open_requests_remainder"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent" />
+                </LinearLayout>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="14dp"
+                android:orientation="vertical">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        style="@style/TextAppearance.DoggySitter.Body"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="@string/filter_accepted_requests" />
+
+                    <TextView
+                        android:id="@+id/text_accepted_requests_count"
+                        style="@style/TextAppearance.DoggySitter.BodySecondary"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="12dp"
+                    android:layout_marginTop="6dp"
+                    android:background="@drawable/bg_chart_track"
+                    android:orientation="horizontal">
+
+                    <View
+                        android:id="@+id/bar_accepted_requests"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:background="@drawable/bg_bar_accepted" />
+
+                    <View
+                        android:id="@+id/bar_accepted_requests_remainder"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent" />
+                </LinearLayout>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="14dp"
+                android:orientation="vertical">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        style="@style/TextAppearance.DoggySitter.Body"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="@string/filter_completed_requests" />
+
+                    <TextView
+                        android:id="@+id/text_completed_requests_count"
+                        style="@style/TextAppearance.DoggySitter.BodySecondary"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="12dp"
+                    android:layout_marginTop="6dp"
+                    android:background="@drawable/bg_chart_track"
+                    android:orientation="horizontal">
+
+                    <View
+                        android:id="@+id/bar_completed_requests"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:background="@drawable/bg_bar_completed" />
+
+                    <View
+                        android:id="@+id/bar_completed_requests_remainder"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent" />
+                </LinearLayout>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="14dp"
+                android:orientation="vertical">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        style="@style/TextAppearance.DoggySitter.Body"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="@string/filter_canceled_requests" />
+
+                    <TextView
+                        android:id="@+id/text_canceled_requests_count"
+                        style="@style/TextAppearance.DoggySitter.BodySecondary"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="12dp"
+                    android:layout_marginTop="6dp"
+                    android:background="@drawable/bg_chart_track"
+                    android:orientation="horizontal">
+
+                    <View
+                        android:id="@+id/bar_canceled_requests"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:background="@drawable/bg_bar_canceled" />
+
+                    <View
+                        android:id="@+id/bar_canceled_requests_remainder"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent" />
+                </LinearLayout>
+            </LinearLayout>
+        </LinearLayout>
     </LinearLayout>
 </ScrollView>

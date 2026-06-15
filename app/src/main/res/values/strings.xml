@@ -133,11 +133,23 @@
     <string name="no_admin_walk_requests">אין בקשות להצגה</string>
     <string name="no_admin_reviews">אין ביקורות להצגה</string>
     <string name="filter_all">הכל</string>
+    <string name="filter_dog_owners">בעלי כלבים</string>
+    <string name="filter_dog_walkers">דוגווקרים</string>
     <string name="filter_open_requests">פתוחות</string>
     <string name="filter_accepted_requests">התקבלו</string>
     <string name="filter_completed_requests">הושלמו</string>
     <string name="filter_canceled_requests">בוטלו</string>
     <string name="admin_filter_status">סינון לפי סטטוס</string>
+    <string name="admin_filter_role">סינון לפי סוג משתמש</string>
+    <string name="admin_stats_users_title">משתמשים</string>
+    <string name="admin_stats_owners_title">בעלי כלבים</string>
+    <string name="admin_stats_walkers_title">דוגווקרים</string>
+    <string name="admin_stats_admins_title">מנהלים</string>
+    <string name="admin_stats_dogs_title">כלבים</string>
+    <string name="admin_stats_requests_title">בקשות טיול</string>
+    <string name="admin_stats_reviews_title">ביקורות</string>
+    <string name="admin_stats_average_rating_title">דירוג ממוצע</string>
+    <string name="admin_stats_status_distribution">התפלגות בקשות לפי סטטוס</string>
     <string name="status_label">סטטוס: %1$s</string>
     <string name="status_accepted_display">התקבלה</string>
     <string name="status_open_display">פתוחה</string>
@@ -262,4 +274,10 @@
     <string name="exit_app_title">יציאה מהאפליקציה</string>
     <string name="exit_app_message">האם לצאת מהאפליקציה?</string>
     <string name="exit_app_positive">יציאה</string>
+
+    <string-array name="admin_user_role_filters">
+        <item>@string/filter_all</item>
+        <item>@string/filter_dog_owners</item>
+        <item>@string/filter_dog_walkers</item>
+    </string-array>
 </resources>

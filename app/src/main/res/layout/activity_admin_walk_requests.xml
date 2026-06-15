@@ -4,28 +4,30 @@
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:animateLayoutChanges="true"
+    android:background="@color/ds_background"
     android:layoutDirection="rtl"
     android:orientation="vertical"
-    android:padding="24dp"
+    android:padding="20dp"
     android:textDirection="rtl"
     tools:context=".activities.admin.AdminWalkRequestsActivity">
 
     <TextView
+        style="@style/TextAppearance.DoggySitter.ScreenTitle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/walk_requests"
-        android:textSize="26sp"
-        android:textStyle="bold" />
+        android:text="@string/walk_requests" />
 
     <TextView
+        style="@style/TextAppearance.DoggySitter.FieldLabel"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
-        android:text="@string/admin_filter_status"
-        android:textSize="15sp" />
+        android:text="@string/admin_filter_status" />
 
     <Spinner
         android:id="@+id/spinner_status_filter"
+        style="@style/Widget.DoggySitter.Spinner"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="4dp" />
@@ -40,11 +42,13 @@
 
     <TextView
         android:id="@+id/text_empty"
+        style="@style/TextAppearance.DoggySitter.EmptyState"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="24dp"
+        android:background="@drawable/bg_empty_state"
+        android:padding="24dp"
         android:text="@string/no_admin_walk_requests"
-        android:textSize="18sp"
         android:visibility="gone" />
 
     <androidx.recyclerview.widget.RecyclerView
@@ -53,5 +57,7 @@
         android:layout_height="0dp"
         android:layout_marginTop="16dp"
         android:layout_weight="1"
-        android:clipToPadding="false" />
+        android:clipToPadding="false"
+        android:layoutAnimation="@anim/layout_list_fade_in"
+        android:paddingBottom="16dp" />
 </LinearLayout>

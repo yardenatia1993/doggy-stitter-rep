@@ -9,9 +9,9 @@ import com.example.doggysitter.utils.FirestoreConstants;
 
 import android.os.Bundle;
 import android.view.View;
+import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.google.android.gms.tasks.Task;
 import com.google.android.gms.tasks.Tasks;
@@ -27,12 +27,22 @@ public class AdminStatsActivity extends AdminBaseActivity {
     private TextView ownersCountTextView;
     private TextView walkersCountTextView;
     private TextView adminsCountTextView;
+    private TextView dogsCountTextView;
+    private TextView walkRequestsCountTextView;
     private TextView openRequestsCountTextView;
     private TextView acceptedRequestsCountTextView;
     private TextView completedRequestsCountTextView;
     private TextView canceledRequestsCountTextView;
     private TextView reviewsCountTextView;
     private TextView averageRatingTextView;
+    private View openRequestsBarView;
+    private View openRequestsRemainderView;
+    private View acceptedRequestsBarView;
+    private View acceptedRequestsRemainderView;
+    private View completedRequestsBarView;
+    private View completedRequestsRemainderView;
+    private View canceledRequestsBarView;
+    private View canceledRequestsRemainderView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,12 +55,22 @@ public class AdminStatsActivity extends AdminBaseActivity {
         ownersCountTextView = findViewById(R.id.text_owners_count);
         walkersCountTextView = findViewById(R.id.text_walkers_count);
         adminsCountTextView = findViewById(R.id.text_admins_count);
+        dogsCountTextView = findViewById(R.id.text_dogs_count);
+        walkRequestsCountTextView = findViewById(R.id.text_walk_requests_count);
         openRequestsCountTextView = findViewById(R.id.text_open_requests_count);
         acceptedRequestsCountTextView = findViewById(R.id.text_accepted_requests_count);
         completedRequestsCountTextView = findViewById(R.id.text_completed_requests_count);
         canceledRequestsCountTextView = findViewById(R.id.text_canceled_requests_count);
         reviewsCountTextView = findViewById(R.id.text_reviews_count);
         averageRatingTextView = findViewById(R.id.text_average_rating);
+        openRequestsBarView = findViewById(R.id.bar_open_requests);
+        openRequestsRemainderView = findViewById(R.id.bar_open_requests_remainder);
+        acceptedRequestsBarView = findViewById(R.id.bar_accepted_requests);
+        acceptedRequestsRemainderView = findViewById(R.id.bar_accepted_requests_remainder);
+        completedRequestsBarView = findViewById(R.id.bar_completed_requests);
+        completedRequestsRemainderView = findViewById(R.id.bar_completed_requests_remainder);
+        canceledRequestsBarView = findViewById(R.id.bar_canceled_requests);
+        canceledRequestsRemainderView = findViewById(R.id.bar_canceled_requests_remainder);
 
         requireAdminAccess(this::loadStats);
     }
@@ -58,19 +78,26 @@ public class AdminStatsActivity extends AdminBaseActivity {
     private void loadStats() {
         setLoading(true);
         Task<QuerySnapshot> usersTask = adminRepository.getAllUsers();
+        Task<QuerySnapshot> dogsTask = adminRepository.getAllDogs();
         Task<QuerySnapshot> walkRequestsTask = adminRepository.getAllWalkRequests();
         Task<QuerySnapshot> reviewsTask = adminRepository.getAllReviews();
 
-        Tasks.whenAllComplete(usersTask, walkRequestsTask, reviewsTask)
+        Tasks.whenAllComplete(usersTask, dogsTask, walkRequestsTask, reviewsTask)
                 .addOnCompleteListener(task -> {
                     setLoading(false);
                     if (!usersTask.isSuccessful()
+                            || !dogsTask.isSuccessful()
                             || !walkRequestsTask.isSuccessful()
                             || !reviewsTask.isSuccessful()) {
-                        handleFailedStatsTasks(usersTask, walkRequestsTask, reviewsTask);
+                        handleFailedStatsTasks(usersTask, dogsTask, walkRequestsTask, reviewsTask);
                         return;
                     }
-                    bindStats(usersTask.getResult(), walkRequestsTask.getResult(), reviewsTask.getResult());
+                    bindStats(
+                            usersTask.getResult(),
+                            dogsTask.getResult(),
+                            walkRequestsTask.getResult(),
+                            reviewsTask.getResult()
+                    );
                 });
     }
 
@@ -84,8 +111,8 @@ public class AdminStatsActivity extends AdminBaseActivity {
         }
     }
 
-    private void bindStats(QuerySnapshot usersSnapshot, QuerySnapshot walkRequestsSnapshot,
-                           QuerySnapshot reviewsSnapshot) {
+    private void bindStats(QuerySnapshot usersSnapshot, QuerySnapshot dogsSnapshot,
+                           QuerySnapshot walkRequestsSnapshot, QuerySnapshot reviewsSnapshot) {
         int ownerCount = 0;
         int walkerCount = 0;
         int adminCount = 0;
@@ -134,17 +161,44 @@ public class AdminStatsActivity extends AdminBaseActivity {
             }
         }
 
-        usersCountTextView.setText("מספר משתמשים: " + usersSnapshot.size());
-        ownersCountTextView.setText("מספר בעלי כלבים: " + ownerCount);
-        walkersCountTextView.setText("מספר דוגווקרים: " + walkerCount);
-        adminsCountTextView.setText("מספר מנהלים: " + adminCount);
-        openRequestsCountTextView.setText("מספר בקשות פתוחות: " + openRequests);
-        acceptedRequestsCountTextView.setText("מספר בקשות שהתקבלו: " + acceptedRequests);
-        completedRequestsCountTextView.setText("מספר בקשות שהושלמו: " + completedRequests);
-        canceledRequestsCountTextView.setText("מספר בקשות שבוטלו: " + canceledRequests);
-        reviewsCountTextView.setText("מספר ביקורות: " + reviewsSnapshot.size());
-        averageRatingTextView.setText("דירוג ממוצע כללי של דוגווקרים: "
-                + formatAverageRating(ratingSum, ratingCount));
+        int requestCount = walkRequestsSnapshot.size();
+        usersCountTextView.setText(String.valueOf(usersSnapshot.size()));
+        ownersCountTextView.setText(String.valueOf(ownerCount));
+        walkersCountTextView.setText(String.valueOf(walkerCount));
+        adminsCountTextView.setText(String.valueOf(adminCount));
+        dogsCountTextView.setText(String.valueOf(dogsSnapshot.size()));
+        walkRequestsCountTextView.setText(String.valueOf(requestCount));
+        openRequestsCountTextView.setText(String.valueOf(openRequests));
+        acceptedRequestsCountTextView.setText(String.valueOf(acceptedRequests));
+        completedRequestsCountTextView.setText(String.valueOf(completedRequests));
+        canceledRequestsCountTextView.setText(String.valueOf(canceledRequests));
+        reviewsCountTextView.setText(String.valueOf(reviewsSnapshot.size()));
+        averageRatingTextView.setText(formatAverageRating(ratingSum, ratingCount));
+        updateStatusBars(openRequests, acceptedRequests, completedRequests, canceledRequests);
+    }
+
+    private void updateStatusBars(int openRequests, int acceptedRequests, int completedRequests,
+                                  int canceledRequests) {
+        int total = openRequests + acceptedRequests + completedRequests + canceledRequests;
+        setBarWeights(openRequestsBarView, openRequestsRemainderView, openRequests, total);
+        setBarWeights(acceptedRequestsBarView, acceptedRequestsRemainderView, acceptedRequests, total);
+        setBarWeights(completedRequestsBarView, completedRequestsRemainderView, completedRequests, total);
+        setBarWeights(canceledRequestsBarView, canceledRequestsRemainderView, canceledRequests, total);
+    }
+
+    private void setBarWeights(View barView, View remainderView, int count, int total) {
+        float barWeight = total <= 0 ? 0f : count;
+        float remainderWeight = total <= 0 ? 1f : Math.max(0, total - count);
+        barView.setLayoutParams(new LinearLayout.LayoutParams(
+                0,
+                LinearLayout.LayoutParams.MATCH_PARENT,
+                barWeight
+        ));
+        remainderView.setLayoutParams(new LinearLayout.LayoutParams(
+                0,
+                LinearLayout.LayoutParams.MATCH_PARENT,
+                remainderWeight
+        ));
     }
 
     private String formatAverageRating(int ratingSum, int ratingCount) {

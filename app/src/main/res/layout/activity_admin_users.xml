@@ -10,13 +10,36 @@
     android:orientation="vertical"
     android:padding="20dp"
     android:textDirection="rtl"
-    tools:context=".activities.owner.OwnerRequestsActivity">
+    tools:context=".activities.admin.AdminUsersActivity">
 
     <TextView
         style="@style/TextAppearance.DoggySitter.ScreenTitle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/title_owner_requests" />
+        android:text="@string/users" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:background="@drawable/bg_form_section"
+        android:elevation="1dp"
+        android:orientation="vertical"
+        android:padding="16dp">
+
+        <TextView
+            style="@style/TextAppearance.DoggySitter.FieldLabel"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/admin_filter_role" />
+
+        <Spinner
+            android:id="@+id/spinner_role_filter"
+            style="@style/Widget.DoggySitter.Spinner"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="6dp" />
+    </LinearLayout>
 
     <ProgressBar
         android:id="@+id/progress_bar"
@@ -34,11 +57,11 @@
         android:layout_marginTop="24dp"
         android:background="@drawable/bg_empty_state"
         android:padding="24dp"
-        android:text="@string/no_owner_walk_requests"
+        android:text="@string/no_admin_users"
         android:visibility="gone" />
 
     <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/recycler_owner_requests"
+        android:id="@+id/recycler_users"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_marginTop="16dp"

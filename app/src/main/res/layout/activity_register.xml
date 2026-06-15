@@ -21,6 +21,15 @@
         android:padding="24dp"
         android:textDirection="rtl">
 
+        <ImageView
+            android:id="@+id/image_app_logo"
+            android:layout_width="64dp"
+            android:layout_height="64dp"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginBottom="10dp"
+            android:contentDescription="@string/app_name"
+            android:src="@mipmap/ic_launcher" />
+
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -44,10 +53,10 @@
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            style="@style/TextAppearance.DoggySitter.FieldLabel"
             android:text="@string/full_name_required_label"
             android:textAlignment="viewStart"
-            android:textDirection="rtl"
-            android:textSize="15sp" />
+            android:textDirection="rtl" />
 
         <EditText
             android:id="@+id/edit_full_name"
@@ -63,10 +72,10 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="14dp"
+            style="@style/TextAppearance.DoggySitter.FieldLabel"
             android:text="@string/email_required_label"
             android:textAlignment="viewStart"
-            android:textDirection="rtl"
-            android:textSize="15sp" />
+            android:textDirection="rtl" />
 
         <EditText
             android:id="@+id/edit_email"
@@ -82,10 +91,10 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="14dp"
+            style="@style/TextAppearance.DoggySitter.FieldLabel"
             android:text="@string/password_required_label"
             android:textAlignment="viewStart"
-            android:textDirection="rtl"
-            android:textSize="15sp" />
+            android:textDirection="rtl" />
 
         <EditText
             android:id="@+id/edit_password"
@@ -101,10 +110,10 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="14dp"
+            style="@style/TextAppearance.DoggySitter.FieldLabel"
             android:text="@string/confirm_password_required_label"
             android:textAlignment="viewStart"
-            android:textDirection="rtl"
-            android:textSize="15sp" />
+            android:textDirection="rtl" />
 
         <EditText
             android:id="@+id/edit_confirm_password"

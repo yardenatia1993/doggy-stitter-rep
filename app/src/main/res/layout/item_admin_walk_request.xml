@@ -1,13 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    style="@style/Widget.DoggySitter.Card"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_marginBottom="12dp"
-    android:layoutDirection="rtl"
-    app:cardCornerRadius="8dp"
-    app:cardElevation="2dp"
-    app:contentPadding="16dp">
+    android:layoutDirection="rtl">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -17,74 +15,79 @@
 
         <TextView
             android:id="@+id/text_dog_name"
+            style="@style/TextAppearance.DoggySitter.CardTitle"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:textSize="18sp"
-            android:textStyle="bold" />
+            android:layout_height="wrap_content" />
 
         <TextView
             android:id="@+id/text_owner_id"
+            style="@style/TextAppearance.DoggySitter.CardMeta"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="6dp"
-            android:textSize="15sp" />
+            android:layout_marginTop="6dp" />
 
         <TextView
             android:id="@+id/text_walker_id"
+            style="@style/TextAppearance.DoggySitter.CardMeta"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="4dp"
-            android:textSize="15sp"
             android:visibility="gone" />
 
         <TextView
             android:id="@+id/text_date"
+            style="@style/TextAppearance.DoggySitter.Body"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="4dp"
-            android:textSize="16sp" />
+            android:layout_marginTop="4dp" />
 
         <TextView
             android:id="@+id/text_time"
+            style="@style/TextAppearance.DoggySitter.Body"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="4dp"
-            android:textSize="16sp" />
+            android:layout_marginTop="4dp" />
 
         <TextView
             android:id="@+id/text_duration"
+            style="@style/TextAppearance.DoggySitter.Body"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="4dp"
-            android:textSize="16sp" />
+            android:layout_marginTop="4dp" />
 
         <TextView
             android:id="@+id/text_price"
+            style="@style/TextAppearance.DoggySitter.Body"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="4dp"
-            android:textSize="16sp" />
+            android:layout_marginTop="4dp" />
 
         <TextView
             android:id="@+id/text_location"
+            style="@style/TextAppearance.DoggySitter.CardMeta"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="4dp"
-            android:textSize="15sp"
             android:visibility="gone" />
 
         <TextView
             android:id="@+id/text_status"
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="6dp"
-            android:textSize="16sp" />
+            android:background="@drawable/bg_status_unknown"
+            android:paddingStart="10dp"
+            android:paddingTop="5dp"
+            android:paddingEnd="10dp"
+            android:paddingBottom="5dp"
+            android:textColor="@color/ds_status_unknown_text"
+            android:textSize="14sp" />
 
         <TextView
             android:id="@+id/text_reviewed"
+            style="@style/TextAppearance.DoggySitter.BodySecondary"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="4dp"
-            android:textSize="16sp" />
+            android:layout_marginTop="8dp" />
     </LinearLayout>
 </com.google.android.material.card.MaterialCardView>

@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    style="@style/Widget.DoggySitter.Card"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_marginBottom="12dp"
@@ -20,35 +21,30 @@
 
         <TextView
             android:id="@+id/text_dog_name"
+            style="@style/TextAppearance.DoggySitter.CardTitle"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:textColor="@color/ds_text_primary"
-            android:textSize="20sp"
-            android:textStyle="bold" />
+            android:layout_height="wrap_content" />
 
         <TextView
             android:id="@+id/text_dog_breed"
+            style="@style/TextAppearance.DoggySitter.Body"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="6dp"
-            android:textColor="@color/ds_text_primary"
-            android:textSize="16sp" />
+            android:layout_marginTop="6dp" />
 
         <TextView
             android:id="@+id/text_dog_age"
+            style="@style/TextAppearance.DoggySitter.Body"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="4dp"
-            android:textColor="@color/ds_text_primary"
-            android:textSize="16sp" />
+            android:layout_marginTop="4dp" />
 
         <TextView
             android:id="@+id/text_dog_notes"
+            style="@style/TextAppearance.DoggySitter.CardMeta"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="6dp"
-            android:textColor="@color/ds_text_secondary"
-            android:textSize="15sp"
             android:visibility="gone" />
 
         <LinearLayout
@@ -60,12 +56,14 @@
 
             <Button
                 android:id="@+id/button_edit"
+                style="@style/Widget.DoggySitter.Button.Secondary"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/edit" />
 
             <Button
                 android:id="@+id/button_delete"
+                style="@style/Widget.DoggySitter.Button.Danger"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="8dp"

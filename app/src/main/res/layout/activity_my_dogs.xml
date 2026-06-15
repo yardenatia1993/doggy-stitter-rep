@@ -8,7 +8,7 @@
     android:background="@color/ds_background"
     android:layoutDirection="rtl"
     android:orientation="vertical"
-    android:padding="24dp"
+    android:padding="20dp"
     android:textDirection="rtl"
     tools:context=".activities.owner.MyDogsActivity">
 
@@ -34,7 +34,7 @@
         android:background="@drawable/bg_empty_state"
         android:gravity="center_horizontal"
         android:orientation="vertical"
-        android:padding="20dp"
+        android:padding="24dp"
         android:visibility="gone">
 
         <TextView
@@ -61,5 +61,5 @@
         android:layout_weight="1"
         android:clipToPadding="false"
         android:layoutAnimation="@anim/layout_list_fade_in"
-        android:paddingBottom="8dp" />
+        android:paddingBottom="16dp" />
 </LinearLayout>
