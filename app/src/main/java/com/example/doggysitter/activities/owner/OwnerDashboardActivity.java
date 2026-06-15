@@ -3,6 +3,7 @@ package com.example.doggysitter.activities.owner;
 import com.example.doggysitter.R;
 import com.example.doggysitter.activities.auth.LoginActivity;
 import com.example.doggysitter.repositories.AuthRepository;
+import com.example.doggysitter.utils.ExitConfirmationUtils;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -19,6 +20,7 @@ public class OwnerDashboardActivity extends AppCompatActivity {
         setContentView(R.layout.activity_owner_dashboard);
 
         authRepository = new AuthRepository();
+        ExitConfirmationUtils.install(this);
         Button addDogButton = findViewById(R.id.button_add_dog);
         Button myDogsButton = findViewById(R.id.button_my_dogs);
         Button createWalkRequestButton = findViewById(R.id.button_create_walk_request);

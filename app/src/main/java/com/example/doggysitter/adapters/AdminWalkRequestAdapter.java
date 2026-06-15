@@ -17,15 +17,22 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class AdminWalkRequestAdapter
         extends RecyclerView.Adapter<AdminWalkRequestAdapter.AdminWalkRequestViewHolder> {
     private final List<WalkRequest> walkRequests = new ArrayList<>();
+    private final Map<String, String> userNamesById = new HashMap<>();
 
-    public void submitList(List<WalkRequest> newWalkRequests) {
+    public void submitList(List<WalkRequest> newWalkRequests, Map<String, String> newUserNamesById) {
         walkRequests.clear();
         walkRequests.addAll(newWalkRequests);
+        userNamesById.clear();
+        if (newUserNamesById != null) {
+            userNamesById.putAll(newUserNamesById);
+        }
         notifyDataSetChanged();
     }
 
@@ -41,11 +48,13 @@ public class AdminWalkRequestAdapter
     public void onBindViewHolder(@NonNull AdminWalkRequestViewHolder holder, int position) {
         WalkRequest walkRequest = walkRequests.get(position);
         holder.dogNameTextView.setText("שם הכלב: " + AdminDisplayUtils.fallbackText(walkRequest.getDogName()));
-        holder.ownerIdTextView.setText("בעלים: " + AdminDisplayUtils.fallbackText(walkRequest.getOwnerId()));
+        holder.ownerIdTextView.setText("בעלים: "
+                + AdminDisplayUtils.displayUserName(walkRequest.getOwnerId(), userNamesById));
 
         String walkerId = ValidationUtils.normalizeSpaces(walkRequest.getWalkerId());
         holder.walkerIdTextView.setVisibility(TextUtils.isEmpty(walkerId) ? View.GONE : View.VISIBLE);
-        holder.walkerIdTextView.setText("דוגווקר: " + walkerId);
+        holder.walkerIdTextView.setText("דוגווקר: "
+                + AdminDisplayUtils.displayUserName(walkerId, userNamesById));
 
         holder.dateTextView.setText("תאריך: " + DateTimeUtils.formatDisplayDate(walkRequest.getDate()));
         holder.timeTextView.setText("שעה: " + AdminDisplayUtils.fallbackText(walkRequest.getTime()));

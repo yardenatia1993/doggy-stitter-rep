@@ -63,6 +63,7 @@ service cloud.firestore {
         && request.resource.data.dogName == resource.data.dogName
         && request.resource.data.date == resource.data.date
         && request.resource.data.time == resource.data.time
+        && request.resource.data.get("startAt", null) == resource.data.get("startAt", null)
         && request.resource.data.durationMinutes == resource.data.durationMinutes
         && request.resource.data.maxPrice == resource.data.maxPrice
         && request.resource.data.notes == resource.data.notes
@@ -80,6 +81,7 @@ service cloud.firestore {
         && request.resource.data.dogName == resource.data.dogName
         && request.resource.data.date == resource.data.date
         && request.resource.data.time == resource.data.time
+        && request.resource.data.get("startAt", null) == resource.data.get("startAt", null)
         && request.resource.data.durationMinutes == resource.data.durationMinutes
         && request.resource.data.maxPrice == resource.data.maxPrice
         && request.resource.data.notes == resource.data.notes
@@ -164,8 +166,10 @@ service cloud.firestore {
         && request.resource.data.keys().hasOnly([
           "id", "ownerId", "dogId", "dogName", "date", "time", "durationMinutes",
           "maxPrice", "notes", "status", "reviewed", "pickupLat", "pickupLng",
-          "pickupLocationLabel", "createdAt"
+          "pickupLocationLabel", "startAt", "createdAt"
         ])
+        && request.resource.data.startAt is timestamp
+        && request.resource.data.startAt > request.time
         && request.resource.data.id == requestId
         && request.resource.data.ownerId == request.auth.uid
         && exists(dogPath(request.resource.data.dogId))
@@ -179,6 +183,7 @@ service cloud.firestore {
         && resource.data.status == "OPEN"
         && request.resource.data.status == "ACCEPTED"
         && request.resource.data.walkerId == request.auth.uid
+        && (!resource.data.keys().hasAny(["startAt"]) || resource.data.startAt > request.time)
         && changedKeys().hasOnly(["status", "walkerId", "acceptedAt"])
         && unchangedWalkRequestIdentity();
     }

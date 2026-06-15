@@ -3,6 +3,7 @@ package com.example.doggysitter.activities.walker;
 import com.example.doggysitter.R;
 import com.example.doggysitter.models.IsraeliLocation;
 import com.example.doggysitter.models.WalkerProfile;
+import com.example.doggysitter.repositories.IsraeliLocationsProvider;
 import com.example.doggysitter.repositories.UserRepository;
 import com.example.doggysitter.repositories.WalkerProfileRepository;
 import com.example.doggysitter.utils.DateTimeUtils;
@@ -703,12 +704,39 @@ public class WalkerProfileActivity extends AppCompatActivity {
             return;
         }
 
-        serviceLat = location.getLatitude();
-        serviceLng = location.getLongitude();
-        serviceLocationLabel = "";
+        double currentLat = location.getLatitude();
+        double currentLng = location.getLongitude();
+        IsraeliLocation nearestLocation = findNearestLocation(currentLat, currentLng);
+        if (nearestLocation == null) {
+            return;
+        }
+
+        serviceLat = currentLat;
+        serviceLng = currentLng;
+        serviceLocationLabel = nearestLocation.getNameHe();
         Log.d(TAG, "location success");
-        serviceLocationStatusTextView.setText(R.string.service_location_saved);
-        Toast.makeText(this, R.string.service_location_saved, Toast.LENGTH_SHORT).show();
+        serviceLocationStatusTextView.setText(getString(
+                R.string.location_saved_with_name,
+                nearestLocation.getNameHe()
+        ));
+        Toast.makeText(
+                this,
+                getString(R.string.location_saved_with_name, nearestLocation.getNameHe()),
+                Toast.LENGTH_SHORT
+        ).show();
+    }
+
+    private IsraeliLocation findNearestLocation(double lat, double lng) {
+        try {
+            IsraeliLocation nearestLocation = IsraeliLocationsProvider.findNearest(this, lat, lng);
+            if (nearestLocation == null) {
+                Toast.makeText(this, R.string.error_location_dataset_empty, Toast.LENGTH_SHORT).show();
+            }
+            return nearestLocation;
+        } catch (Exception error) {
+            Toast.makeText(this, R.string.error_load_locations, Toast.LENGTH_SHORT).show();
+            return null;
+        }
     }
 
     private void openManualServiceLocation() {

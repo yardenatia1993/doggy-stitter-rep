@@ -3,6 +3,7 @@ package com.example.doggysitter.activities.admin;
 import com.example.doggysitter.R;
 import com.example.doggysitter.activities.auth.LoginActivity;
 import com.example.doggysitter.repositories.AuthRepository;
+import com.example.doggysitter.utils.ExitConfirmationUtils;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -17,6 +18,7 @@ public class AdminDashboardActivity extends AdminBaseActivity {
         setContentView(R.layout.activity_admin_dashboard);
 
         authRepository = new AuthRepository();
+        ExitConfirmationUtils.install(this);
         Button usersButton = findViewById(R.id.button_users);
         Button walkerProfilesButton = findViewById(R.id.button_walker_profiles);
         Button walkRequestsButton = findViewById(R.id.button_walk_requests);

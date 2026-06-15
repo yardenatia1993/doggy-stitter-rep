@@ -25,6 +25,7 @@ public final class FirestoreConstants {
     public static final String FIELD_DOG_NAME = "dogName";
     public static final String FIELD_DATE = "date";
     public static final String FIELD_TIME = "time";
+    public static final String FIELD_START_AT = "startAt";
     public static final String FIELD_DURATION_MINUTES = "durationMinutes";
     public static final String FIELD_MAX_PRICE = "maxPrice";
     public static final String FIELD_STATUS = "status";

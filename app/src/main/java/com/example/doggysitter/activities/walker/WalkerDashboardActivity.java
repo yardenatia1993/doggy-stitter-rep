@@ -3,6 +3,7 @@ package com.example.doggysitter.activities.walker;
 import com.example.doggysitter.R;
 import com.example.doggysitter.activities.auth.LoginActivity;
 import com.example.doggysitter.repositories.AuthRepository;
+import com.example.doggysitter.utils.ExitConfirmationUtils;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -19,6 +20,7 @@ public class WalkerDashboardActivity extends AppCompatActivity {
         setContentView(R.layout.activity_walker_dashboard);
 
         authRepository = new AuthRepository();
+        ExitConfirmationUtils.install(this);
         Button profileButton = findViewById(R.id.button_my_profile);
         Button availableRequestsButton = findViewById(R.id.button_available_walk_requests);
         Button myJobsButton = findViewById(R.id.button_my_jobs);

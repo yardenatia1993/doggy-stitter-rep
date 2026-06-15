@@ -4,6 +4,7 @@ import android.content.Context;
 import android.text.TextUtils;
 
 import com.example.doggysitter.models.IsraeliLocation;
+import com.example.doggysitter.utils.LocationUtils;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -54,6 +55,28 @@ public final class IsraeliLocationsProvider {
             }
         }
         return results;
+    }
+
+    public static IsraeliLocation findNearest(Context context, double lat, double lng)
+            throws IOException, JSONException {
+        List<IsraeliLocation> locations = getLocations(context);
+        IsraeliLocation nearestLocation = null;
+        double nearestDistanceKm = Double.MAX_VALUE;
+
+        for (IsraeliLocation location : locations) {
+            double distanceKm = LocationUtils.calculateDistanceKm(
+                    lat,
+                    lng,
+                    location.getLat(),
+                    location.getLng()
+            );
+            if (distanceKm < nearestDistanceKm) {
+                nearestDistanceKm = distanceKm;
+                nearestLocation = location;
+            }
+        }
+
+        return nearestLocation;
     }
 
     private static List<IsraeliLocation> loadLocations(Context context) throws IOException, JSONException {

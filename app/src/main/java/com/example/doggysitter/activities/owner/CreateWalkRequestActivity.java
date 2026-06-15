@@ -5,6 +5,7 @@ import com.example.doggysitter.models.Dog;
 import com.example.doggysitter.models.IsraeliLocation;
 import com.example.doggysitter.models.WalkRequest;
 import com.example.doggysitter.repositories.DogRepository;
+import com.example.doggysitter.repositories.IsraeliLocationsProvider;
 import com.example.doggysitter.repositories.WalkRequestRepository;
 import com.example.doggysitter.utils.DateTimeUtils;
 import com.example.doggysitter.utils.FirestoreConstants;
@@ -242,6 +243,10 @@ public class CreateWalkRequestActivity extends AppCompatActivity {
             timeEditText.setError(getString(R.string.error_time_required));
             return;
         }
+        if (DateTimeUtils.isPastDateTime(selectedDateIso, selectedTime)) {
+            Toast.makeText(this, R.string.error_walk_request_time_in_past, Toast.LENGTH_SHORT).show();
+            return;
+        }
 
         int durationMinutes = durationValues.get(durationSpinner.getSelectedItemPosition());
         if (durationMinutes <= 0) {
@@ -364,10 +369,38 @@ public class CreateWalkRequestActivity extends AppCompatActivity {
             return;
         }
 
-        pickupLat = location.getLatitude();
-        pickupLng = location.getLongitude();
-        pickupLocationStatusTextView.setText(R.string.pickup_location_saved);
-        Toast.makeText(this, R.string.pickup_location_saved, Toast.LENGTH_SHORT).show();
+        double currentLat = location.getLatitude();
+        double currentLng = location.getLongitude();
+        IsraeliLocation nearestLocation = findNearestLocation(currentLat, currentLng);
+        if (nearestLocation == null) {
+            return;
+        }
+
+        pickupLat = currentLat;
+        pickupLng = currentLng;
+        pickupLocationLabelEditText.setText(nearestLocation.getNameHe());
+        pickupLocationStatusTextView.setText(getString(
+                R.string.location_saved_with_name,
+                nearestLocation.getNameHe()
+        ));
+        Toast.makeText(
+                this,
+                getString(R.string.location_saved_with_name, nearestLocation.getNameHe()),
+                Toast.LENGTH_SHORT
+        ).show();
+    }
+
+    private IsraeliLocation findNearestLocation(double lat, double lng) {
+        try {
+            IsraeliLocation nearestLocation = IsraeliLocationsProvider.findNearest(this, lat, lng);
+            if (nearestLocation == null) {
+                Toast.makeText(this, R.string.error_location_dataset_empty, Toast.LENGTH_SHORT).show();
+            }
+            return nearestLocation;
+        } catch (Exception error) {
+            Toast.makeText(this, R.string.error_load_locations, Toast.LENGTH_SHORT).show();
+            return null;
+        }
     }
 
     private void openManualPickupLocation() {

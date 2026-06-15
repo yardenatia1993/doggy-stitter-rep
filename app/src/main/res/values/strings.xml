@@ -143,6 +143,7 @@
     <string name="status_open_display">פתוחה</string>
     <string name="status_completed_display">הושלמה</string>
     <string name="status_canceled_display">בוטלה</string>
+    <string name="status_expired_display">פג תוקף</string>
     <string name="status_unknown_display">לא ידוע</string>
     <string name="selected_walker_fallback">דוגווקר נבחר</string>
     <string name="request_dog_name">שם הכלב: %1$s</string>
@@ -196,7 +197,10 @@
     <string name="error_time_required">יש לבחור שעה</string>
     <string name="error_pickup_location_required">יש לבחור מיקום איסוף</string>
     <string name="error_location_permission_denied">אין הרשאה לגישה למיקום</string>
-    <string name="error_location_unavailable">לא ניתן לקבל את המיקום כרגע</string>
+    <string name="error_location_unavailable">לא ניתן לקבל את המיקום כרגע. ודא שה-GPS פעיל ונסה שוב</string>
+    <string name="error_location_dataset_empty">רשימת היישובים אינה זמינה כרגע</string>
+    <string name="error_walk_request_expired">לא ניתן לקבל בקשה שמועד הטיול שלה עבר</string>
+    <string name="error_walk_request_time_in_past">יש לבחור מועד עתידי לטיול</string>
     <string name="error_save_dog">לא ניתן לשמור את הכלב</string>
     <string name="error_update_dog">לא ניתן לעדכן את הכלב</string>
     <string name="error_load_dog">לא ניתן לטעון את הכלב</string>
@@ -255,4 +259,7 @@
     <string name="no_location_results">לא נמצאו תוצאות</string>
     <string name="location_saved_with_name">המיקום נשמר: %1$s</string>
     <string name="error_load_locations">טעינת רשימת היישובים נכשלה</string>
+    <string name="exit_app_title">יציאה מהאפליקציה</string>
+    <string name="exit_app_message">האם לצאת מהאפליקציה?</string>
+    <string name="exit_app_positive">יציאה</string>
 </resources>

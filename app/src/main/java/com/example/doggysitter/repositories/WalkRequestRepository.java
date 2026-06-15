@@ -1,6 +1,7 @@
 package com.example.doggysitter.repositories;
 
 import com.example.doggysitter.models.WalkRequest;
+import com.example.doggysitter.utils.DateTimeUtils;
 import com.example.doggysitter.utils.FirestoreConstants;
 
 import android.text.TextUtils;
@@ -14,7 +15,9 @@ import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.QuerySnapshot;
+import com.google.firebase.Timestamp;
 
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -32,6 +35,14 @@ public class WalkRequestRepository {
         String requestId = walkRequestsCollection.document().getId();
         walkRequest.setId(requestId);
 
+        Date requestStartAt = DateTimeUtils.parseRequestDateTime(
+                walkRequest.getDate(),
+                walkRequest.getTime()
+        );
+        if (requestStartAt == null) {
+            return Tasks.forException(abort("מועד הטיול אינו תקין"));
+        }
+
         Map<String, Object> requestData = new HashMap<>();
         requestData.put(FirestoreConstants.FIELD_ID, walkRequest.getId());
         requestData.put(FirestoreConstants.FIELD_OWNER_ID, walkRequest.getOwnerId());
@@ -39,6 +50,7 @@ public class WalkRequestRepository {
         requestData.put(FirestoreConstants.FIELD_DOG_NAME, walkRequest.getDogName());
         requestData.put(FirestoreConstants.FIELD_DATE, walkRequest.getDate());
         requestData.put(FirestoreConstants.FIELD_TIME, walkRequest.getTime());
+        requestData.put(FirestoreConstants.FIELD_START_AT, new Timestamp(requestStartAt));
         requestData.put(FirestoreConstants.FIELD_DURATION_MINUTES, walkRequest.getDurationMinutes());
         requestData.put(FirestoreConstants.FIELD_MAX_PRICE, walkRequest.getMaxPrice());
         requestData.put(FirestoreConstants.FIELD_NOTES, walkRequest.getNotes());
@@ -89,6 +101,9 @@ public class WalkRequestRepository {
             String status = getStringValue(requestSnapshot, FirestoreConstants.FIELD_STATUS);
             if (!FirestoreConstants.WALK_REQUEST_STATUS_OPEN.equals(status)) {
                 throw abort(getAcceptErrorMessage(status));
+            }
+            if (isRequestExpired(requestSnapshot)) {
+                throw abort("לא ניתן לקבל בקשה שמועד הטיול שלה עבר");
             }
 
             Map<String, Object> requestData = new HashMap<>();
@@ -193,6 +208,17 @@ public class WalkRequestRepository {
             return "הטיול כבר סומן כהושלם";
         }
         return "לא ניתן להשלים בקשה במצב הנוכחי";
+    }
+
+    private boolean isRequestExpired(DocumentSnapshot requestSnapshot) {
+        Object startAt = requestSnapshot.get(FirestoreConstants.FIELD_START_AT);
+        if (startAt instanceof Timestamp) {
+            return ((Timestamp) startAt).toDate().getTime() <= System.currentTimeMillis();
+        }
+
+        String date = getStringValue(requestSnapshot, FirestoreConstants.FIELD_DATE);
+        String time = getStringValue(requestSnapshot, FirestoreConstants.FIELD_TIME);
+        return DateTimeUtils.isPastDateTime(date, time);
     }
 
     private String getStringValue(DocumentSnapshot documentSnapshot, String fieldName) {

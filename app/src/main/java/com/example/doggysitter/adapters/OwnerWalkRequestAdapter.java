@@ -111,9 +111,14 @@ public class OwnerWalkRequestAdapter
         holder.statusTextView.setText(String.format(
                 Locale.getDefault(),
                 context.getString(R.string.status_label),
-                getDisplayStatus(context, walkRequest.getStatus())
+                getDisplayStatus(context, walkRequest)
         ));
-        StatusBadgeUtils.apply(holder.statusTextView, walkRequest.getStatus());
+        StatusBadgeUtils.apply(
+                holder.statusTextView,
+                isExpiredOpenRequest(walkRequest)
+                        ? FirestoreConstants.WALK_REQUEST_STATUS_CANCELED
+                        : walkRequest.getStatus()
+        );
 
         bindWalkerName(holder, context, walkRequest);
         bindActionButton(holder, context, walkRequest);
@@ -156,7 +161,8 @@ public class OwnerWalkRequestAdapter
             return;
         }
 
-        if (FirestoreConstants.WALK_REQUEST_STATUS_OPEN.equals(walkRequest.getStatus())) {
+        if (FirestoreConstants.WALK_REQUEST_STATUS_OPEN.equals(walkRequest.getStatus())
+                && !isExpiredOpenRequest(walkRequest)) {
             holder.actionButton.setVisibility(View.VISIBLE);
             holder.actionButton.setEnabled(actionsEnabled);
             applyActionStyle(holder.actionButton, context, R.drawable.bg_button_danger, R.color.ds_on_danger);
@@ -191,7 +197,12 @@ public class OwnerWalkRequestAdapter
         button.setTextColor(ContextCompat.getColor(context, textColorResource));
     }
 
-    private String getDisplayStatus(Context context, String status) {
+    private String getDisplayStatus(Context context, WalkRequest walkRequest) {
+        if (isExpiredOpenRequest(walkRequest)) {
+            return context.getString(R.string.status_expired_display);
+        }
+
+        String status = walkRequest.getStatus();
         if (FirestoreConstants.WALK_REQUEST_STATUS_OPEN.equals(status)) {
             return context.getString(R.string.status_open_display);
         }
@@ -205,6 +216,11 @@ public class OwnerWalkRequestAdapter
             return context.getString(R.string.status_canceled_display);
         }
         return context.getString(R.string.status_unknown_display);
+    }
+
+    private boolean isExpiredOpenRequest(WalkRequest walkRequest) {
+        return FirestoreConstants.WALK_REQUEST_STATUS_OPEN.equals(walkRequest.getStatus())
+                && DateTimeUtils.isPastDateTime(walkRequest.getDate(), walkRequest.getTime());
     }
 
     static class OwnerWalkRequestViewHolder extends RecyclerView.ViewHolder {

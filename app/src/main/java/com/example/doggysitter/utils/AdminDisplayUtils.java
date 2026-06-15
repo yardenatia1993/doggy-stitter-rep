@@ -5,6 +5,7 @@ import com.google.firebase.Timestamp;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
+import java.util.Map;
 
 public final class AdminDisplayUtils {
     private static final SimpleDateFormat DATE_TIME_FORMAT =
@@ -16,6 +17,18 @@ public final class AdminDisplayUtils {
     public static String fallbackText(String value) {
         String normalized = ValidationUtils.normalizeSpaces(value);
         return normalized.isEmpty() ? "לא צוין" : normalized;
+    }
+
+    public static String displayUserName(String userId, Map<String, String> userNamesById) {
+        String normalizedId = ValidationUtils.normalizeSpaces(userId);
+        if (normalizedId.isEmpty()) {
+            return "לא ידוע";
+        }
+
+        String fullName = userNamesById == null ? "" : ValidationUtils.normalizeSpaces(
+                userNamesById.get(normalizedId)
+        );
+        return fullName.isEmpty() ? normalizedId : fullName;
     }
 
     public static String formatCreatedAt(Object value) {

@@ -5,6 +5,7 @@ import com.example.doggysitter.adapters.WalkRequestAdapter;
 import com.example.doggysitter.models.WalkRequest;
 import com.example.doggysitter.repositories.WalkRequestRepository;
 import com.example.doggysitter.repositories.WalkerProfileRepository;
+import com.example.doggysitter.utils.DateTimeUtils;
 import com.example.doggysitter.utils.FirestoreConstants;
 import com.example.doggysitter.utils.FirestoreErrorUtils;
 import com.example.doggysitter.utils.LocationUtils;
@@ -119,6 +120,9 @@ public class AvailableWalkRequestsActivity extends AppCompatActivity implements 
                             if (walkRequest.getId() == null || walkRequest.getId().trim().isEmpty()) {
                                 walkRequest.setId(documentSnapshot.getId());
                             }
+                            if (DateTimeUtils.isPastDateTime(walkRequest.getDate(), walkRequest.getTime())) {
+                                continue;
+                            }
                             if (walkRequest.getPickupLat() == null || walkRequest.getPickupLng() == null) {
                                 continue;
                             }
@@ -159,6 +163,11 @@ public class AvailableWalkRequestsActivity extends AppCompatActivity implements 
         if (currentUser == null) {
             Toast.makeText(this, R.string.error_login_required, Toast.LENGTH_SHORT).show();
             finish();
+            return;
+        }
+        if (DateTimeUtils.isPastDateTime(walkRequest.getDate(), walkRequest.getTime())) {
+            Toast.makeText(this, R.string.error_walk_request_expired, Toast.LENGTH_SHORT).show();
+            loadAvailableWalkRequests();
             return;
         }
 

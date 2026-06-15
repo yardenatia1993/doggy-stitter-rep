@@ -15,18 +15,23 @@ import android.widget.ArrayAdapter;
 import android.widget.ProgressBar;
 import android.widget.Spinner;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.android.gms.tasks.Task;
+import com.google.android.gms.tasks.Tasks;
 import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class AdminWalkRequestsActivity extends AdminBaseActivity {
     private final List<WalkRequest> allWalkRequests = new ArrayList<>();
+    private final Map<String, String> userNamesById = new HashMap<>();
     private AdminRepository adminRepository;
     private AdminWalkRequestAdapter adapter;
     private RecyclerView recyclerView;
@@ -82,10 +87,30 @@ public class AdminWalkRequestsActivity extends AdminBaseActivity {
 
     private void loadWalkRequests() {
         setLoading(true);
-        adminRepository.getAllWalkRequests()
-                .addOnSuccessListener(querySnapshot -> {
+        Task<QuerySnapshot> walkRequestsTask = adminRepository.getAllWalkRequests();
+        Task<QuerySnapshot> usersTask = adminRepository.getAllUsers();
+
+        Tasks.whenAllComplete(walkRequestsTask, usersTask)
+                .addOnCompleteListener(task -> {
+                    if (!walkRequestsTask.isSuccessful()) {
+                        setLoading(false);
+                        handleAdminDataLoadFailure(
+                                "Failed to load admin walk requests",
+                                walkRequestsTask.getException()
+                        );
+                        return;
+                    }
+                    if (!usersTask.isSuccessful()) {
+                        setLoading(false);
+                        handleAdminDataLoadFailure(
+                                "Failed to load user names for admin walk requests",
+                                usersTask.getException()
+                        );
+                        return;
+                    }
+
                     allWalkRequests.clear();
-                    for (DocumentSnapshot documentSnapshot : querySnapshot.getDocuments()) {
+                    for (DocumentSnapshot documentSnapshot : walkRequestsTask.getResult().getDocuments()) {
                         WalkRequest walkRequest = documentSnapshot.toObject(WalkRequest.class);
                         if (walkRequest != null) {
                             if (TextUtils.isEmpty(ValidationUtils.normalizeSpaces(walkRequest.getId()))) {
@@ -94,13 +119,31 @@ public class AdminWalkRequestsActivity extends AdminBaseActivity {
                             allWalkRequests.add(walkRequest);
                         }
                     }
+                    userNamesById.clear();
+                    userNamesById.putAll(buildUserNamesById(usersTask.getResult()));
                     setLoading(false);
                     applyStatusFilter();
-                })
-                .addOnFailureListener(error -> {
-                    setLoading(false);
-                    handleAdminDataLoadFailure("Failed to load admin walk requests", error);
                 });
+    }
+
+    private Map<String, String> buildUserNamesById(QuerySnapshot usersSnapshot) {
+        Map<String, String> namesById = new HashMap<>();
+        for (DocumentSnapshot documentSnapshot : usersSnapshot.getDocuments()) {
+            String uid = ValidationUtils.normalizeSpaces(
+                    documentSnapshot.getString(FirestoreConstants.FIELD_UID)
+            );
+            if (TextUtils.isEmpty(uid)) {
+                uid = documentSnapshot.getId();
+            }
+
+            String fullName = ValidationUtils.normalizeSpaces(
+                    documentSnapshot.getString(FirestoreConstants.FIELD_FULL_NAME)
+            );
+            if (!TextUtils.isEmpty(uid) && !TextUtils.isEmpty(fullName)) {
+                namesById.put(uid, fullName);
+            }
+        }
+        return namesById;
     }
 
     private void applyStatusFilter() {
@@ -111,7 +154,7 @@ public class AdminWalkRequestsActivity extends AdminBaseActivity {
                 filteredRequests.add(walkRequest);
             }
         }
-        adapter.submitList(filteredRequests);
+        adapter.submitList(filteredRequests, userNamesById);
         updateEmptyState(filteredRequests.isEmpty());
     }
 

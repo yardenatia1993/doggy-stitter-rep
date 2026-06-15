@@ -8,6 +8,7 @@ public class WalkRequest {
     private String dogName;
     private String date;
     private String time;
+    private Object startAt;
     private int durationMinutes;
     private double maxPrice;
     private String notes;
@@ -88,6 +89,14 @@ public class WalkRequest {
 
     public void setTime(String time) {
         this.time = time;
+    }
+
+    public Object getStartAt() {
+        return startAt;
+    }
+
+    public void setStartAt(Object startAt) {
+        this.startAt = startAt;
     }
 
     public int getDurationMinutes() {

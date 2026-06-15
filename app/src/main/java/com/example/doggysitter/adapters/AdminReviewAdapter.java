@@ -15,14 +15,21 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class AdminReviewAdapter extends RecyclerView.Adapter<AdminReviewAdapter.AdminReviewViewHolder> {
     private final List<Review> reviews = new ArrayList<>();
+    private final Map<String, String> userNamesById = new HashMap<>();
 
-    public void submitList(List<Review> newReviews) {
+    public void submitList(List<Review> newReviews, Map<String, String> newUserNamesById) {
         reviews.clear();
         reviews.addAll(newReviews);
+        userNamesById.clear();
+        if (newUserNamesById != null) {
+            userNamesById.putAll(newUserNamesById);
+        }
         notifyDataSetChanged();
     }
 
@@ -44,8 +51,10 @@ public class AdminReviewAdapter extends RecyclerView.Adapter<AdminReviewAdapter.
         holder.commentTextView.setVisibility(TextUtils.isEmpty(comment) ? View.GONE : View.VISIBLE);
         holder.commentTextView.setText("הערה: " + comment);
 
-        holder.ownerIdTextView.setText("בעלים: " + AdminDisplayUtils.fallbackText(review.getOwnerId()));
-        holder.walkerIdTextView.setText("דוגווקר: " + AdminDisplayUtils.fallbackText(review.getWalkerId()));
+        holder.ownerIdTextView.setText("בעלים: "
+                + AdminDisplayUtils.displayUserName(review.getOwnerId(), userNamesById));
+        holder.walkerIdTextView.setText("דוגווקר: "
+                + AdminDisplayUtils.displayUserName(review.getWalkerId(), userNamesById));
         holder.requestIdTextView.setText("בקשה: " + AdminDisplayUtils.fallbackText(review.getRequestId()));
         holder.createdAtTextView.setText("תאריך יצירה: "
                 + AdminDisplayUtils.formatCreatedAt(review.getCreatedAt()));
